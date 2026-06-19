@@ -1,0 +1,19 @@
+# Local verification / dev artifacts - not part of the theme
+.wp-core/
+.playwright-mcp/
+node_modules/
+*.log
+debug.log
+
+# Handoff / archive artifacts - not part of the theme
+*.zip
+
+# Playwright verification screenshots (the theme's own preview is screenshot.png)
+v-*.png
+oaf-home-full.png
+oaf-collection.png
+oaf-donate.png
+oaf-home-mobile.png
+
+# OS
+.DS_Store

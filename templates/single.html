@@ -1,0 +1,64 @@
+<!-- wp:template-part {"slug":"header","tagName":"header"} /-->
+
+<!-- wp:group {"tagName":"main","className":"oaf-main","layout":{"type":"default"}} -->
+<main class="wp-block-group oaf-main">
+
+<!-- wp:group {"align":"full","className":"oaf-pagehero oaf-post-hero","backgroundColor":"maroon","tagName":"section","layout":{"type":"default"}} -->
+<section class="wp-block-group alignfull oaf-pagehero oaf-post-hero has-maroon-background-color has-background">
+	<!-- wp:group {"className":"oaf-ct oaf-ct--read","layout":{"type":"default"}} -->
+	<div class="wp-block-group oaf-ct oaf-ct--read">
+		<!-- wp:group {"className":"oaf-teaser__meta","layout":{"type":"flex","flexWrap":"wrap"}} -->
+		<div class="wp-block-group oaf-teaser__meta">
+			<!-- wp:post-terms {"term":"category","className":"oaf-tag"} /-->
+			<!-- wp:post-date {"format":"j F Y","className":"oaf-date","isLink":false} /-->
+		</div>
+		<!-- /wp:group -->
+		<!-- wp:post-title {"level":1} /-->
+	</div>
+	<!-- /wp:group -->
+</section>
+<!-- /wp:group -->
+
+<!-- wp:group {"align":"full","className":"oaf-band","backgroundColor":"white","tagName":"section","layout":{"type":"default"}} -->
+<section class="wp-block-group alignfull oaf-band has-white-background-color has-background">
+	<!-- wp:group {"className":"oaf-ct oaf-ct--read","layout":{"type":"default"}} -->
+	<div class="wp-block-group oaf-ct oaf-ct--read">
+		<!-- wp:post-author {"showAvatar":true,"avatarSize":44,"showBio":false,"byline":"","className":"oaf-byline"} /-->
+		<!-- wp:post-content {"className":"oaf-prose","layout":{"type":"default"}} /-->
+	</div>
+	<!-- /wp:group -->
+</section>
+<!-- /wp:group -->
+
+<!-- wp:group {"align":"full","className":"oaf-band","backgroundColor":"sand","tagName":"section","layout":{"type":"default"}} -->
+<section class="wp-block-group alignfull oaf-band has-sand-background-color has-background">
+	<!-- wp:group {"className":"oaf-ct","layout":{"type":"default"}} -->
+	<div class="wp-block-group oaf-ct">
+		<!-- wp:heading {"style":{"spacing":{"margin":{"bottom":"26px"}}},"fontSize":"x-large"} -->
+		<h2 class="wp-block-heading has-x-large-font-size" style="margin-bottom:26px">More from the blog</h2>
+		<!-- /wp:heading -->
+		<!-- wp:query {"queryId":40,"query":{"perPage":3,"pages":0,"offset":0,"postType":"post","order":"desc","orderBy":"date","inherit":false},"className":"oaf-teasers"} -->
+		<div class="wp-block-query oaf-teasers">
+			<!-- wp:post-template {"className":"oaf-teaser-grid"} -->
+				<!-- wp:group {"className":"oaf-teaser__meta","layout":{"type":"flex","flexWrap":"wrap"}} -->
+				<div class="wp-block-group oaf-teaser__meta">
+					<!-- wp:post-terms {"term":"category","className":"oaf-tag"} /-->
+					<!-- wp:post-date {"format":"j F Y","className":"oaf-date","isLink":false} /-->
+				</div>
+				<!-- /wp:group -->
+				<!-- wp:post-title {"level":3,"isLink":true,"className":"oaf-teaser__title"} /-->
+				<!-- wp:post-excerpt {"moreText":"","showMoreOnNewLine":false,"excerptLength":24,"className":"oaf-teaser__excerpt"} /-->
+			<!-- /wp:post-template -->
+		</div>
+		<!-- /wp:query -->
+	</div>
+	<!-- /wp:group -->
+</section>
+<!-- /wp:group -->
+
+<!-- wp:pattern {"slug":"oaf/donate-band"} /-->
+
+</main>
+<!-- /wp:group -->
+
+<!-- wp:template-part {"slug":"footer","tagName":"footer"} /-->

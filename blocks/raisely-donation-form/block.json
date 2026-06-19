@@ -1,0 +1,19 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "oaf/raisely-donation-form",
+	"version": "1.0.0",
+	"title": "Raisely Donation Form",
+	"category": "embed",
+	"icon": "heart",
+	"description": "Shows the Raisely donation form embed configured in Appearance → OAF Theme.",
+	"keywords": [ "donate", "donation", "raisely", "fundraising" ],
+	"textdomain": "oaf-wp-blocktheme",
+	"supports": {
+		"html": false,
+		"reusable": false,
+		"align": [ "wide", "full" ]
+	},
+	"editorScript": "file:./editor.js",
+	"render": "file:./render.php"
+}

@@ -1,0 +1,853 @@
+/*
+Theme Name: OpenAustralia Foundation
+Theme URI: https://www.oaf.org.au/
+Author: OpenAustralia Foundation
+Author URI: https://www.oaf.org.au/
+Description: Block theme for the OpenAustralia Foundation - a charity running public digital library services for democracy. Maroon institutional brand, full-site editing.
+Requires at least: 6.6
+Tested up to: 6.8
+Requires PHP: 7.4
+Version: 1.0.0
+License: GNU General Public License v2 or later
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
+Text Domain: oaf-wp-blocktheme
+GitHub Theme URI: openaustralia/oaf-wp-blocktheme
+Primary Branch: main
+Tags: full-site-editing, blog, news, charity, two-columns, custom-colors, custom-logo, custom-menu, editor-style, block-patterns
+*/
+
+/* ============================================================
+   OpenAustralia Foundation block theme - component styles
+   Palette and fonts are declared in theme.json; this file holds
+   the bespoke .oaf-* component styling that the designs require.
+   Values ported from the Claude Design handoff (block-preview/*
+   for structure, JSX design source for exact values).
+   ============================================================ */
+
+:root {
+	--oaf-maroon: #800000;
+	--oaf-maroon-deep: #4a0000;
+	--oaf-navy: #060f2f;
+	--oaf-sand: #f4f1eb;
+	--oaf-hair: #e6e1d7;
+	--oaf-border: #d9d4cb;
+	--oaf-ink: #0e0e25;
+	--oaf-body: #333333;
+	--oaf-muted: #6c6c6c;
+	--oaf-link: #3a4e72;
+	--oaf-link-hover: #ba3458;
+	--oaf-font-sans: "Fira Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+	--oaf-font-serif: "Merriweather", Georgia, "Times New Roman", serif;
+	--oaf-font-display: "Helvetica Neue", Helvetica, Arial, sans-serif;
+	--oaf-font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+}
+
+body {
+	font-family: var(--oaf-font-sans);
+	color: var(--oaf-body);
+	background: #fff;
+	margin: 0;
+}
+
+/* The header part, the <main> wrapper and the footer part are top-level siblings in
+   .wp-site-blocks, and the content sections sit inside <main>. WordPress adds a 24px
+   block-gap between siblings at each level, which shows as white bars between the maroon
+   masthead/bands and the footer. Remove it at both levels so the bands sit flush,
+   matching the OAF Theme.html flex-column layout. */
+.wp-site-blocks > *,
+.oaf-main > * { margin-block-start: 0; margin-block-end: 0; }
+
+/* Headings use the tight display stack everywhere. */
+h1, h2, h3, h4,
+.wp-block-heading {
+	font-family: var(--oaf-font-display);
+	font-weight: 800;
+	letter-spacing: -0.035em;
+	line-height: 1.05;
+	color: var(--oaf-ink);
+}
+
+a { color: var(--oaf-link); }
+a:hover { color: var(--oaf-link-hover); }
+
+/* ---------- Containers ---------- */
+.oaf-ct {
+	max-width: 1040px;
+	margin-left: auto;
+	margin-right: auto;
+	padding-left: 48px;
+	padding-right: 48px;
+}
+.oaf-ct--narrow { max-width: 840px; }
+.oaf-ct--read { max-width: 760px; }
+.oaf-ct--920 { max-width: 920px; }
+
+/* ---------- Buttons ---------- */
+.oaf-btn,
+.wp-block-button.is-style-oaf-rev .wp-block-button__link,
+.wp-block-button.is-style-oaf-ghost .wp-block-button__link {
+	display: inline-block;
+	font-family: var(--oaf-font-sans);
+	font-weight: 700;
+	font-size: 15.5px;
+	line-height: 1.2;
+	padding: 14px 30px;
+	border-radius: 3px;
+	text-decoration: none;
+	border: 1px solid transparent;
+	cursor: pointer;
+	transition: background-color .15s ease, color .15s ease, border-color .15s ease;
+}
+.oaf-btn-rev,
+.wp-block-button.is-style-oaf-rev .wp-block-button__link {
+	background: #fff;
+	color: var(--oaf-maroon);
+	border-color: #fff;
+}
+.oaf-btn-rev:hover,
+.wp-block-button.is-style-oaf-rev .wp-block-button__link:hover {
+	background: #f4f1eb;
+	color: var(--oaf-maroon);
+}
+.oaf-btn-ghost,
+.wp-block-button.is-style-oaf-ghost .wp-block-button__link {
+	background: transparent;
+	color: #fff;
+	border-color: rgba(255, 255, 255, 0.55);
+}
+.oaf-btn-ghost:hover,
+.wp-block-button.is-style-oaf-ghost .wp-block-button__link:hover {
+	background: rgba(255, 255, 255, 0.12);
+	color: #fff;
+}
+
+/* ---------- Masthead ---------- */
+.oaf-masthead {
+	background: var(--oaf-maroon);
+}
+.oaf-masthead .oaf-ct {
+	display: flex;
+	align-items: center;
+	gap: 26px;
+	min-height: 68px;
+	padding-top: 0;
+	padding-bottom: 0;
+}
+.oaf-masthead__logo { display: flex; align-items: center; }
+.oaf-masthead__logo img { height: 24px; width: auto; display: block; }
+.oaf-masthead .wp-block-navigation {
+	margin-left: auto;
+	gap: 24px;
+	font-family: var(--oaf-font-sans);
+	font-size: 14.5px;
+	font-weight: 500;
+}
+.oaf-masthead .wp-block-navigation a,
+.oaf-masthead .wp-block-navigation .wp-block-navigation-item__content {
+	color: rgba(255, 255, 255, 0.92);
+	text-decoration: none;
+}
+.oaf-masthead .wp-block-navigation a:hover { color: #fff; }
+.oaf-masthead .wp-block-navigation .current-menu-item a {
+	color: #fff;
+	font-weight: 700;
+	border-bottom: 2px solid #fff;
+	padding-bottom: 2px;
+}
+/* Mobile nav toggle (hamburger) - keep it white on the maroon masthead. */
+.oaf-masthead .wp-block-navigation__responsive-container-open,
+.oaf-masthead .wp-block-navigation__responsive-container-open svg { color: #fff; fill: currentColor; }
+.oaf-masthead .wp-block-navigation:not(.has-background) .wp-block-navigation__responsive-container.is-menu-open { background: var(--oaf-maroon); }
+.oaf-masthead .wp-block-navigation__responsive-container.is-menu-open .wp-block-navigation-item a { color: #fff; }
+.oaf-masthead .wp-block-navigation__responsive-container-close,
+.oaf-masthead .wp-block-navigation__responsive-container-close svg { color: #fff; fill: currentColor; }
+
+.oaf-donate-btn { margin-left: 0; }
+.oaf-donate-btn .wp-block-button__link {
+	background: #fff;
+	color: var(--oaf-maroon);
+	border: 1px solid #fff;
+	font-family: var(--oaf-font-sans);
+	font-weight: 600;
+	font-size: 13px;
+	padding: 8px 18px;
+	border-radius: 3px;
+	white-space: nowrap;
+	transition: background-color .15s ease;
+}
+.oaf-donate-btn .wp-block-button__link:hover { background: #f4f1eb; }
+
+/* ---------- Hero / page hero ---------- */
+.oaf-hero { background: var(--oaf-maroon); }
+.oaf-hero .oaf-ct { padding-top: 60px; padding-bottom: 56px; }
+.oaf-pagehero { background: var(--oaf-maroon); }
+.oaf-pagehero .oaf-ct { padding-top: 52px; padding-bottom: 48px; }
+
+.oaf-eyebrow {
+	font-family: var(--oaf-font-sans);
+	font-size: 12px;
+	color: rgba(255, 255, 255, 0.72);
+	text-transform: uppercase;
+	letter-spacing: 0.16em;
+	font-weight: 700;
+	margin: 0 0 16px;
+}
+/* Eyebrow on light sections turns maroon. */
+.has-white-background-color .oaf-eyebrow,
+.has-sand-background-color .oaf-eyebrow,
+.oaf-eyebrow.oaf-eyebrow--dark { color: var(--oaf-maroon); }
+
+.oaf-hero h1 {
+	font-size: 64px;
+	line-height: 1.0;
+	color: #fff;
+	margin: 22px 0 0;
+	max-width: 900px;
+}
+.oaf-pagehero h1 {
+	font-size: 46px;
+	line-height: 1.0;
+	color: #fff;
+	margin: 0;
+	max-width: 860px;
+}
+.oaf-dot { color: #e8a0a0; }
+.oaf-hero p.oaf-lead,
+.oaf-pagehero p.oaf-lead {
+	font-family: var(--oaf-font-sans);
+	font-size: 19px;
+	line-height: 1.55;
+	color: rgba(255, 255, 255, 0.86);
+	margin: 24px 0 0;
+	max-width: 640px;
+}
+.oaf-pagehero p.oaf-lead { font-size: 18.5px; margin-top: 18px; max-width: 660px; }
+.oaf-hero .oaf-cta-row { margin-top: 32px; gap: 14px; }
+.oaf-hero .oaf-cta-row .wp-block-button { margin: 0; }
+
+/* ---------- Stats strip ---------- */
+.oaf-stats { background: var(--oaf-maroon-deep); }
+.oaf-stats .oaf-ct {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 40px;
+	justify-content: space-between;
+	padding-top: 26px;
+	padding-bottom: 26px;
+}
+.oaf-stat__num {
+	font-family: var(--oaf-font-display);
+	font-weight: 800;
+	letter-spacing: -0.035em;
+	line-height: 1.0;
+	font-size: 30px;
+	color: #fff;
+}
+.oaf-stat__label {
+	font-family: var(--oaf-font-sans);
+	font-size: 12px;
+	color: rgba(255, 255, 255, 0.66);
+	margin-top: 3px;
+	max-width: 175px;
+	line-height: 1.35;
+}
+
+/* ---------- Section heading row ---------- */
+.oaf-sechead {
+	display: flex;
+	justify-content: space-between;
+	flex-wrap: wrap;
+	align-items: baseline;
+	gap: 12px;
+}
+.oaf-sechead h2 { font-size: 34px; margin: 0; }
+.oaf-morelink {
+	font-family: var(--oaf-font-sans);
+	font-size: 14px;
+	color: var(--oaf-link);
+	font-weight: 600;
+	text-decoration: none;
+}
+.oaf-morelink:hover { color: var(--oaf-link-hover); }
+.oaf-intro {
+	font-family: var(--oaf-font-sans);
+	font-size: 15.5px;
+	color: var(--oaf-muted);
+	margin: 8px 0 26px;
+	max-width: 580px;
+	line-height: 1.55;
+}
+
+/* ---------- Mission statement ---------- */
+.oaf-mission__statement {
+	font-family: var(--oaf-font-display);
+	font-weight: 500;
+	font-size: 30px;
+	line-height: 1.35;
+	color: var(--oaf-ink);
+	letter-spacing: -0.035em;
+	margin: 0;
+}
+.oaf-hl { color: var(--oaf-maroon); }
+
+/* ---------- Collection (home rows) ---------- */
+.oaf-coll-list {
+	background: #fff;
+	border: 1px solid var(--oaf-border);
+	border-radius: 4px;
+	overflow: hidden;
+}
+.oaf-coll-row {
+	display: grid;
+	grid-template-columns: 260px 1fr auto;
+	gap: 24px;
+	align-items: center;
+	padding: 16px 22px;
+	text-decoration: none;
+	color: inherit;
+	transition: background-color .15s ease;
+}
+.oaf-coll-list .oaf-service-card + .oaf-service-card .oaf-coll-row { border-top: 1px solid var(--oaf-hair); }
+.oaf-coll-row:hover { background: #faf8f4; }
+.oaf-coll-band {
+	border-radius: 4px;
+	height: 66px;
+	display: flex;
+	align-items: center;
+	padding: 0 18px;
+	min-width: 0;
+	overflow: hidden;
+}
+.oaf-coll-band img { max-height: 38px; max-width: 100%; width: auto; object-fit: contain; display: block; }
+.oaf-coll-row__one {
+	font-family: var(--oaf-font-sans);
+	font-size: 14.5px;
+	color: var(--oaf-body);
+	line-height: 1.5;
+}
+.oaf-coll-row__stat {
+	font-family: var(--oaf-font-mono);
+	font-size: 12px;
+	font-weight: 700;
+	white-space: nowrap;
+}
+
+/* ---------- Collection (full / collection page) ---------- */
+.oaf-coll-full .oaf-service-card + .oaf-service-card { border-top: 1px solid var(--oaf-hair); }
+.oaf-coll-full .oaf-coll-row {
+	grid-template-columns: 230px 1fr auto;
+	gap: 32px;
+	align-items: center;
+	padding: 28px 0;
+}
+.oaf-coll-full .oaf-coll-band { height: 76px; padding: 0 20px; }
+.oaf-coll-full .oaf-coll-band img { max-height: 46px; }
+.oaf-coll-full__body h3 {
+	font-size: 22px;
+	margin: 0 0 8px;
+	display: flex;
+	align-items: center;
+	gap: 11px;
+}
+.oaf-coll-full__dot {
+	width: 9px;
+	height: 9px;
+	border-radius: 999px;
+	flex-shrink: 0;
+	display: inline-block;
+}
+.oaf-coll-full__long {
+	font-family: var(--oaf-font-sans);
+	font-size: 15px;
+	line-height: 1.6;
+	color: var(--oaf-body);
+	margin: 0;
+	max-width: 560px;
+}
+.oaf-coll-full__meta { text-align: right; }
+.oaf-coll-full__meta .oaf-coll-row__stat { display: block; margin-bottom: 10px; }
+.oaf-coll-full__visit {
+	font-family: var(--oaf-font-mono);
+	font-size: 12px;
+	color: var(--oaf-link);
+	text-decoration: none;
+	white-space: nowrap;
+}
+.oaf-coll-full__visit:hover { color: var(--oaf-link-hover); }
+
+/* ---------- Blog teasers (static + query loop) ---------- */
+.oaf-teaser-grid {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: 34px 28px;
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+.oaf-teaser, .oaf-teaser-grid > li {
+	display: block;
+	text-decoration: none;
+	color: inherit;
+	margin: 0;
+}
+.oaf-teaser__meta {
+	display: flex;
+	gap: 10px;
+	align-items: center;
+	margin-bottom: 11px;
+	flex-wrap: wrap;
+}
+.oaf-tag, .oaf-teaser__meta .wp-block-post-terms {
+	font-family: var(--oaf-font-sans);
+	font-size: 11px;
+	color: var(--oaf-maroon);
+	text-transform: uppercase;
+	letter-spacing: 0.1em;
+	font-weight: 700;
+}
+.oaf-tag a, .oaf-teaser__meta .wp-block-post-terms a { color: inherit; text-decoration: none; }
+.oaf-date, .oaf-teaser__meta .wp-block-post-date {
+	font-family: var(--oaf-font-mono);
+	font-size: 12px;
+	color: var(--oaf-muted);
+}
+.oaf-teaser h3,
+.oaf-teaser__title {
+	font-size: 20px;
+	margin: 0 0 10px;
+	line-height: 1.05;
+}
+.oaf-teaser__title a { color: var(--oaf-ink); text-decoration: none; }
+.oaf-teaser__title a:hover { color: var(--oaf-maroon); }
+.oaf-teaser p,
+.oaf-teaser__excerpt {
+	font-family: var(--oaf-font-sans);
+	font-size: 14px;
+	line-height: 1.6;
+	color: var(--oaf-body);
+	margin: 0;
+}
+.oaf-teaser__excerpt a { color: var(--oaf-link); }
+
+/* ---------- Donate band ---------- */
+.oaf-donateband { background: var(--oaf-maroon); }
+.oaf-donateband .oaf-ct {
+	padding-top: 52px;
+	padding-bottom: 52px;
+	display: flex;
+	align-items: center;
+	gap: 32px;
+	flex-wrap: wrap;
+	justify-content: space-between;
+}
+.oaf-donateband__text { flex: 1 1 420px; }
+.oaf-donateband h2 { color: #fff; font-size: 30px; margin: 0 0 10px; }
+.oaf-donateband p {
+	font-family: var(--oaf-font-sans);
+	font-size: 15.5px;
+	line-height: 1.6;
+	color: rgba(255, 255, 255, 0.86);
+	margin: 0;
+	max-width: 540px;
+}
+
+/* ---------- Footer ---------- */
+.oaf-footer {
+	background: var(--oaf-sand);
+	color: var(--oaf-body);
+	font-family: var(--oaf-font-sans);
+	border-top: 3px solid var(--oaf-maroon);
+}
+.oaf-footer .oaf-ct { padding-top: 44px; padding-bottom: 40px; }
+.oaf-foot-top {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) auto;
+	column-gap: 36px;
+	align-items: flex-start;
+}
+.oaf-foot-left { display: flex; flex-direction: column; gap: 18px; min-width: 0; }
+.oaf-foot-brand { display: flex; flex-direction: column; gap: 12px; }
+.oaf-foot-intro { font-size: 13px; color: var(--oaf-muted); letter-spacing: 0.01em; }
+.oaf-foot-wordmark { display: inline-block; }
+.oaf-foot-wordmark img { height: 26px; width: auto; display: block; }
+.oaf-foot-charity p { font-size: 14px; color: var(--oaf-body); line-height: 1.6; margin: 0; }
+.oaf-foot-charity a { color: var(--oaf-link); text-underline-offset: 2px; }
+.oaf-foot-aok {
+	font-size: 14px;
+	color: var(--oaf-muted);
+	line-height: 1.6;
+	padding-top: 14px;
+	border-top: 1px solid var(--oaf-border);
+}
+.oaf-foot-tick { display: block; }
+.oaf-foot-tick img { width: 150px; height: 150px; display: block; }
+.oaf-foot-row {
+	margin-top: 18px;
+	padding-top: 16px;
+	border-top: 1px solid var(--oaf-border);
+	display: flex;
+	flex-wrap: wrap;
+	align-items: baseline;
+	gap: 18px;
+	justify-content: space-between;
+}
+.oaf-foot-row--socials { align-items: center; gap: 16px; }
+.oaf-foot-eyebrow {
+	font-size: 11px;
+	letter-spacing: 0.12em;
+	text-transform: uppercase;
+	color: var(--oaf-muted);
+	font-weight: 600;
+}
+.oaf-foot-services {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 22px;
+	align-items: baseline;
+}
+.oaf-foot-services a { color: var(--oaf-body); text-decoration: none; font-size: 14px; }
+.oaf-foot-services a:hover { color: var(--oaf-link-hover); }
+.oaf-foot-socials {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 20px;
+	align-items: center;
+}
+.oaf-foot-socials a {
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	color: var(--oaf-body);
+	text-decoration: none;
+	padding: 4px 2px;
+}
+.oaf-foot-socials a:hover { color: var(--oaf-maroon); }
+.oaf-foot-socials svg { width: 22px; height: 22px; display: block; }
+.oaf-foot-socials__label { font-size: 13px; font-weight: 500; letter-spacing: 0.01em; }
+
+/* ---------- People ---------- */
+.oaf-people-section h2 { font-size: 26px; margin: 0 0 4px; }
+.oaf-people-note { font-family: var(--oaf-font-sans); font-size: 12.5px; color: var(--oaf-muted); font-style: italic; margin: 24px 0 0; }
+.oaf-people-grid {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 0 40px;
+	margin-top: 18px;
+}
+.oaf-person {
+	display: flex;
+	gap: 16px;
+	padding: 20px 0;
+	border-top: 1px solid var(--oaf-hair);
+}
+.oaf-avatar {
+	width: 56px;
+	height: 56px;
+	border-radius: 999px;
+	color: #fff;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	flex-shrink: 0;
+	font-family: var(--oaf-font-display);
+	font-weight: 700;
+	font-size: 20px;
+	letter-spacing: 0.02em;
+}
+.oaf-avatar--photo { overflow: hidden; background: none; }
+.oaf-avatar--photo img { width: 100%; height: 100%; object-fit: cover; border-radius: 999px; }
+.oaf-person__name { font-size: 16.5px; font-weight: 700; color: var(--oaf-ink); }
+.oaf-person__role { font-size: 13.5px; color: var(--oaf-maroon); font-weight: 600; margin-top: 1px; }
+.oaf-person__bio {
+	font-size: 14px;
+	line-height: 1.6;
+	color: var(--oaf-body);
+	margin: 8px 0 0;
+	max-width: 420px;
+}
+
+/* ---------- Single post prose ---------- */
+.oaf-post-hero .oaf-ct { padding-top: 40px; padding-bottom: 44px; }
+.oaf-post-hero h1 { color: #fff; font-size: 40px; }
+.oaf-post-hero .oaf-teaser__meta .oaf-tag,
+.oaf-post-hero .oaf-teaser__meta .wp-block-post-terms { color: #fff; }
+.oaf-post-hero .oaf-teaser__meta .oaf-date,
+.oaf-post-hero .oaf-teaser__meta .wp-block-post-date { color: rgba(255, 255, 255, 0.66); }
+
+.oaf-byline {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	padding-bottom: 28px;
+	border-bottom: 1px solid var(--oaf-hair);
+	margin-bottom: 32px;
+}
+.oaf-byline .oaf-avatar { width: 44px; height: 44px; font-size: 15px; }
+.oaf-byline__name { font-size: 14.5px; font-weight: 700; color: var(--oaf-ink); }
+.oaf-byline__role { font-size: 13px; color: var(--oaf-muted); }
+
+/* Core post-author block styled as the byline. */
+.wp-block-post-author.oaf-byline {
+	gap: 12px;
+	margin-top: 0;
+}
+.oaf-byline .wp-block-post-author__avatar { margin: 0; line-height: 0; }
+.oaf-byline .wp-block-post-author__avatar img {
+	width: 44px;
+	height: 44px;
+	border-radius: 999px;
+	display: block;
+}
+.oaf-byline .wp-block-post-author__name {
+	font-family: var(--oaf-font-sans);
+	font-size: 14.5px;
+	font-weight: 700;
+	color: var(--oaf-ink);
+}
+.oaf-byline .wp-block-post-author__content { line-height: 1.3; }
+
+.oaf-prose p {
+	font-family: var(--oaf-font-sans);
+	font-size: 17px;
+	line-height: 1.75;
+	color: var(--oaf-body);
+	margin: 0 0 20px;
+}
+.oaf-prose h2 { font-size: 24px; margin: 34px 0 14px; }
+.oaf-prose h3 { font-size: 19px; margin: 28px 0 12px; }
+.oaf-prose ul, .oaf-prose ol { font-family: var(--oaf-font-sans); font-size: 17px; line-height: 1.75; color: var(--oaf-body); margin: 0 0 20px; padding-left: 1.4em; }
+.oaf-prose li { margin-bottom: 8px; }
+.oaf-prose blockquote {
+	margin: 28px 0;
+	padding: 4px 0 4px 24px;
+	border-left: 3px solid var(--oaf-maroon);
+}
+.oaf-prose blockquote p {
+	font-family: var(--oaf-font-serif);
+	font-style: italic;
+	font-size: 21px;
+	line-height: 1.5;
+	color: var(--oaf-ink);
+	margin: 0;
+}
+.oaf-prose a { color: var(--oaf-link); text-underline-offset: 2px; }
+.oaf-prose a:hover { color: var(--oaf-link-hover); }
+
+/* ---------- Form placeholders (contact + donate) ---------- */
+.oaf-form-card,
+.oaf-donate-card {
+	background: #fff;
+	border: 1px solid var(--oaf-border);
+	border-radius: 6px;
+	padding: 28px 28px 30px;
+}
+.oaf-field { display: block; margin-bottom: 16px; }
+.oaf-field__label {
+	display: block;
+	font-family: var(--oaf-font-sans);
+	font-size: 13px;
+	font-weight: 700;
+	color: var(--oaf-ink);
+	margin-bottom: 6px;
+}
+.oaf-input {
+	width: 100%;
+	box-sizing: border-box;
+	border: 1.5px solid var(--oaf-border);
+	border-radius: 4px;
+	padding: 11px 13px;
+	font-family: var(--oaf-font-sans);
+	font-size: 15px;
+	color: var(--oaf-ink);
+	outline: none;
+	transition: border-color .15s ease;
+}
+.oaf-input:focus { border-color: var(--oaf-maroon); }
+textarea.oaf-input { resize: vertical; }
+.oaf-submit {
+	background: var(--oaf-maroon);
+	color: #fff;
+	border: none;
+	border-radius: 3px;
+	padding: 13px 26px;
+	font-family: var(--oaf-font-sans);
+	font-size: 15px;
+	font-weight: 700;
+	cursor: pointer;
+	width: 100%;
+	transition: background-color .15s ease;
+}
+.oaf-submit:hover { background: #5e0000; }
+.oaf-fineprint {
+	font-family: var(--oaf-font-sans);
+	font-size: 12px;
+	color: var(--oaf-muted);
+	line-height: 1.6;
+	margin: 12px 0 0;
+}
+.oaf-channels { list-style: none; padding: 0; margin: 0; }
+.oaf-channels a, .oaf-channels li {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: 12px;
+	padding: 11px 0;
+	font-family: var(--oaf-font-sans);
+	font-size: 14px;
+	text-decoration: none;
+	border-bottom: 1px solid var(--oaf-hair);
+}
+.oaf-channels__name { color: var(--oaf-link); font-weight: 700; }
+.oaf-channels__handle { color: var(--oaf-muted); font-family: var(--oaf-font-mono); font-size: 12.5px; }
+
+.oaf-freq { display: flex; gap: 8px; margin-bottom: 22px; background: var(--oaf-sand); padding: 4px; border-radius: 4px; }
+.oaf-freq__btn {
+	flex: 1;
+	padding: 10px 0;
+	border: none;
+	border-radius: 3px;
+	cursor: pointer;
+	font-family: var(--oaf-font-sans);
+	font-size: 14px;
+	font-weight: 700;
+	background: transparent;
+	color: var(--oaf-muted);
+}
+.oaf-freq__btn.is-active { background: #fff; color: var(--oaf-maroon); box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12); }
+.oaf-amounts { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; }
+.oaf-amount {
+	padding: 15px 0;
+	border: 1.5px solid var(--oaf-border);
+	border-radius: 4px;
+	cursor: pointer;
+	font-family: var(--oaf-font-sans);
+	font-size: 18px;
+	font-weight: 700;
+	background: #fff;
+	color: var(--oaf-ink);
+}
+.oaf-amount.is-active { border-color: var(--oaf-maroon); background: #fbf2f2; color: var(--oaf-maroon); }
+.oaf-amount-other { display: flex; align-items: center; border: 1.5px solid var(--oaf-border); border-radius: 4px; padding: 0 14px; margin-bottom: 20px; }
+.oaf-amount-other span { font-family: var(--oaf-font-sans); font-size: 17px; color: var(--oaf-muted); }
+.oaf-amount-other input { border: none; outline: none; padding: 13px 8px; font-family: var(--oaf-font-sans); font-size: 16px; width: 100%; background: transparent; color: var(--oaf-ink); }
+.oaf-donate-cta {
+	background: var(--oaf-maroon);
+	color: #fff;
+	border: none;
+	border-radius: 3px;
+	padding: 14px 30px;
+	font-family: var(--oaf-font-sans);
+	font-size: 15.5px;
+	font-weight: 700;
+	display: block;
+	text-align: center;
+	width: 100%;
+	box-sizing: border-box;
+	text-decoration: none;
+	transition: background-color .15s ease;
+}
+.oaf-donate-cta:hover { background: #5e0000; color: #fff; }
+.oaf-funds { list-style: none; padding: 0; margin: 0; }
+.oaf-funds li { display: flex; gap: 14px; padding: 14px 0; border-bottom: 1px solid var(--oaf-hair); }
+.oaf-funds__check { color: var(--oaf-maroon); margin-top: 2px; flex-shrink: 0; }
+.oaf-funds__check svg { width: 18px; height: 18px; display: block; }
+.oaf-funds__h { font-family: var(--oaf-font-sans); font-size: 15px; font-weight: 700; color: var(--oaf-ink); }
+.oaf-funds__b { font-family: var(--oaf-font-sans); font-size: 14px; line-height: 1.6; color: var(--oaf-body); margin-top: 2px; }
+
+/* ---------- Two-column page layout (about story, values, contact, donate) ---------- */
+.oaf-cols { display: flex; gap: 48px; flex-wrap: wrap; }
+.oaf-cols > * { flex: 1 1 320px; }
+.oaf-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+.oaf-grid-form { display: grid; grid-template-columns: 1.2fr 1fr; gap: 48px; align-items: start; }
+.oaf-grid-donate { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: start; }
+.about-card { border-top: 1px solid var(--oaf-hair); padding-top: 20px; }
+.about-card h3 { font-size: 21px; margin: 0 0 10px; }
+.about-card p { font-family: var(--oaf-font-sans); font-size: 15px; line-height: 1.65; color: var(--oaf-body); margin: 0; }
+.oaf-lede { font-family: var(--oaf-font-sans); font-size: 19px; line-height: 1.65; color: var(--oaf-body); }
+.oaf-prose-narrow p { font-family: var(--oaf-font-sans); font-size: 16px; line-height: 1.7; color: var(--oaf-body); margin: 0 0 16px; }
+
+/* Governance / dark inset panel */
+.oaf-darkpanel { background: var(--oaf-navy); }
+.oaf-darkpanel .oaf-ct { padding-top: 44px; padding-bottom: 44px; }
+.oaf-darkpanel h2 { color: #fff; font-size: 24px; margin: 0; }
+.oaf-darkpanel p { font-family: var(--oaf-font-sans); color: rgba(255, 255, 255, 0.82); font-size: 15.5px; line-height: 1.7; margin: 12px 0 0; }
+
+/* Spacer helper for white/sand content bands */
+.oaf-band { padding-top: 58px; padding-bottom: 58px; }
+.has-sand-background-color { background: var(--oaf-sand); }
+.has-navy-background-color { background: var(--oaf-navy); }
+
+/* ---------- Pagination ---------- */
+.wp-block-query-pagination { margin-top: 40px; font-family: var(--oaf-font-sans); }
+.wp-block-query-pagination a { color: var(--oaf-link); }
+
+/* ---------- Archive / search hero extras ---------- */
+.oaf-pagehero .wp-block-query-title { color: #fff; font-size: 46px; margin: 0; }
+.oaf-pagehero .wp-block-term-description {
+	font-family: var(--oaf-font-sans);
+	font-size: 18.5px;
+	line-height: 1.55;
+	color: rgba(255, 255, 255, 0.86);
+	margin: 18px 0 0;
+	max-width: 660px;
+}
+.oaf-pagehero .wp-block-search { margin-top: 22px; max-width: 460px; }
+.oaf-pagehero .wp-block-search__input {
+	border: none;
+	border-radius: 3px 0 0 3px;
+	padding: 12px 14px;
+	font-family: var(--oaf-font-sans);
+	font-size: 15px;
+	color: var(--oaf-ink);
+}
+.oaf-pagehero .wp-block-search__button {
+	background: #fff;
+	color: var(--oaf-maroon);
+	border: none;
+	border-radius: 0 3px 3px 0;
+	font-family: var(--oaf-font-sans);
+	font-weight: 700;
+	font-size: 14px;
+	padding: 0 18px;
+	margin-left: 0;
+}
+
+/* ---------- Generic page content (plain pages) ---------- */
+.oaf-page-content { margin-top: 0; margin-bottom: 0; }
+@media (max-width: 781px) {
+	.oaf-page-content > :not(.alignfull):not(.alignwide) {
+		padding-left: 22px;
+		padding-right: 22px;
+	}
+}
+
+/* ============================================================
+   Responsive
+   ============================================================ */
+@media (max-width: 980px) {
+	.oaf-hero h1 { font-size: 52px; }
+	.oaf-pagehero h1 { font-size: 38px; }
+}
+@media (max-width: 781px) {
+	.oaf-ct { padding-left: 22px; padding-right: 22px; }
+	.oaf-masthead .oaf-ct { flex-wrap: wrap; gap: 14px; }
+	.oaf-hero h1 { font-size: 40px; }
+	.oaf-pagehero h1 { font-size: 32px; }
+	.oaf-teaser-grid { grid-template-columns: 1fr; }
+	.oaf-coll-row,
+	.oaf-coll-full .oaf-coll-row { grid-template-columns: 1fr; gap: 14px; }
+	.oaf-coll-full__meta { text-align: left; }
+	.oaf-people-grid,
+	.oaf-grid-2,
+	.oaf-grid-form,
+	.oaf-grid-donate { grid-template-columns: 1fr; gap: 24px; }
+	.oaf-foot-top { grid-template-columns: 1fr; row-gap: 28px; }
+	.oaf-foot-tick img { width: 110px; height: 110px; }
+	.oaf-donateband .oaf-ct { align-items: flex-start; }
+}

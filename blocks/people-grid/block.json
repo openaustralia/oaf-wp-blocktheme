@@ -1,0 +1,24 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "oaf/people-grid",
+	"version": "1.0.0",
+	"title": "People Grid",
+	"category": "theme",
+	"icon": "groups",
+	"description": "Shows people from a chosen group (Team, Board) managed under Admin → People.",
+	"keywords": [ "people", "team", "board", "staff" ],
+	"textdomain": "oaf-wp-blocktheme",
+	"attributes": {
+		"group": {
+			"type": "string",
+			"default": ""
+		}
+	},
+	"supports": {
+		"html": false,
+		"reusable": false
+	},
+	"editorScript": "file:./editor.js",
+	"render": "file:./render.php"
+}

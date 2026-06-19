@@ -1,0 +1,54 @@
+<!-- wp:template-part {"slug":"header","tagName":"header"} /-->
+
+<!-- wp:group {"tagName":"main","className":"oaf-main","layout":{"type":"default"}} -->
+<main class="wp-block-group oaf-main">
+
+<!-- wp:group {"align":"full","className":"oaf-pagehero","backgroundColor":"maroon","tagName":"section","layout":{"type":"default"}} -->
+<section class="wp-block-group alignfull oaf-pagehero has-maroon-background-color has-background">
+	<!-- wp:html -->
+	<div class="oaf-ct">
+		<p class="oaf-eyebrow">Blog</p>
+		<h1>Notes from our desk.</h1>
+		<p class="oaf-lead">Considered, longer-form writing: organisation news, transparency and FOI commentary, service updates, and posts from our partners.</p>
+	</div>
+	<!-- /wp:html -->
+</section>
+<!-- /wp:group -->
+
+<!-- wp:group {"align":"full","className":"oaf-band","backgroundColor":"white","tagName":"section","layout":{"type":"default"}} -->
+<section class="wp-block-group alignfull oaf-band has-white-background-color has-background">
+	<!-- wp:group {"className":"oaf-ct","layout":{"type":"default"}} -->
+	<div class="wp-block-group oaf-ct">
+		<!-- wp:query {"queryId":20,"query":{"perPage":9,"pages":0,"offset":0,"postType":"post","order":"desc","orderBy":"date","inherit":true},"className":"oaf-teasers"} -->
+		<div class="wp-block-query oaf-teasers">
+			<!-- wp:post-template {"className":"oaf-teaser-grid"} -->
+				<!-- wp:group {"className":"oaf-teaser__meta","layout":{"type":"flex","flexWrap":"wrap"}} -->
+				<div class="wp-block-group oaf-teaser__meta">
+					<!-- wp:post-terms {"term":"category","className":"oaf-tag"} /-->
+					<!-- wp:post-date {"format":"j F Y","className":"oaf-date","isLink":false} /-->
+				</div>
+				<!-- /wp:group -->
+				<!-- wp:post-title {"level":3,"isLink":true,"className":"oaf-teaser__title"} /-->
+				<!-- wp:post-excerpt {"moreText":"","showMoreOnNewLine":false,"excerptLength":28,"className":"oaf-teaser__excerpt"} /-->
+			<!-- /wp:post-template -->
+			<!-- wp:query-pagination {"layout":{"type":"flex","justifyContent":"space-between"}} -->
+				<!-- wp:query-pagination-previous /-->
+				<!-- wp:query-pagination-numbers /-->
+				<!-- wp:query-pagination-next /-->
+			<!-- /wp:query-pagination -->
+			<!-- wp:query-no-results -->
+				<!-- wp:paragraph -->
+				<p>No posts yet. Check back soon.</p>
+				<!-- /wp:paragraph -->
+			<!-- /wp:query-no-results -->
+		</div>
+		<!-- /wp:query -->
+	</div>
+	<!-- /wp:group -->
+</section>
+<!-- /wp:group -->
+
+</main>
+<!-- /wp:group -->
+
+<!-- wp:template-part {"slug":"footer","tagName":"footer"} /-->
