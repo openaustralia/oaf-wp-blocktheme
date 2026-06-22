@@ -233,7 +233,9 @@ if ( ! function_exists( 'oaf_seed_people' ) ) {
 					'post_type'    => 'oaf_person',
 					'post_status'  => 'publish',
 					'post_title'   => $name,
-					'post_content' => $bio,
+					// Store the bio as a Paragraph block, not raw text, so the
+					// block editor opens it cleanly instead of as a Classic block.
+					'post_content' => '<!-- wp:paragraph -->' . "\n" . '<p>' . $bio . '</p>' . "\n" . '<!-- /wp:paragraph -->',
 					'menu_order'   => $order[ $group ],
 				)
 			);
