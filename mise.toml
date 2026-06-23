@@ -1,2 +1,3 @@
 [tools]
 "npm:@wordpress/env" = "latest"
+"npm:wp-studio" = "latest"
