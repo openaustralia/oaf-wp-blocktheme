@@ -18,39 +18,49 @@ if ( ! function_exists( 'oaf_required_pages' ) ) {
 	 * The minimum set of pages the theme expects, keyed by slug.
 	 *
 	 * `pattern` is the block pattern inserted as the page content, or null for
-	 * pages whose body is supplied by a template (home, blog).
+	 * pages whose body is supplied by a template (home, blog). `template` is the
+	 * custom page template to assign (via the `_wp_page_template` meta); the
+	 * pattern-backed pages supply their own hero, so they use the `page-no-title`
+	 * canvas template to avoid the title hero that `page.html` adds.
 	 *
-	 * @return array<string,array{title:string,pattern:?string}>
+	 * @return array<string,array{title:string,pattern:?string,template:?string}>
 	 */
 	function oaf_required_pages() {
 		return array(
 			'home'       => array(
-				'title'   => __( 'Home', 'oaf-wp-blocktheme' ),
-				'pattern' => null,
+				'title'    => __( 'Home', 'oaf-wp-blocktheme' ),
+				'pattern'  => null,
+				'template' => null,
 			),
 			'blog'       => array(
-				'title'   => __( 'Blog', 'oaf-wp-blocktheme' ),
-				'pattern' => null,
+				'title'    => __( 'Blog', 'oaf-wp-blocktheme' ),
+				'pattern'  => null,
+				'template' => null,
 			),
 			'about'      => array(
-				'title'   => __( 'About', 'oaf-wp-blocktheme' ),
-				'pattern' => 'oaf/page-about',
+				'title'    => __( 'About', 'oaf-wp-blocktheme' ),
+				'pattern'  => 'oaf/page-about',
+				'template' => 'page-no-title',
 			),
 			'collection' => array(
-				'title'   => __( 'Collection', 'oaf-wp-blocktheme' ),
-				'pattern' => 'oaf/page-collection',
+				'title'    => __( 'Collection', 'oaf-wp-blocktheme' ),
+				'pattern'  => 'oaf/page-collection',
+				'template' => 'page-no-title',
 			),
 			'people'     => array(
-				'title'   => __( 'People', 'oaf-wp-blocktheme' ),
-				'pattern' => 'oaf/page-people',
+				'title'    => __( 'People', 'oaf-wp-blocktheme' ),
+				'pattern'  => 'oaf/page-people',
+				'template' => 'page-no-title',
 			),
 			'contact'    => array(
-				'title'   => __( 'Contact', 'oaf-wp-blocktheme' ),
-				'pattern' => 'oaf/page-contact',
+				'title'    => __( 'Contact', 'oaf-wp-blocktheme' ),
+				'pattern'  => 'oaf/page-contact',
+				'template' => 'page-no-title',
 			),
 			'donate'     => array(
-				'title'   => __( 'Donate', 'oaf-wp-blocktheme' ),
-				'pattern' => 'oaf/page-donate',
+				'title'    => __( 'Donate', 'oaf-wp-blocktheme' ),
+				'pattern'  => 'oaf/page-donate',
+				'template' => 'page-no-title',
 			),
 		);
 	}
@@ -103,6 +113,8 @@ if ( ! function_exists( 'oaf_write_page' ) ) {
 			? '<!-- wp:pattern {"slug":"' . $pages[ $slug ]['pattern'] . '"} /-->'
 			: '';
 
+		$template = ! empty( $pages[ $slug ]['template'] ) ? $pages[ $slug ]['template'] : '';
+
 		$existing = get_page_by_path( $slug );
 
 		if ( $existing instanceof WP_Post ) {
@@ -121,6 +133,10 @@ if ( ! function_exists( 'oaf_write_page' ) ) {
 				true
 			);
 
+			if ( ! is_wp_error( $id ) && '' !== $template ) {
+				update_post_meta( (int) $id, '_wp_page_template', $template );
+			}
+
 			return array(
 				'status' => is_wp_error( $id ) ? 'skipped' : 'overwritten',
 				'id'     => is_wp_error( $id ) ? $existing->ID : (int) $id,
@@ -136,6 +152,10 @@ if ( ! function_exists( 'oaf_write_page' ) ) {
 				'post_content' => $content,
 			)
 		);
+
+		if ( $id && ! is_wp_error( $id ) && '' !== $template ) {
+			update_post_meta( (int) $id, '_wp_page_template', $template );
+		}
 
 		return ( $id && ! is_wp_error( $id ) )
 			? array(
