@@ -10,14 +10,14 @@
  */
 
 $oaf_uri  = get_template_directory_uri();
-$oaf_home = esc_url( home_url( '/' ) );
+$oaf_home = home_url( '/' );
 ?>
 <!-- wp:group {"align":"full","className":"oaf-masthead","backgroundColor":"maroon","layout":{"type":"default"}} -->
 <div class="wp-block-group alignfull oaf-masthead has-maroon-background-color has-background">
 	<!-- wp:group {"className":"oaf-ct","layout":{"type":"default"}} -->
 	<div class="wp-block-group oaf-ct">
 		<!-- wp:html -->
-		<a class="oaf-masthead__logo" href="<?php echo $oaf_home; ?>" aria-label="OpenAustralia Foundation - home"><img src="<?php echo esc_url( $oaf_uri . '/assets/img/oaf-wordmark-white.svg' ); ?>" alt="OpenAustralia Foundation" width="220" height="24"></a>
+		<a class="oaf-masthead__logo" href="<?php echo esc_url( $oaf_home ); ?>" aria-label="OpenAustralia Foundation - home"><img src="<?php echo esc_url( $oaf_uri . '/assets/img/oaf-wordmark-white.svg' ); ?>" alt="OpenAustralia Foundation" width="220" height="24"></a>
 		<!-- /wp:html -->
 
 		<!-- wp:navigation {"overlayMenu":"mobile","layout":{"type":"flex","setCascadingProperties":true,"justifyContent":"left"}} -->

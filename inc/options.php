@@ -41,24 +41,24 @@ if ( ! function_exists( 'oaf_default_options' ) ) {
 
 if ( ! function_exists( 'oaf_option' ) ) {
 	/**
-	 * Read a single theme option, falling back to its default when unset or empty.
+	 * Read a single theme option.
 	 *
-	 * `raisely_embed` legitimately defaults to an empty string, so an empty value
-	 * there is returned as-is.
+	 * A saved value is always returned, including an empty string, so an admin can
+	 * intentionally blank a field (e.g. remove a social link). The default is used
+	 * only when the key has never been saved.
 	 *
 	 * @param string $key Option key.
 	 * @return string
 	 */
 	function oaf_option( $key ) {
-		$defaults = oaf_default_options();
-		$opts     = get_option( 'oaf_theme_options', array() );
-		$value    = isset( $opts[ $key ] ) ? $opts[ $key ] : '';
+		$opts = get_option( 'oaf_theme_options', array() );
 
-		if ( '' === $value && isset( $defaults[ $key ] ) ) {
-			return $defaults[ $key ];
+		if ( is_array( $opts ) && array_key_exists( $key, $opts ) ) {
+			return $opts[ $key ];
 		}
 
-		return $value;
+		$defaults = oaf_default_options();
+		return isset( $defaults[ $key ] ) ? $defaults[ $key ] : '';
 	}
 }
 
@@ -95,11 +95,13 @@ if ( ! function_exists( 'oaf_sanitize_options' ) ) {
 			$clean[ $key ] = isset( $input[ $key ] ) ? sanitize_text_field( $input[ $key ] ) : '';
 		}
 
-		// The Raisely embed may contain <script>/<iframe>. Only users who can
-		// manage options reach this screen, so store it raw rather than running
-		// it through wp_kses (which would strip the embed). Preserve the existing
-		// value if a lower-capability save ever occurs.
-		if ( current_user_can( 'manage_options' ) && isset( $input['raisely_embed'] ) ) {
+		// The Raisely embed may contain <script>/<iframe>, so it is stored raw
+		// rather than run through wp_kses (which would strip the embed). Gate that
+		// on `unfiltered_html` - the capability WordPress uses for storing raw
+		// markup - not merely `manage_options`. On single-site the two coincide; on
+		// multisite this stops a non-super-admin site admin injecting front-end
+		// script. A save without the capability preserves the existing value.
+		if ( current_user_can( 'unfiltered_html' ) && isset( $input['raisely_embed'] ) ) {
 			$clean['raisely_embed'] = trim( $input['raisely_embed'] );
 		} else {
 			$existing               = get_option( 'oaf_theme_options', array() );

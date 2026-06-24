@@ -2,6 +2,7 @@
 .wp-core/
 .playwright-mcp/
 node_modules/
+vendor/
 *.log
 debug.log
 

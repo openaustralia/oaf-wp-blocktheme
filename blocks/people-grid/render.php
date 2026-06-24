@@ -17,10 +17,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 $oaf_group = isset( $attributes['group'] ) ? sanitize_title( $attributes['group'] ) : '';
 
+// Bound the query rather than using -1. The realistic count is a handful; the cap
+// sits far above that and is filterable for an unusually large directory.
+$oaf_limit = (int) apply_filters( 'oaf_people_grid_max', 200 );
+
 $oaf_args = array(
 	'post_type'      => 'oaf_person',
 	'post_status'    => 'publish',
-	'posts_per_page' => -1,
+	'posts_per_page' => $oaf_limit,
+	'no_found_rows'  => true,
 	'orderby'        => array(
 		'menu_order' => 'ASC',
 		'title'      => 'ASC',

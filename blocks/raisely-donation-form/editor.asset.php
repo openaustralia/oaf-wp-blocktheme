@@ -16,5 +16,7 @@ return array(
 		'wp-server-side-render',
 		'wp-i18n',
 	),
-	'version'      => '1.0.0',
+	// Derive the cache-busting version from editor.js's mtime so a change to the
+	// script (or a fresh Git Updater deploy) invalidates the browser cache.
+	'version'      => file_exists( __DIR__ . '/editor.js' ) ? (string) filemtime( __DIR__ . '/editor.js' ) : '1.1.0',
 );

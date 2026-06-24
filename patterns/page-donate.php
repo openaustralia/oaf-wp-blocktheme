@@ -13,6 +13,7 @@
  *
  * @package oaf-wp-blocktheme
  */
+
 ?>
 <!-- wp:group {"align":"full","className":"oaf-pagehero","backgroundColor":"maroon","tagName":"section","layout":{"type":"default"}} -->
 <section class="wp-block-group alignfull oaf-pagehero has-maroon-background-color has-background">

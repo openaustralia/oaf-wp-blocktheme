@@ -86,7 +86,7 @@ if ( ! function_exists( 'oaf_raisely_section_intro' ) ) {
 	 * Short note above the Raisely field.
 	 */
 	function oaf_raisely_section_intro() {
-		echo '<p>' . esc_html__( 'Anyone who can manage theme options can edit this code, which may contain scripts. Only paste embed code you trust from your own Raisely dashboard.', 'oaf-wp-blocktheme' ) . '</p>';
+		echo '<p>' . esc_html__( 'This code may contain scripts and is saved as-is, so only people allowed to publish unfiltered HTML can change it. Only paste embed code you trust from your own Raisely dashboard.', 'oaf-wp-blocktheme' ) . '</p>';
 	}
 }
 

@@ -2,10 +2,10 @@
 /**
  * Server render for the Raisely Donation Form block.
  *
- * Outputs the embed snippet configured in Appearance -> OAF Theme. That value is
- * admin-only (manage_options) and may contain <script>/<iframe>, so it is echoed
- * raw rather than escaped. When empty, editors see a prompt and the public sees
- * nothing.
+ * Outputs the embed snippet configured in Appearance -> OAF Theme. That value can
+ * only be saved by someone with the `unfiltered_html` capability and may contain
+ * <script>/<iframe>, so it is echoed raw rather than escaped. When empty, editors
+ * see a prompt and the public sees nothing.
  *
  * @package oaf-wp-blocktheme
  */
