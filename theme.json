@@ -37,12 +37,24 @@
 				{
 					"slug": "sans",
 					"name": "Fira Sans",
-					"fontFamily": "\"Fira Sans\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Arial, sans-serif"
+					"fontFamily": "\"Fira Sans\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Arial, sans-serif",
+					"fontFace": [
+						{ "fontFamily": "Fira Sans", "fontWeight": "400", "fontStyle": "normal", "fontDisplay": "swap", "src": [ "file:./assets/fonts/fira-sans-v18-latin-regular.woff2" ] },
+						{ "fontFamily": "Fira Sans", "fontWeight": "400", "fontStyle": "italic", "fontDisplay": "swap", "src": [ "file:./assets/fonts/fira-sans-v18-latin-italic.woff2" ] },
+						{ "fontFamily": "Fira Sans", "fontWeight": "500", "fontStyle": "normal", "fontDisplay": "swap", "src": [ "file:./assets/fonts/fira-sans-v18-latin-500.woff2" ] },
+						{ "fontFamily": "Fira Sans", "fontWeight": "600", "fontStyle": "normal", "fontDisplay": "swap", "src": [ "file:./assets/fonts/fira-sans-v18-latin-600.woff2" ] },
+						{ "fontFamily": "Fira Sans", "fontWeight": "700", "fontStyle": "normal", "fontDisplay": "swap", "src": [ "file:./assets/fonts/fira-sans-v18-latin-700.woff2" ] },
+						{ "fontFamily": "Fira Sans", "fontWeight": "800", "fontStyle": "normal", "fontDisplay": "swap", "src": [ "file:./assets/fonts/fira-sans-v18-latin-800.woff2" ] }
+					]
 				},
 				{
 					"slug": "serif",
 					"name": "Merriweather",
-					"fontFamily": "\"Merriweather\", Georgia, \"Times New Roman\", serif"
+					"fontFamily": "\"Merriweather\", Georgia, \"Times New Roman\", serif",
+					"fontFace": [
+						{ "fontFamily": "Merriweather", "fontWeight": "400", "fontStyle": "normal", "fontDisplay": "swap", "src": [ "file:./assets/fonts/merriweather-v33-latin-regular.woff2" ] },
+						{ "fontFamily": "Merriweather", "fontWeight": "400", "fontStyle": "italic", "fontDisplay": "swap", "src": [ "file:./assets/fonts/merriweather-v33-latin-italic.woff2" ] }
+					]
 				},
 				{
 					"slug": "display",
@@ -109,5 +121,7 @@
 		{ "name": "header", "title": "Header", "area": "header" },
 		{ "name": "footer", "title": "Footer", "area": "footer" }
 	],
-	"customTemplates": []
+	"customTemplates": [
+		{ "name": "page-no-title", "title": "Page – no title (canvas)", "postTypes": [ "page" ] }
+	]
 }

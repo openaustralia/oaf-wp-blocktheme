@@ -4,19 +4,21 @@ A WordPress Full-Site-Editing (block) theme for [oaf.org.au](https://www.oaf.org
 the OpenAustralia Foundation. It replaces the legacy `oaf-thematic` classic theme with the
 maroon institutional brand from the 2026 redesign.
 
-- **Requires:** WordPress 6.6+, PHP 7.4+
+- **Requires:** WordPress 6.6+, PHP 8.3+
 - **Type:** Block theme (FSE) - editable in Appearance → Editor
 - **Self-updating:** via [Git Updater](https://git-updater.com/) from this GitHub repo (see below)
-- **Fonts:** Fira Sans (body) + Merriweather (blockquotes) are loaded from **Google Fonts**
-  (enqueued in `functions.php` on `enqueue_block_assets`, with preconnect hints). Headings use a
-  system Helvetica stack (no webfont). Note: this sends each visitor's IP to Google on page load.
+- **Fonts:** Fira Sans (body) + Merriweather (serif, used for blockquotes) are **self-hosted**
+  from `assets/fonts/` and registered in `theme.json` via `fontFace` (loads on the front end and
+  in the editor). Headings use a system Helvetica stack (no webfont). No font request leaves the
+  visitor's browser to a third party, so no visitor IP is sent to Google. The bundled woff2 files
+  are SIL Open Font License 1.1; see `assets/fonts/OFL.txt`.
 
 ## What's in the theme
 
 ```text
 style.css            Theme header (incl. Git Updater headers) + all .oaf-* component styles
-theme.json           Palette, fonts, layout, element/heading styles (schema v3)
-functions.php        Style/font enqueue, theme supports, pattern category, button + block registration
+theme.json           Palette, fonts (self-hosted via fontFace), layout, element/heading styles (schema v3)
+functions.php        Style enqueue, theme supports, text domain, pattern category, button + block registration
 inc/                 options.php  - editable settings (defaults + accessor + sanitise)
                      admin.php    - the Appearance → OAF Theme admin screen (Settings API)
                      pages.php    - idempotent required-page creator + example-people seeding
@@ -27,7 +29,9 @@ templates/           front-page, home, index, single, page, archive, search, 404
 parts/               header, footer (thin - each references a pattern)
 patterns/            header, footer, donate-band, home-collection,
                      page-about, page-collection, page-people, page-contact, page-donate
+assets/fonts/        Self-hosted Fira Sans + Merriweather woff2 (SIL OFL 1.1, see OFL.txt)
 assets/img/          OAF wordmarks, ACNC tick, service logos
+languages/           Translation files (.pot/.po/.mo) - text domain oaf-wp-blocktheme
 LICENSE              GNU General Public License v2
 ```
 

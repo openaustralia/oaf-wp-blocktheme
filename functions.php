@@ -26,6 +26,8 @@ if ( ! function_exists( 'oaf_setup' ) ) {
 	 * Theme supports. Most FSE supports are implicit, these are the extras.
 	 */
 	function oaf_setup() {
+		load_theme_textdomain( 'oaf-wp-blocktheme', get_template_directory() . '/languages' );
+
 		add_theme_support( 'wp-block-styles' );
 		add_theme_support( 'editor-styles' );
 		add_theme_support( 'responsive-embeds' );
@@ -53,44 +55,9 @@ if ( ! function_exists( 'oaf_enqueue_assets' ) ) {
 }
 add_action( 'wp_enqueue_scripts', 'oaf_enqueue_assets' );
 
-if ( ! function_exists( 'oaf_fonts_url' ) ) {
-	/**
-	 * Google Fonts stylesheet: Fira Sans (body) and Merriweather (serif), in the
-	 * weights and styles the design uses. Headings use a system Helvetica stack,
-	 * so no webfont is requested for them.
-	 */
-	function oaf_fonts_url() {
-		return 'https://fonts.googleapis.com/css2?family=Fira+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=Merriweather:ital,wght@0,400;1,400&display=swap';
-	}
-}
-
-if ( ! function_exists( 'oaf_enqueue_fonts' ) ) {
-	/**
-	 * Load the fonts from Google's CDN. enqueue_block_assets fires on both the
-	 * front end and in the block/site editor, so the type matches in both.
-	 */
-	function oaf_enqueue_fonts() {
-		wp_enqueue_style( 'oaf-fonts', oaf_fonts_url(), array(), null );
-	}
-}
-add_action( 'enqueue_block_assets', 'oaf_enqueue_fonts' );
-
-if ( ! function_exists( 'oaf_resource_hints' ) ) {
-	/**
-	 * Preconnect to the Google Fonts hosts so the webfont request starts sooner.
-	 */
-	function oaf_resource_hints( $hints, $relation_type ) {
-		if ( 'preconnect' === $relation_type ) {
-			$hints[] = 'https://fonts.googleapis.com';
-			$hints[] = array(
-				'href'        => 'https://fonts.gstatic.com',
-				'crossorigin' => 'anonymous',
-			);
-		}
-		return $hints;
-	}
-}
-add_filter( 'wp_resource_hints', 'oaf_resource_hints', 10, 2 );
+// Fonts are self-hosted: the Fira Sans and Merriweather woff2 files in
+// assets/fonts/ are registered via theme.json `fontFace`, which loads them on
+// both the front end and in the editor. No webfont enqueue or preconnect here.
 
 if ( ! function_exists( 'oaf_register_block_assets' ) ) {
 	/**

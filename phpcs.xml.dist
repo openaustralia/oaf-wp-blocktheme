@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<ruleset name="OAF WP Block Theme">
+	<description>Coding standards for the OpenAustralia Foundation block theme.</description>
+
+	<!-- Scan theme PHP from the repo root. -->
+	<file>.</file>
+
+	<arg name="extensions" value="php"/>
+	<arg name="basepath" value="."/>
+	<arg name="parallel" value="8"/>
+	<arg name="colors"/>
+	<!-- Show sniff codes and progress. -->
+	<arg value="ps"/>
+
+	<!-- Dependencies and build output are not ours to lint. -->
+	<exclude-pattern>/vendor/*</exclude-pattern>
+	<exclude-pattern>/node_modules/*</exclude-pattern>
+
+	<!-- Match the theme's declared support: PHP 8.3+ and WordPress 6.6+. -->
+	<config name="testVersion" value="8.3-"/>
+	<config name="minimum_wp_version" value="6.6"/>
+
+	<rule ref="WordPress-Extra"/>
+	<rule ref="WordPress-Docs"/>
+	<rule ref="PHPCompatibilityWP"/>
+
+	<rule ref="WordPress.WP.I18n">
+		<properties>
+			<property name="text_domain" type="array">
+				<element value="oaf-wp-blocktheme"/>
+			</property>
+		</properties>
+	</rule>
+
+	<rule ref="WordPress.NamingConventions.PrefixAllGlobals">
+		<properties>
+			<property name="prefixes" type="array">
+				<element value="oaf"/>
+			</property>
+		</properties>
+		<!-- "oaf" is the OpenAustralia Foundation's established prefix; we keep it
+		     even though it is under the sniff's 4-character minimum. Globals must
+		     still be prefixed with it. -->
+		<exclude name="WordPress.NamingConventions.PrefixAllGlobals.ShortPrefixPassed"/>
+	</rule>
+
+	<!-- *.asset.php is the standard WordPress block-asset filename (the dot is not a
+	     word separator), so don't flag it for hyphenation. -->
+	<rule ref="WordPress.Files.FileName.NotHyphenatedLowercase">
+		<exclude-pattern>*.asset.php</exclude-pattern>
+	</rule>
+</ruleset>

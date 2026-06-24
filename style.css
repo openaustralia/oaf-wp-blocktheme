@@ -6,8 +6,8 @@ Author URI: https://www.oaf.org.au/
 Description: Block theme for the OpenAustralia Foundation - a charity running public digital library services for democracy. Maroon institutional brand, full-site editing.
 Requires at least: 6.6
 Tested up to: 6.8
-Requires PHP: 7.4
-Version: 1.0.0
+Requires PHP: 8.3
+Version: 1.1.0
 License: GNU General Public License v2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: oaf-wp-blocktheme
@@ -55,7 +55,8 @@ body {
    masthead/bands and the footer. Remove it at both levels so the bands sit flush,
    matching the OAF Theme.html flex-column layout. */
 .wp-site-blocks > *,
-.oaf-main > * { margin-block-start: 0; margin-block-end: 0; }
+.oaf-main > *,
+.oaf-page-main > * { margin-block-start: 0; margin-block-end: 0; }
 
 /* Headings use the tight display stack everywhere. */
 h1, h2, h3, h4,
@@ -818,13 +819,77 @@ textarea.oaf-input { resize: vertical; }
 	margin-left: 0;
 }
 
-/* ---------- Generic page content (plain pages) ---------- */
-.oaf-page-content { margin-top: 0; margin-bottom: 0; }
+/* ---------- Generic page content (legacy / plain pages) ----------
+   page.html renders the title in a maroon hero, then the body in a white
+   band. Legacy pages hold classic-editor HTML (bare h2/h3, ol/ul, tables,
+   alignright images), so style the prose here to match the brand. Width and
+   horizontal padding come from the enclosing .oaf-band > .oaf-ct. */
+.oaf-band .oaf-page-content {
+	font-size: 17px;
+	line-height: 1.65;
+	color: var(--oaf-body);
+}
+.oaf-band .oaf-page-content > :first-child { margin-top: 0; }
+.oaf-band .oaf-page-content > :last-child { margin-bottom: 0; }
+
+.oaf-band .oaf-page-content p { margin: 0 0 1.1em; }
+.oaf-band .oaf-page-content h2 { font-size: 30px; margin: 1.6em 0 0.5em; }
+.oaf-band .oaf-page-content h3 { font-size: 23px; margin: 1.5em 0 0.4em; }
+.oaf-band .oaf-page-content h4 { font-size: 19px; margin: 1.4em 0 0.4em; }
+
+.oaf-band .oaf-page-content a {
+	color: var(--oaf-link);
+	text-decoration: underline;
+	text-underline-offset: 2px;
+}
+.oaf-band .oaf-page-content a:hover { color: var(--oaf-link-hover); }
+
+.oaf-band .oaf-page-content ul,
+.oaf-band .oaf-page-content ol { margin: 0 0 1.1em; padding-left: 1.5em; }
+.oaf-band .oaf-page-content li { margin: 0.3em 0; }
+.oaf-band .oaf-page-content li > ul,
+.oaf-band .oaf-page-content li > ol { margin: 0.3em 0; }
+
+.oaf-band .oaf-page-content blockquote {
+	margin: 1.4em 0;
+	padding: 4px 0 4px 22px;
+	border-left: 3px solid var(--oaf-maroon);
+	color: var(--oaf-ink);
+	font-style: italic;
+}
+
+.oaf-band .oaf-page-content img { max-width: 100%; height: auto; }
+.oaf-band .oaf-page-content figure { margin: 1.4em 0; }
+.oaf-band .oaf-page-content .alignright { float: right; margin: 0.3em 0 1em 1.6em; max-width: 50%; }
+.oaf-band .oaf-page-content .alignleft { float: left; margin: 0.3em 1.6em 1em 0; max-width: 50%; }
+.oaf-band .oaf-page-content .aligncenter { margin-left: auto; margin-right: auto; }
+
+.oaf-band .oaf-page-content table {
+	width: 100%;
+	border-collapse: collapse;
+	margin: 1.4em 0;
+	font-size: 15.5px;
+}
+.oaf-band .oaf-page-content th,
+.oaf-band .oaf-page-content td {
+	border: 1px solid var(--oaf-border);
+	padding: 8px 12px;
+	text-align: left;
+	vertical-align: top;
+}
+.oaf-band .oaf-page-content th { background: var(--oaf-sand); font-weight: 700; }
+
+.oaf-band .oaf-page-content hr {
+	border: 0;
+	border-top: 1px solid var(--oaf-border);
+	margin: 2em 0;
+}
+
 @media (max-width: 781px) {
-	.oaf-page-content > :not(.alignfull):not(.alignwide) {
-		padding-left: 22px;
-		padding-right: 22px;
-	}
+	.oaf-band .oaf-page-content { font-size: 16px; }
+	.oaf-band .oaf-page-content .alignright,
+	.oaf-band .oaf-page-content .alignleft { float: none; margin: 1em 0; max-width: 100%; }
+	.oaf-band .oaf-page-content table { display: block; overflow-x: auto; }
 }
 
 /* ============================================================

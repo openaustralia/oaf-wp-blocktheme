@@ -22,7 +22,7 @@ if ( ! function_exists( 'oaf_register_people' ) ) {
 		register_post_type(
 			'oaf_person',
 			array(
-				'labels'       => array(
+				'labels'        => array(
 					'name'          => __( 'People', 'oaf-wp-blocktheme' ),
 					'singular_name' => __( 'Person', 'oaf-wp-blocktheme' ),
 					'menu_name'     => __( 'People', 'oaf-wp-blocktheme' ),
@@ -35,15 +35,15 @@ if ( ! function_exists( 'oaf_register_people' ) ) {
 					'search_items'  => __( 'Search People', 'oaf-wp-blocktheme' ),
 					'not_found'     => __( 'No people found.', 'oaf-wp-blocktheme' ),
 				),
-				'public'       => false,
-				'show_ui'      => true,
-				'show_in_menu' => true,
-				'show_in_rest' => true,
-				'menu_icon'    => 'dashicons-groups',
+				'public'        => false,
+				'show_ui'       => true,
+				'show_in_menu'  => true,
+				'show_in_rest'  => true,
+				'menu_icon'     => 'dashicons-groups',
 				'menu_position' => 25,
-				'supports'     => array( 'title', 'editor', 'thumbnail', 'page-attributes' ),
-				'has_archive'  => false,
-				'rewrite'      => false,
+				'supports'      => array( 'title', 'editor', 'thumbnail', 'page-attributes' ),
+				'has_archive'   => false,
+				'rewrite'       => false,
 			)
 		);
 
@@ -233,7 +233,9 @@ if ( ! function_exists( 'oaf_seed_people' ) ) {
 					'post_type'    => 'oaf_person',
 					'post_status'  => 'publish',
 					'post_title'   => $name,
-					'post_content' => $bio,
+					// Store the bio as a Paragraph block, not raw text, so the
+					// block editor opens it cleanly instead of as a Classic block.
+					'post_content' => '<!-- wp:paragraph -->' . "\n" . '<p>' . $bio . '</p>' . "\n" . '<!-- /wp:paragraph -->',
 					'menu_order'   => $order[ $group ],
 				)
 			);
@@ -241,7 +243,7 @@ if ( ! function_exists( 'oaf_seed_people' ) ) {
 			if ( $id && ! is_wp_error( $id ) ) {
 				update_post_meta( $id, '_oaf_role', $role );
 				wp_set_object_terms( $id, $group, 'oaf_person_group' );
-				$count++;
+				++$count;
 			}
 		}
 
