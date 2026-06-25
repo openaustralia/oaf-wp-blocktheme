@@ -18,3 +18,10 @@ oaf-home-mobile.png
 
 # OS
 .DS_Store
+
+# Re-include the block theme's template parts. The global gitignore
+# (~/.gitignore_global, from the Python template) ignores any directory named
+# parts/ (it belongs to the buildout tool), which silently excludes this theme's
+# header/footer template parts and breaks deploys. Keep them tracked here.
+!parts/
+!parts/*.html
