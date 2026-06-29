@@ -60,17 +60,22 @@ $oaf_palette = array( '#800000', '#3a4e72', '#ca3f94', '#03827a', '#428bca' );
 
 echo '<div ' . $oaf_wrapper . '>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- core-escaped wrapper.
 
-foreach ( $oaf_people->posts as $oaf_index => $oaf_person ) {
+// Cycle the palette across the initials circles actually shown, not the absolute
+// post index, so colours don't repeat or skip when some people have photos.
+$oaf_initial_index = 0;
+
+foreach ( $oaf_people->posts as $oaf_person ) {
 	$oaf_name = get_the_title( $oaf_person );
 	$oaf_role = get_post_meta( $oaf_person->ID, '_oaf_role', true );
 	$oaf_bio  = wp_strip_all_tags( $oaf_person->post_content );
 
 	if ( has_post_thumbnail( $oaf_person ) ) {
 		$oaf_avatar = '<span class="oaf-avatar oaf-avatar--photo">'
-			. get_the_post_thumbnail( $oaf_person->ID, 'thumbnail', array( 'alt' => esc_attr( $oaf_name ) ) )
+			. get_the_post_thumbnail( $oaf_person->ID, 'thumbnail', array( 'alt' => $oaf_name ) )
 			. '</span>';
 	} else {
-		$oaf_color  = $oaf_palette[ $oaf_index % count( $oaf_palette ) ];
+		$oaf_color = $oaf_palette[ $oaf_initial_index % count( $oaf_palette ) ];
+		++$oaf_initial_index;
 		$oaf_avatar = sprintf(
 			'<span class="oaf-avatar" style="background:%1$s" aria-hidden="true">%2$s</span>',
 			esc_attr( $oaf_color ),

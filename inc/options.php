@@ -62,6 +62,23 @@ if ( ! function_exists( 'oaf_option' ) ) {
 	}
 }
 
+if ( ! function_exists( 'oaf_service_urls' ) ) {
+	/**
+	 * The sister-service URLs, keyed by service. Single source of which option keys
+	 * are "the services", so the footer and collection patterns stay in sync.
+	 *
+	 * @return array<string,string> service slug => URL (may be an empty string).
+	 */
+	function oaf_service_urls() {
+		return array(
+			'planningalerts' => oaf_option( 'planningalerts_url' ),
+			'righttoknow'    => oaf_option( 'righttoknow_url' ),
+			'theyvoteforyou' => oaf_option( 'theyvoteforyou_url' ),
+			'openaustralia'  => oaf_option( 'openaustralia_url' ),
+		);
+	}
+}
+
 if ( ! function_exists( 'oaf_sanitize_options' ) ) {
 	/**
 	 * Sanitise the settings array before it is stored.

@@ -22,14 +22,15 @@ $oaf_abr  = oaf_option( 'abr_url' );
 
 // Service and social links can each be blanked in the theme settings; a blank one
 // is omitted rather than rendered as an empty link.
-$oaf_pa   = oaf_option( 'planningalerts_url' );
-$oaf_rtk  = oaf_option( 'righttoknow_url' );
-$oaf_tvfy = oaf_option( 'theyvoteforyou_url' );
-$oaf_oa   = oaf_option( 'openaustralia_url' );
-$oaf_gh   = oaf_option( 'github_url' );
-$oaf_bsky = oaf_option( 'bluesky_url' );
-$oaf_mast = oaf_option( 'mastodon_url' );
-$oaf_li   = oaf_option( 'linkedin_url' );
+$oaf_services = oaf_service_urls();
+$oaf_pa       = $oaf_services['planningalerts'];
+$oaf_rtk      = $oaf_services['righttoknow'];
+$oaf_tvfy     = $oaf_services['theyvoteforyou'];
+$oaf_oa       = $oaf_services['openaustralia'];
+$oaf_gh       = oaf_option( 'github_url' );
+$oaf_bsky     = oaf_option( 'bluesky_url' );
+$oaf_mast     = oaf_option( 'mastodon_url' );
+$oaf_li       = oaf_option( 'linkedin_url' );
 ?>
 <!-- wp:group {"align":"full","className":"oaf-footer","backgroundColor":"sand","layout":{"type":"default"}} -->
 <div class="wp-block-group alignfull oaf-footer has-sand-background-color has-background">

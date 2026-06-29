@@ -86,19 +86,75 @@ if ( ! function_exists( 'oaf_recreatable_pages' ) ) {
 	}
 }
 
+if ( ! function_exists( 'oaf_find_required_page' ) ) {
+	/**
+	 * Find an existing page for a required slug, across every status including trash.
+	 *
+	 * WordPress's get_page_by_path() ignores nothing by status but cannot find a
+	 * trashed page, because it suffixes a trashed page's slug with `__trashed`. This looks
+	 * for a live page first (any non-trash status), then for a trashed one, so the
+	 * create/re-create flow neither mistakes a draft for "missing" nor duplicates a
+	 * page that is only in the Trash.
+	 *
+	 * @param string $slug A top-level page slug.
+	 * @return array{post:?WP_Post,trashed:bool}
+	 */
+	function oaf_find_required_page( $slug ) {
+		$live = new WP_Query(
+			array(
+				'post_type'        => 'page',
+				'name'             => $slug,
+				'post_status'      => array( 'publish', 'draft', 'pending', 'private', 'future' ),
+				'posts_per_page'   => 1,
+				'no_found_rows'    => true,
+				'suppress_filters' => false,
+			)
+		);
+		if ( $live->have_posts() ) {
+			return array(
+				'post'    => $live->posts[0],
+				'trashed' => false,
+			);
+		}
+
+		$trashed = new WP_Query(
+			array(
+				'post_type'      => 'page',
+				'name'           => $slug . '__trashed',
+				'post_status'    => 'trash',
+				'posts_per_page' => 1,
+				'no_found_rows'  => true,
+			)
+		);
+		if ( $trashed->have_posts() ) {
+			return array(
+				'post'    => $trashed->posts[0],
+				'trashed' => true,
+			);
+		}
+
+		return array(
+			'post'    => null,
+			'trashed' => false,
+		);
+	}
+}
+
 if ( ! function_exists( 'oaf_write_page' ) ) {
 	/**
 	 * Insert a required page, or overwrite an existing one's content in place.
 	 *
-	 * Looks the page up by its top-level slug. When missing, it is created with the
-	 * pattern body (as the create flow always has). When it exists and $overwrite is
-	 * true, only post_content is replaced - title, slug, status and menu_order are
-	 * preserved, and wp_update_post() keeps the previous content as a page revision.
-	 * When it exists and $overwrite is false, it is left untouched.
+	 * Looks the page up by its top-level slug across all statuses. When missing, it is
+	 * created with the pattern body (as the create flow always has). When it exists and
+	 * $overwrite is true, only post_content is replaced - title, slug, status and
+	 * menu_order are preserved, and wp_update_post() keeps the previous content as a
+	 * page revision. When it exists and $overwrite is false, it is left untouched. When
+	 * only a trashed page owns the slug, nothing is written (the admin is told to
+	 * restore it) rather than silently creating a duplicate.
 	 *
 	 * @param string $slug      A key of oaf_required_pages().
 	 * @param bool   $overwrite Replace an existing page's content.
-	 * @return array{status:string,id:int} status: created|overwritten|skipped|invalid.
+	 * @return array{status:string,id:int} status: created|overwritten|skipped|trashed|error|invalid.
 	 */
 	function oaf_write_page( $slug, $overwrite = false ) {
 		$pages = oaf_required_pages();
@@ -115,31 +171,45 @@ if ( ! function_exists( 'oaf_write_page' ) ) {
 
 		$template = ! empty( $pages[ $slug ]['template'] ) ? $pages[ $slug ]['template'] : '';
 
-		$existing = get_page_by_path( $slug );
+		$found = oaf_find_required_page( $slug );
 
-		if ( $existing instanceof WP_Post ) {
+		if ( $found['trashed'] ) {
+			return array(
+				'status' => 'trashed',
+				'id'     => $found['post']->ID,
+			);
+		}
+
+		if ( $found['post'] instanceof WP_Post ) {
 			if ( ! $overwrite ) {
 				return array(
 					'status' => 'skipped',
-					'id'     => $existing->ID,
+					'id'     => $found['post']->ID,
 				);
 			}
 
 			$id = wp_update_post(
 				array(
-					'ID'           => $existing->ID,
+					'ID'           => $found['post']->ID,
 					'post_content' => $content,
 				),
 				true
 			);
 
-			if ( ! is_wp_error( $id ) && '' !== $template ) {
+			if ( is_wp_error( $id ) ) {
+				return array(
+					'status' => 'error',
+					'id'     => $found['post']->ID,
+				);
+			}
+
+			if ( '' !== $template ) {
 				update_post_meta( (int) $id, '_wp_page_template', $template );
 			}
 
 			return array(
-				'status' => is_wp_error( $id ) ? 'skipped' : 'overwritten',
-				'id'     => is_wp_error( $id ) ? $existing->ID : (int) $id,
+				'status' => 'overwritten',
+				'id'     => (int) $id,
 			);
 		}
 
@@ -153,19 +223,21 @@ if ( ! function_exists( 'oaf_write_page' ) ) {
 			)
 		);
 
-		if ( $id && ! is_wp_error( $id ) && '' !== $template ) {
+		if ( ! $id || is_wp_error( $id ) ) {
+			return array(
+				'status' => 'error',
+				'id'     => 0,
+			);
+		}
+
+		if ( '' !== $template ) {
 			update_post_meta( (int) $id, '_wp_page_template', $template );
 		}
 
-		return ( $id && ! is_wp_error( $id ) )
-			? array(
-				'status' => 'created',
-				'id'     => (int) $id,
-			)
-			: array(
-				'status' => 'skipped',
-				'id'     => 0,
-			);
+		return array(
+			'status' => 'created',
+			'id'     => (int) $id,
+		);
 	}
 }
 
@@ -175,11 +247,13 @@ if ( ! function_exists( 'oaf_create_required_pages' ) ) {
 	 *
 	 * @param bool $set_front Whether to also set Home as the front page and Blog
 	 *                        as the posts page.
-	 * @return array{created:string[],skipped:string[]}
+	 * @return array{created:string[],skipped:string[],trashed:string[],errors:string[]}
 	 */
 	function oaf_create_required_pages( $set_front = false ) {
 		$created = array();
 		$skipped = array();
+		$trashed = array();
+		$errors  = array();
 		$ids     = array();
 
 		foreach ( array_keys( oaf_required_pages() ) as $slug ) {
@@ -190,10 +264,18 @@ if ( ! function_exists( 'oaf_create_required_pages' ) ) {
 				$created[] = $slug;
 			} elseif ( 'skipped' === $result['status'] ) {
 				$skipped[] = $slug;
+			} elseif ( 'trashed' === $result['status'] ) {
+				$trashed[] = $slug;
+			} elseif ( 'error' === $result['status'] ) {
+				$errors[] = $slug;
 			}
 		}
 
-		if ( $set_front && ! empty( $ids['home'] ) && ! empty( $ids['blog'] ) ) {
+		// Only point the site at published Home/Blog pages - never at a draft,
+		// private or trashed page, which would leave the front end blank.
+		if ( $set_front
+			&& ! empty( $ids['home'] ) && 'publish' === get_post_status( $ids['home'] )
+			&& ! empty( $ids['blog'] ) && 'publish' === get_post_status( $ids['blog'] ) ) {
 			update_option( 'show_on_front', 'page' );
 			update_option( 'page_on_front', $ids['home'] );
 			update_option( 'page_for_posts', $ids['blog'] );
@@ -202,6 +284,8 @@ if ( ! function_exists( 'oaf_create_required_pages' ) ) {
 		return array(
 			'created' => $created,
 			'skipped' => $skipped,
+			'trashed' => $trashed,
+			'errors'  => $errors,
 		);
 	}
 }
@@ -246,15 +330,29 @@ if ( ! function_exists( 'oaf_handle_recreate_pages' ) ) {
 		$requested = array_map( 'sanitize_key', $requested );
 		$allowed   = array_keys( oaf_recreatable_pages() );
 
-		$done = array();
+		$done    = array();
+		$trashed = array();
+		$errors  = array();
 		foreach ( array_intersect( $requested, $allowed ) as $slug ) {
 			$result = oaf_write_page( $slug, true );
 			if ( in_array( $result['status'], array( 'overwritten', 'created' ), true ) ) {
 				$done[] = $slug;
+			} elseif ( 'trashed' === $result['status'] ) {
+				$trashed[] = $slug;
+			} elseif ( 'error' === $result['status'] ) {
+				$errors[] = $slug;
 			}
 		}
 
-		set_transient( 'oaf_recreate_result', array( 'done' => $done ), MINUTE_IN_SECONDS );
+		set_transient(
+			'oaf_recreate_result',
+			array(
+				'done'    => $done,
+				'trashed' => $trashed,
+				'errors'  => $errors,
+			),
+			MINUTE_IN_SECONDS
+		);
 
 		wp_safe_redirect( add_query_arg( 'page', 'oaf-theme', admin_url( 'themes.php' ) ) );
 		exit;
@@ -292,20 +390,55 @@ if ( ! function_exists( 'oaf_render_pages_section' ) ) {
 				printf( esc_html__( 'Seeded %d example people.', 'oaf-wp-blocktheme' ), (int) $result['people'] );
 			}
 			echo '</p></div>';
+
+			$trashed = ! empty( $result['trashed'] ) ? implode( ', ', $result['trashed'] ) : '';
+			$errors  = ! empty( $result['errors'] ) ? implode( ', ', $result['errors'] ) : '';
+			if ( '' !== $trashed || '' !== $errors ) {
+				echo '<div class="notice notice-error is-dismissible"><p>';
+				if ( '' !== $trashed ) {
+					/* translators: %s: comma-separated list of page slugs. */
+					printf( esc_html__( 'In the Trash, so skipped: %s. Restore each page first, then run this again.', 'oaf-wp-blocktheme' ), '<strong>' . esc_html( $trashed ) . '</strong>' );
+					echo ' ';
+				}
+				if ( '' !== $errors ) {
+					/* translators: %s: comma-separated list of page slugs. */
+					printf( esc_html__( 'Could not be created: %s.', 'oaf-wp-blocktheme' ), '<strong>' . esc_html( $errors ) . '</strong>' );
+				}
+				echo '</p></div>';
+			}
 		}
 
 		$recreate = get_transient( 'oaf_recreate_result' );
 		if ( is_array( $recreate ) ) {
 			delete_transient( 'oaf_recreate_result' );
-			$done = ! empty( $recreate['done'] ) ? implode( ', ', $recreate['done'] ) : '';
-			echo '<div class="notice notice-success is-dismissible"><p>';
+			$done    = ! empty( $recreate['done'] ) ? implode( ', ', $recreate['done'] ) : '';
+			$trashed = ! empty( $recreate['trashed'] ) ? implode( ', ', $recreate['trashed'] ) : '';
+			$errors  = ! empty( $recreate['errors'] ) ? implode( ', ', $recreate['errors'] ) : '';
+
 			if ( '' !== $done ) {
+				echo '<div class="notice notice-success is-dismissible"><p>';
 				/* translators: %s: comma-separated list of page slugs. */
 				printf( esc_html__( 'Re-created: %s. The old content was kept as a page revision.', 'oaf-wp-blocktheme' ), '<strong>' . esc_html( $done ) . '</strong>' );
-			} else {
+				echo '</p></div>';
+			} elseif ( '' === $trashed && '' === $errors ) {
+				echo '<div class="notice notice-success is-dismissible"><p>';
 				esc_html_e( 'No pages were selected to re-create.', 'oaf-wp-blocktheme' );
+				echo '</p></div>';
 			}
-			echo '</p></div>';
+
+			if ( '' !== $trashed || '' !== $errors ) {
+				echo '<div class="notice notice-error is-dismissible"><p>';
+				if ( '' !== $trashed ) {
+					/* translators: %s: comma-separated list of page slugs. */
+					printf( esc_html__( 'In the Trash, so skipped: %s. Restore each page first, then re-create it.', 'oaf-wp-blocktheme' ), '<strong>' . esc_html( $trashed ) . '</strong>' );
+					echo ' ';
+				}
+				if ( '' !== $errors ) {
+					/* translators: %s: comma-separated list of page slugs. */
+					printf( esc_html__( 'Could not be re-created: %s.', 'oaf-wp-blocktheme' ), '<strong>' . esc_html( $errors ) . '</strong>' );
+				}
+				echo '</p></div>';
+			}
 		}
 		?>
 		<h2><?php esc_html_e( 'Required pages', 'oaf-wp-blocktheme' ); ?></h2>
@@ -331,17 +464,20 @@ if ( ! function_exists( 'oaf_render_pages_section' ) ) {
 			<?php wp_nonce_field( 'oaf_recreate_pages' ); ?>
 			<?php
 			foreach ( oaf_recreatable_pages() as $oaf_slug => $oaf_title ) {
-				$oaf_page   = get_page_by_path( $oaf_slug );
-				$oaf_status = $oaf_page ? $oaf_page->post_status : 'missing';
+				$oaf_found  = oaf_find_required_page( $oaf_slug );
+				$oaf_page   = $oaf_found['post'];
+				$oaf_status = $oaf_found['trashed'] ? 'trash' : ( $oaf_page ? $oaf_page->post_status : 'missing' );
 
-				if ( ! $oaf_page ) {
-					$oaf_state = __( 'Missing — will be created', 'oaf-wp-blocktheme' );
+				if ( $oaf_found['trashed'] ) {
+					$oaf_state = __( 'In the Trash - restore it first', 'oaf-wp-blocktheme' );
+				} elseif ( ! $oaf_page ) {
+					$oaf_state = __( 'Missing - will be created', 'oaf-wp-blocktheme' );
 				} elseif ( 'publish' === $oaf_status ) {
 					/* translators: %s: page slug. */
-					$oaf_state = sprintf( __( 'Published — /%s/', 'oaf-wp-blocktheme' ), $oaf_slug );
+					$oaf_state = sprintf( __( 'Published - /%s/', 'oaf-wp-blocktheme' ), $oaf_slug );
 				} else {
 					/* translators: 1: post status (e.g. draft), 2: page slug. */
-					$oaf_state = sprintf( __( '%1$s — /%2$s/', 'oaf-wp-blocktheme' ), $oaf_status, $oaf_slug );
+					$oaf_state = sprintf( __( '%1$s - /%2$s/', 'oaf-wp-blocktheme' ), $oaf_status, $oaf_slug );
 				}
 				?>
 				<p>

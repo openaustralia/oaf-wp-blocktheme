@@ -10,11 +10,12 @@
  * @package oaf-wp-blocktheme
  */
 
-$oaf_svc  = get_template_directory_uri() . '/assets/img/services';
-$oaf_pa   = oaf_option( 'planningalerts_url' );
-$oaf_rtk  = oaf_option( 'righttoknow_url' );
-$oaf_tvfy = oaf_option( 'theyvoteforyou_url' );
-$oaf_oa   = oaf_option( 'openaustralia_url' );
+$oaf_svc      = get_template_directory_uri() . '/assets/img/services';
+$oaf_services = oaf_service_urls();
+$oaf_pa       = $oaf_services['planningalerts'];
+$oaf_rtk      = $oaf_services['righttoknow'];
+$oaf_tvfy     = $oaf_services['theyvoteforyou'];
+$oaf_oa       = $oaf_services['openaustralia'];
 ?>
 <!-- wp:group {"align":"full","className":"oaf-pagehero","backgroundColor":"maroon","tagName":"section","layout":{"type":"default"}} -->
 <section class="wp-block-group alignfull oaf-pagehero has-maroon-background-color has-background">
