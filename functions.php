@@ -15,6 +15,9 @@ require_once get_template_directory() . '/inc/options.php';
 // People post type + taxonomy (registered on the front end and in admin).
 require_once get_template_directory() . '/inc/people.php';
 
+// Local avatars (People images instead of Gravatar) for bylines and comments.
+require_once get_template_directory() . '/inc/avatars.php';
+
 // Admin-only: required-page creation and the theme settings screen.
 if ( is_admin() ) {
 	require_once get_template_directory() . '/inc/pages.php';

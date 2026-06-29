@@ -56,7 +56,7 @@ if ( ! $oaf_people->have_posts() ) {
 	return;
 }
 
-$oaf_palette = array( '#800000', '#3a4e72', '#ca3f94', '#03827a', '#428bca' );
+$oaf_palette = oaf_person_palette();
 
 echo '<div ' . $oaf_wrapper . '>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- core-escaped wrapper.
 

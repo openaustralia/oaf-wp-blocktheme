@@ -7,7 +7,7 @@ Description: Block theme for the OpenAustralia Foundation - a charity running pu
 Requires at least: 6.6
 Tested up to: 6.8
 Requires PHP: 8.3
-Version: 1.1.1
+Version: 0.0.5
 License: GNU General Public License v2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: oaf-wp-blocktheme
@@ -56,7 +56,8 @@ body {
    matching the OAF Theme.html flex-column layout. */
 .wp-site-blocks > *,
 .oaf-main > *,
-.oaf-page-main > * { margin-block-start: 0; margin-block-end: 0; }
+.oaf-page-main > *,
+.oaf-page-content > * { margin-block-start: 0; margin-block-end: 0; }
 
 /* Headings use the tight display stack everywhere. */
 h1, h2, h3, h4,
@@ -379,7 +380,7 @@ a:hover { color: var(--oaf-link-hover); }
 /* ---------- Blog teasers (static + query loop) ---------- */
 .oaf-teaser-grid {
 	display: grid;
-	grid-template-columns: repeat(3, 1fr);
+	grid-template-columns: repeat(2, 1fr);
 	gap: 34px 28px;
 	list-style: none;
 	margin: 0;
