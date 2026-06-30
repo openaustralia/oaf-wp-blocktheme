@@ -1,5 +1,5 @@
 /*
-Theme Name: OpenAustralia Foundation
+Theme Name: OpenAustralia Foundation (Block Theme)
 Theme URI: https://www.oaf.org.au/
 Author: OpenAustralia Foundation
 Author URI: https://www.oaf.org.au/
@@ -7,7 +7,7 @@ Description: Block theme for the OpenAustralia Foundation - a charity running pu
 Requires at least: 6.6
 Tested up to: 6.8
 Requires PHP: 8.3
-Version: 0.0.5
+Version: 0.0.1
 License: GNU General Public License v2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: oaf-wp-blocktheme
@@ -779,6 +779,8 @@ textarea.oaf-input { resize: vertical; }
 .oaf-darkpanel .oaf-ct { padding-top: 44px; padding-bottom: 44px; }
 .oaf-darkpanel h2 { color: #fff; font-size: 24px; margin: 0; }
 .oaf-darkpanel p { font-family: var(--oaf-font-sans); color: rgba(255, 255, 255, 0.82); font-size: 15.5px; line-height: 1.7; margin: 12px 0 0; }
+/* Maroon variant of the dark inset panel - reuses the white-text rules above. */
+.oaf-darkpanel--maroon { background: var(--oaf-maroon); }
 
 /* Spacer helper for white/sand content bands */
 .oaf-band { padding-top: 58px; padding-bottom: 58px; }
