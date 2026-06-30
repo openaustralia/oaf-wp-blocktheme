@@ -32,7 +32,7 @@ patterns/            header, footer, donate-band, home-collection,
 assets/fonts/        Self-hosted Fira Sans + Merriweather woff2 (SIL OFL 1.1, see OFL.txt)
 assets/img/          OAF wordmarks, ACNC tick, service logos
 languages/           Translation files (.pot/.po/.mo) - text domain oaf-wp-blocktheme
-LICENSE              GNU General Public License v2
+LICENSE              GNU General Public License v2 or later
 ```
 
 The header masthead and the canonical footer (attribution, charity status + ABN,
@@ -146,6 +146,33 @@ sh .wp-setup.sh                                # optional: seed demo posts/pages
 `.wp-env.json` and `.wp-setup.sh` are development conveniences and have no effect on a normal
 install. (On this network `wp-env`/Node may need
 `NODE_OPTIONS=--network-family-autoselection-attempt-timeout=5000` to avoid connection timeouts.)
+
+## Trademarks and branding
+
+The [GPL](LICENSE) covers the theme's **code**. It does **not** grant any rights to the brand
+assets bundled with the theme - those are included only so the theme renders the OpenAustralia
+Foundation site as designed.
+
+- **OpenAustralia Foundation name and wordmark** (`assets/img/oaf-wordmark-*.svg`), and the
+  names and logos of our services - **Planning Alerts**, **Right to Know**, **They Vote for
+  You** and **OpenAustralia.org.au** (`assets/img/services/`) - are trademarks of the
+  OpenAustralia Foundation. They remain our property and are not licensed under the GPL. If you
+  fork, redistribute or adapt this theme you must remove or replace these names and logos, and
+  must not use them in any way that suggests the OpenAustralia Foundation produces, endorses or
+  is affiliated with your version.
+- **The ACNC Registered Charity Tick** (`assets/img/acnc/`) is **not ours to license**.
+  Copyright in the Tick is owned by the Commonwealth of Australia (represented by the
+  Commissioner of the ACNC), and the OpenAustralia Foundation uses it under a non-transferable,
+  non-sub-licensable licence that applies only while it remains an ACNC-registered charity. It
+  is **not** covered by the GPL and is **not** included for reuse. If you fork or redistribute
+  this theme you must remove the Tick. Registered charities may obtain their own from the ACNC
+  Charity Portal and must use it under the ACNC's
+  [Terms and Conditions](https://www.acnc.gov.au/charity/registered-charity-tick/terms-and-conditions)
+  - including hyperlinking it to their own Charity Register listing and following the Registered
+  Charity Tick Style Guide.
+
+The bundled Fira Sans and Merriweather fonts are licensed separately under the SIL Open Font
+License 1.1 (see `assets/fonts/OFL.txt`).
 
 ## License
 
