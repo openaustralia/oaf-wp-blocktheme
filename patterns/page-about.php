@@ -66,7 +66,7 @@
 				<p>In 2004 Matthew Landauer and Katherine Szuminska attended the launch of TheyWorkForYou in the UK and were inspired to build something similar in Australia. Three years later, the first rough prototype of OpenAustralia.org went live.</p>
 				<!-- /wp:paragraph -->
 				<!-- wp:paragraph -->
-				<p>Since then - with volunteers, donations and a few grants - we&rsquo;ve grown to run four services used by hundreds of thousands of people. Right to Know runs on Alaveteli, software built and maintained by mySociety. We credit the work we build on.</p>
+				<p>Since then - with volunteers, donations and a few grants - we&rsquo;ve grown to run four services used by hundreds of thousands of people. Some of our services build on open-source software created and maintained by others, and we always credit the work we build on.</p>
 				<!-- /wp:paragraph -->
 			</div>
 			<!-- /wp:column -->
