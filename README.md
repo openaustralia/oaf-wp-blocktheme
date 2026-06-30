@@ -99,7 +99,7 @@ driven by templates.
 People are managed under **Admin → People** (a custom post type), not in page markup:
 
 - **Add / edit / remove** a person like a post. Fields: **Name** (title), **Bio** (editor),
-  **Role** (sidebar box, e.g. "Acting Executive Officer"), **Photo** (Featured image, optional),
+  **Role** (sidebar box, e.g. "Chief Executive Officer"), **Photo** (Featured image, optional),
   and **Order** (Page Attributes, for manual sorting).
 - **Groups** is a taxonomy seeded with **Team** and **Board of directors**; assign each person
   to a group, rename them, or add more groups later.
