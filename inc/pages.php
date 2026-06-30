@@ -21,46 +21,54 @@ if ( ! function_exists( 'oaf_required_pages' ) ) {
 	 * pages whose body is supplied by a template (home, blog). `template` is the
 	 * custom page template to assign (via the `_wp_page_template` meta); the
 	 * pattern-backed pages supply their own hero, so they use the `page-no-title`
-	 * canvas template to avoid the title hero that `page.html` adds.
+	 * canvas template to avoid the title hero that `page.html` adds. `parent`, when
+	 * set, is the slug of another required page to nest this one under; it is
+	 * applied as `post_parent` when the page is first created.
 	 *
-	 * @return array<string,array{title:string,pattern:?string,template:?string}>
+	 * @return array<string,array{title:string,pattern:?string,template:?string,parent?:string}>
 	 */
 	function oaf_required_pages() {
 		return array(
-			'home'       => array(
+			'home'         => array(
 				'title'    => __( 'Home', 'oaf-wp-blocktheme' ),
 				'pattern'  => null,
 				'template' => null,
 			),
-			'blog'       => array(
+			'blog'         => array(
 				'title'    => __( 'Blog', 'oaf-wp-blocktheme' ),
 				'pattern'  => null,
 				'template' => null,
 			),
-			'about'      => array(
+			'about'        => array(
 				'title'    => __( 'About', 'oaf-wp-blocktheme' ),
 				'pattern'  => 'oaf/page-about',
 				'template' => 'page-no-title',
 			),
-			'collection' => array(
+			'collection'   => array(
 				'title'    => __( 'Collection', 'oaf-wp-blocktheme' ),
 				'pattern'  => 'oaf/page-collection',
 				'template' => 'page-no-title',
 			),
-			'people'     => array(
+			'people'       => array(
 				'title'    => __( 'People', 'oaf-wp-blocktheme' ),
 				'pattern'  => 'oaf/page-people',
 				'template' => 'page-no-title',
 			),
-			'contact'    => array(
+			'contact'      => array(
 				'title'    => __( 'Contact', 'oaf-wp-blocktheme' ),
 				'pattern'  => 'oaf/page-contact',
 				'template' => 'page-no-title',
 			),
-			'donate'     => array(
+			'donate'       => array(
 				'title'    => __( 'Donate', 'oaf-wp-blocktheme' ),
 				'pattern'  => 'oaf/page-donate',
 				'template' => 'page-no-title',
+			),
+			'alternatives' => array(
+				'title'    => __( 'Other ways to give', 'oaf-wp-blocktheme' ),
+				'pattern'  => 'oaf/page-donate-alternatives',
+				'template' => 'page-no-title',
+				'parent'   => 'donate',
 			),
 		);
 	}
@@ -213,6 +221,16 @@ if ( ! function_exists( 'oaf_write_page' ) ) {
 			);
 		}
 
+		// Nest under a parent page (e.g. /donate/alternatives/) when the slug
+		// declares one and that parent currently exists outside the Trash.
+		$post_parent = 0;
+		if ( ! empty( $pages[ $slug ]['parent'] ) ) {
+			$parent_found = oaf_find_required_page( $pages[ $slug ]['parent'] );
+			if ( $parent_found['post'] instanceof WP_Post && ! $parent_found['trashed'] ) {
+				$post_parent = (int) $parent_found['post']->ID;
+			}
+		}
+
 		$id = wp_insert_post(
 			array(
 				'post_type'    => 'page',
@@ -220,6 +238,7 @@ if ( ! function_exists( 'oaf_write_page' ) ) {
 				'post_title'   => $pages[ $slug ]['title'],
 				'post_name'    => $slug,
 				'post_content' => $content,
+				'post_parent'  => $post_parent,
 			)
 		);
 

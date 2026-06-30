@@ -32,6 +32,17 @@
 		</properties>
 	</rule>
 
+	<!-- oaf_stat() returns markup the wp-alaveteli-stats plugin has already
+	     escaped (and escapes its own fallback), so treat it as an escaping
+	     function rather than re-escaping at every call site. -->
+	<rule ref="WordPress.Security.EscapeOutput">
+		<properties>
+			<property name="customEscapingFunctions" type="array">
+				<element value="oaf_stat"/>
+			</property>
+		</properties>
+	</rule>
+
 	<rule ref="WordPress.NamingConventions.PrefixAllGlobals">
 		<properties>
 			<property name="prefixes" type="array">

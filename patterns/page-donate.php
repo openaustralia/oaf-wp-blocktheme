@@ -43,6 +43,9 @@
 			<!-- wp:html -->
 			<p class="oaf-fineprint">OpenAustralia Foundation is a charity registered with ACNC and endorsed for charity tax concessions. At this time, donations are <strong>not</strong> tax deductible.</p>
 			<!-- /wp:html -->
+			<!-- wp:paragraph -->
+			<p>Prefer not to use a card? <a href="/donate/alternatives/">See other ways to give</a>.</p>
+			<!-- /wp:paragraph -->
 		</div>
 		<!-- /wp:group -->
 		<!-- wp:group {"layout":{"type":"default"}} -->
@@ -53,7 +56,7 @@
 			<!-- wp:html -->
 			<ul class="oaf-funds">
 				<li><span class="oaf-funds__check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"></polyline></svg></span><div><div class="oaf-funds__h">Sends the alerts</div><div class="oaf-funds__b">Planning Alerts emailed 1.4 million alerts last year. Your donation keeps the scrapers running.</div></div></li>
-				<li><span class="oaf-funds__check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"></polyline></svg></span><div><div class="oaf-funds__h">Keeps the archive public</div><div class="oaf-funds__b">Right to Know carries 12,346 FOI requests, archived for everyone to read.</div></div></li>
+				<li><span class="oaf-funds__check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"></polyline></svg></span><div><div class="oaf-funds__h">Keeps the archive public</div><div class="oaf-funds__b">Right to Know carries <?php echo oaf_stat( 'visible_request_count', '12,346' ); ?> FOI requests, archived for everyone to read.</div></div></li>
 				<li><span class="oaf-funds__check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"></polyline></svg></span><div><div class="oaf-funds__h">Explains the votes</div><div class="oaf-funds__b">They Vote for You turns 200+ parliamentary divisions into plain English each year.</div></div></li>
 				<li><span class="oaf-funds__check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"></polyline></svg></span><div><div class="oaf-funds__h">No ads, no data selling</div><div class="oaf-funds__b">We don&rsquo;t run ads or sell your details. Donations from people like you keep us independent.</div></div></li>
 			</ul>
