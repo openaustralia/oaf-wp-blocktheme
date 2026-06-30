@@ -165,6 +165,167 @@ if ( ! function_exists( 'oaf_save_person_role' ) ) {
 }
 add_action( 'save_post_oaf_person', 'oaf_save_person_role' );
 
+if ( ! function_exists( 'oaf_person_columns' ) ) {
+	/**
+	 * Add Photo and Role columns to the People list table. The Photo and Role
+	 * cells double as the data source that Quick Edit reads from via JS, and the
+	 * Role column is what triggers the `quick_edit_custom_box` hook below.
+	 *
+	 * @param array<string,string> $columns Existing columns.
+	 * @return array<string,string>
+	 */
+	function oaf_person_columns( $columns ) {
+		$reordered = array();
+		foreach ( $columns as $key => $label ) {
+			if ( 'title' === $key ) {
+				$reordered['oaf_photo'] = __( 'Photo', 'oaf-wp-blocktheme' );
+			}
+			$reordered[ $key ] = $label;
+			if ( 'title' === $key ) {
+				$reordered['oaf_role'] = __( 'Role', 'oaf-wp-blocktheme' );
+			}
+		}
+		return $reordered;
+	}
+}
+add_filter( 'manage_oaf_person_posts_columns', 'oaf_person_columns' );
+
+if ( ! function_exists( 'oaf_person_column_content' ) ) {
+	/**
+	 * Render the Photo and Role columns. Quick Edit reads the Role text and the
+	 * thumbnail attachment id (only present when a photo is set) from here.
+	 *
+	 * @param string $column  Column key.
+	 * @param int    $post_id Person ID.
+	 */
+	function oaf_person_column_content( $column, $post_id ) {
+		if ( 'oaf_photo' === $column ) {
+			if ( has_post_thumbnail( $post_id ) ) {
+				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- get_the_post_thumbnail() returns safe core markup.
+				echo get_the_post_thumbnail( $post_id, array( 40, 40 ) );
+				printf( '<span class="oaf-thumb-id hidden">%d</span>', (int) get_post_thumbnail_id( $post_id ) );
+			} else {
+				echo '&mdash;';
+			}
+		} elseif ( 'oaf_role' === $column ) {
+			$role = get_post_meta( $post_id, '_oaf_role', true );
+			if ( '' === $role ) {
+				echo '&mdash;';
+			} else {
+				printf( '<span class="oaf-role-text">%s</span>', esc_html( $role ) );
+			}
+		}
+	}
+}
+add_action( 'manage_oaf_person_posts_custom_column', 'oaf_person_column_content', 10, 2 );
+
+if ( ! function_exists( 'oaf_person_quick_edit_box' ) ) {
+	/**
+	 * Render the Role field and featured-image control inside Quick Edit.
+	 *
+	 * Fires once per custom column; we render everything under the Role column so
+	 * the fieldset appears a single time. The values are blank here and populated
+	 * from the row by assets/js/quick-edit-person.js when the editor opens.
+	 *
+	 * @param string $column    Column key.
+	 * @param string $post_type Post type slug.
+	 */
+	function oaf_person_quick_edit_box( $column, $post_type ) {
+		if ( 'oaf_person' !== $post_type || 'oaf_role' !== $column ) {
+			return;
+		}
+		wp_nonce_field( 'oaf_person_quick_edit', 'oaf_person_quick_edit_nonce' );
+		?>
+		<fieldset class="inline-edit-col-right">
+			<div class="inline-edit-col">
+				<label class="inline-edit-group">
+					<span class="title"><?php esc_html_e( 'Role', 'oaf-wp-blocktheme' ); ?></span>
+					<span class="input-text-wrap">
+						<input type="text" name="oaf_person_role" class="oaf-quick-role" value="" />
+					</span>
+				</label>
+				<div class="inline-edit-group oaf-quick-photo">
+					<span class="title"><?php esc_html_e( 'Photo', 'oaf-wp-blocktheme' ); ?></span>
+					<span class="oaf-quick-photo-preview"></span>
+					<button type="button" class="button oaf-quick-photo-set"><?php esc_html_e( 'Set photo', 'oaf-wp-blocktheme' ); ?></button>
+					<button type="button" class="button-link oaf-quick-photo-remove"><?php esc_html_e( 'Remove', 'oaf-wp-blocktheme' ); ?></button>
+					<input type="hidden" name="oaf_thumbnail_id" class="oaf-quick-photo-id" value="" />
+				</div>
+			</div>
+		</fieldset>
+		<?php
+	}
+}
+add_action( 'quick_edit_custom_box', 'oaf_person_quick_edit_box', 10, 2 );
+
+if ( ! function_exists( 'oaf_save_person_quick_edit' ) ) {
+	/**
+	 * Persist the Role and featured image from Quick Edit.
+	 *
+	 * Quick Edit's inline-save routes through edit_post(), which handles neither
+	 * post meta nor the featured image, so we save both here. The thumbnail uses
+	 * core's convention: a positive id sets it, -1 removes it, and an empty value
+	 * (e.g. if the JS never ran) is left untouched so photos are never lost.
+	 *
+	 * @param int $post_id Person ID.
+	 */
+	function oaf_save_person_quick_edit( $post_id ) {
+		if ( ! isset( $_POST['oaf_person_quick_edit_nonce'] )
+			|| ! wp_verify_nonce( sanitize_key( $_POST['oaf_person_quick_edit_nonce'] ), 'oaf_person_quick_edit' ) ) {
+			return;
+		}
+		if ( ! current_user_can( 'edit_post', $post_id ) ) {
+			return;
+		}
+		if ( isset( $_POST['oaf_person_role'] ) ) {
+			update_post_meta( $post_id, '_oaf_role', sanitize_text_field( wp_unslash( $_POST['oaf_person_role'] ) ) );
+		}
+		if ( isset( $_POST['oaf_thumbnail_id'] ) ) {
+			$thumb = (int) wp_unslash( $_POST['oaf_thumbnail_id'] );
+			if ( $thumb > 0 ) {
+				set_post_thumbnail( $post_id, $thumb );
+			} elseif ( -1 === $thumb ) {
+				delete_post_thumbnail( $post_id );
+			}
+		}
+	}
+}
+add_action( 'save_post_oaf_person', 'oaf_save_person_quick_edit' );
+
+if ( ! function_exists( 'oaf_person_admin_assets' ) ) {
+	/**
+	 * Enqueue the media library and Quick Edit script on the People list screen.
+	 *
+	 * @param string $hook Current admin page.
+	 */
+	function oaf_person_admin_assets( $hook ) {
+		if ( 'edit.php' !== $hook ) {
+			return;
+		}
+		$screen = get_current_screen();
+		if ( ! $screen || 'oaf_person' !== $screen->post_type ) {
+			return;
+		}
+		wp_enqueue_media();
+		wp_enqueue_script(
+			'oaf-quick-edit-person',
+			get_template_directory_uri() . '/assets/js/quick-edit-person.js',
+			array( 'jquery', 'inline-edit-post' ),
+			wp_get_theme()->get( 'Version' ),
+			true
+		);
+		wp_localize_script(
+			'oaf-quick-edit-person',
+			'oafQuickEditPerson',
+			array(
+				'mediaTitle'  => __( 'Select photo', 'oaf-wp-blocktheme' ),
+				'mediaButton' => __( 'Use this photo', 'oaf-wp-blocktheme' ),
+			)
+		);
+	}
+}
+add_action( 'admin_enqueue_scripts', 'oaf_person_admin_assets' );
+
 if ( ! function_exists( 'oaf_person_initials' ) ) {
 	/**
 	 * Up to two uppercase initials derived from a name.
