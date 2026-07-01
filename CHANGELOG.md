@@ -6,6 +6,25 @@ in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project aims to follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.0] - 2026-07-01
+
+### Changed
+
+- Rebuilt the Contact page pattern around a working contact form. The old
+  placeholder `<form>` (a Custom HTML block that never sent mail and was stripped
+  by WordPress.com's content sanitiser) is replaced with Jetpack Form blocks,
+  which survive sanitising and deliver submissions.
+- The form is organised as an accordion by enquiry type, each routed to its own
+  inbox with a subject prefix: general (`contact@oaf.org.au`, `[OAF Contact]`),
+  media (`media@oaf.org.au`, `[Media Contact]`), and government or law
+  enforcement (`exec@oaf.org.au`, `[OAF Contact: Gov/LEO]`, with organisation,
+  phone and file-attachment fields and a "gov/LEO only" notice).
+- Questions about a specific service now point people to that service's help
+  page and support address (Right to Know, They Vote for You, PlanningAlerts,
+  OpenAustralia.org.au) rather than a form.
+- Removed the "We're not on Facebook, Instagram or X." line from the contact
+  channels.
+
 ## [1.0.0] - 2026-07-01
 
 First stable release: a full-site-editing (FSE) block theme for oaf.org.au,
