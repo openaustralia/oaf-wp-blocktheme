@@ -7,7 +7,7 @@ Description: Block theme for the OpenAustralia Foundation - a charity running pu
 Requires at least: 6.6
 Tested up to: 6.8
 Requires PHP: 8.3
-Version: 1.1.0
+Version: 1.2.0
 License: GNU General Public License v2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: oaf-wp-blocktheme
@@ -708,70 +708,7 @@ textarea.oaf-input { resize: vertical; }
 .oaf-channels__name { color: var(--oaf-link); font-weight: 700; }
 .oaf-channels__handle { color: var(--oaf-muted); font-family: var(--oaf-font-mono); font-size: 12.5px; }
 
-/* ---------- Contact accordion + Jetpack forms ---------- */
-.oaf-accordion__lead { font-family: var(--oaf-font-sans); font-size: 14px; color: var(--oaf-muted); margin: 0 0 18px; }
-.oaf-accordion .wp-block-details {
-	background: #fff;
-	border: 1px solid var(--oaf-border);
-	border-radius: 6px;
-	margin-bottom: 14px;
-}
-.oaf-accordion .wp-block-details > summary {
-	list-style: none;
-	cursor: pointer;
-	position: relative;
-	padding: 16px 44px 16px 20px;
-	font-family: var(--oaf-font-sans);
-	font-size: 15px;
-	font-weight: 700;
-	color: var(--oaf-ink);
-}
-.oaf-accordion .wp-block-details > summary::-webkit-details-marker { display: none; }
-.oaf-accordion .wp-block-details > summary::after {
-	content: "";
-	position: absolute;
-	right: 22px;
-	top: 50%;
-	width: 9px;
-	height: 9px;
-	border-right: 2px solid var(--oaf-maroon);
-	border-bottom: 2px solid var(--oaf-maroon);
-	transform: translateY(-70%) rotate(45deg);
-	transition: transform .15s ease;
-}
-.oaf-accordion .wp-block-details[open] > summary::after { transform: translateY(-30%) rotate(225deg); }
-.oaf-accordion .wp-block-details > summary:focus-visible { outline: 2px solid var(--oaf-maroon); outline-offset: 2px; }
-.oaf-accordion .wp-block-details > *:not(summary) { margin-left: 20px; margin-right: 20px; }
-.oaf-accordion .wp-block-details > *:last-child { margin-bottom: 20px; }
-.oaf-accordion .wp-block-details p { font-family: var(--oaf-font-sans); font-size: 14px; line-height: 1.6; color: var(--oaf-body); }
-
-/* Government / law-enforcement notice */
-.oaf-notice {
-	background: #fbf2f2;
-	border-left: 3px solid var(--oaf-maroon);
-	border-radius: 4px;
-	padding: 12px 14px;
-	font-size: 13.5px !important;
-	color: var(--oaf-ink) !important;
-}
-
-/* Service enquiries: help link + email per service */
-.oaf-services { list-style: none; padding: 0; margin: 0; }
-.oaf-services li {
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	gap: 12px;
-	flex-wrap: wrap;
-	padding: 11px 0;
-	border-bottom: 1px solid var(--oaf-hair);
-}
-.oaf-services li:last-child { border-bottom: none; }
-.oaf-services__name { font-family: var(--oaf-font-sans); font-size: 14px; font-weight: 700; color: var(--oaf-ink); }
-.oaf-services__links { display: flex; gap: 14px; }
-.oaf-services__links a { font-family: var(--oaf-font-sans); font-size: 13px; color: var(--oaf-link); text-decoration: none; }
-.oaf-services__links a:hover { color: var(--oaf-link-hover); text-decoration: underline; }
-
+/* ---------- Contact form (Jetpack) ---------- */
 /* Jetpack Form fields -> match the OAF form look */
 .wp-block-jetpack-contact-form label { font-family: var(--oaf-font-sans); font-size: 13px; font-weight: 700; color: var(--oaf-ink); }
 .wp-block-jetpack-contact-form input[type="text"],
@@ -813,6 +750,43 @@ textarea.oaf-input { resize: vertical; }
 }
 .wp-block-jetpack-contact-form .wp-block-button__link:hover,
 .wp-block-jetpack-contact-form button[type="submit"]:hover { background: #5e0000; }
+
+/* Multi-step form: step-1 hint, progress indicator, navigation */
+.oaf-form-hint { font-family: var(--oaf-font-sans); font-size: 13px; line-height: 1.6; color: var(--oaf-muted); margin: 0 0 18px; }
+.oaf-form-hint a { color: var(--oaf-link); }
+.wp-block-jetpack-form-progress-indicator { margin-bottom: 20px; }
+/* "Back" is secondary: outline, not a maroon fill */
+.wp-block-jetpack-contact-form .form-button-previous .wp-block-button__link {
+	background: transparent;
+	color: var(--oaf-maroon);
+	border: 1.5px solid var(--oaf-border);
+}
+.wp-block-jetpack-contact-form .form-button-previous .wp-block-button__link:hover {
+	background: #fff;
+	border-color: var(--oaf-maroon);
+}
+
+/* Reactive alerts shown under the step-1 enquiry-type choice */
+.oaf-hidden { display: none !important; }
+.oaf-form-alert {
+	margin: 16px 0 0;
+	padding: 12px 14px;
+	border-radius: 4px;
+	background: #fbf2f2;
+	border-left: 3px solid var(--oaf-maroon);
+}
+.oaf-form-alert p {
+	margin: 0;
+	font-family: var(--oaf-font-sans);
+	font-size: 13.5px;
+	line-height: 1.55;
+	color: var(--oaf-ink);
+}
+.oaf-service-direct {
+	background: #eef2f7;
+	border-left-color: var(--oaf-link);
+}
+.oaf-service-direct a { color: var(--oaf-link); font-weight: 700; text-underline-offset: 2px; }
 
 .oaf-freq { display: flex; gap: 8px; margin-bottom: 22px; background: var(--oaf-sand); padding: 4px; border-radius: 4px; }
 .oaf-freq__btn {

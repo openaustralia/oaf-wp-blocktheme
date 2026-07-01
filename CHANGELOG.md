@@ -6,6 +6,35 @@ in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project aims to follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.0] - 2026-07-01
+
+### Changed
+
+- Reworked the Contact page form from a per-enquiry accordion into a single
+  Jetpack multi-step form (progress indicator, Back/Next navigation): step 1
+  asks what the enquiry is about, step 2 collects details, step 3 the message
+  and an optional file attachment.
+- Routing now happens in PHP (`inc/contact-form.php`) via the `contact_form_to`
+  and `contact_form_subject` filters, keyed on the step-1 choice: general
+  (`contact@oaf.org.au`), media (`media@oaf.org.au`, `[Media Contact]`) and
+  government or law enforcement (`exec@oaf.org.au`, `[OAF Contact: Gov/LEO]`),
+  with each service routed to its own `contact@` address.
+- Warmer, mySociety-inspired copy, including a "check the service's help page
+  first" nudge on step 1.
+
+### Added
+
+- Reactive step-1 behaviour (`assets/js/contact-form.js`): choosing a specific
+  service shows a "contact that team directly" link, and every enquiry except
+  media and government/law enforcement shows a "we are not the government"
+  notice.
+
+### Fixed
+
+- The file-upload field now renders its visible, clickable drop zone. The
+  previous markup omitted the inner dropzone block, so the upload control
+  collapsed to zero height and could not be used.
+
 ## [1.1.0] - 2026-07-01
 
 ### Changed
