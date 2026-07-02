@@ -70,9 +70,49 @@ GitHub Theme URI: openaustralia/oaf-wp-blocktheme
 Primary Branch: main
 ```
 
-With the repo public, no token is required. To cut a release, bump `Version:` in `style.css`
-and push/tag on `main`; Git Updater offers the update on connected sites. (For a private repo
-you would instead add a GitHub Personal Access Token in Git Updater's settings.)
+With the repo public, no token is required. Git Updater tracks `main` and reads the `Version:`
+header in `style.css`; connected sites are offered the update once that version is greater than
+the installed one. (For a private repo you would instead add a GitHub Personal Access Token in
+Git Updater's settings.)
+
+Releases and the production update are automated, so the day-to-day flow is just: bump `Version:`
+in `style.css`, add a matching `## [x.y.z]` entry to `CHANGELOG.md`, and merge to `main`. See
+[Continuous integration and releases](#continuous-integration-and-releases) below.
+
+## Continuous integration and releases
+
+Two GitHub Actions workflows run this repo's CI/CD.
+
+**CI ([`.github/workflows/php.yml`](.github/workflows/php.yml))** runs on every pull request and
+on pushes to `main`:
+
+- **lint** - `composer validate`, `php -l` on all theme PHP, and PHPCS (WPCS ruleset in
+  `phpcs.xml.dist`).
+- **validate** - checks `theme.json` and both `blocks/*/block.json` parse as JSON, that
+  `parts/header.html` and `parts/footer.html` are present, and that the `Version:` in `style.css`
+  has a matching `## [x.y.z]` section in `CHANGELOG.md`.
+- **theme-check** - boots WordPress and runs the official Theme Check plugin against the theme.
+  Report-only for now (it does not block merges); promote it to a required check once its output
+  is clean.
+
+**Release ([`.github/workflows/release.yml`](.github/workflows/release.yml))** runs on pushes to
+`main` only (never on pull requests, so forks never see the deploy secret):
+
+1. If the `Version:` in `style.css` has no matching `vX.Y.Z` git tag, it cuts that tag and a
+   GitHub Release, using the matching `CHANGELOG.md` section as the release notes. If the tag
+   already exists, nothing happens.
+2. When a release is cut, it then flushes the Git Updater cache and triggers the theme update on
+   the production site through the [Git Updater Remote Management REST API](https://git-updater.com/knowledge-base/remote-management-restful-endpoints/),
+   then verifies the reported version.
+
+So to ship: bump `Version:` in `style.css`, add the `CHANGELOG.md` entry, and merge to `main` -
+the tag, the release, and the production update all happen automatically.
+
+The deploy step needs two repository-level settings (Settings → Secrets and variables → Actions):
+
+- **Secret `GU_REST_KEY`** - the Git Updater Remote Management REST API key from the production
+  site's Git Updater settings.
+- **Variable `WP_SITE_URL`** - the production base URL (for example `https://www.oaf.org.au`).
 
 ## Theme settings & one-click setup
 

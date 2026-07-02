@@ -1,4 +1,4 @@
-name: PHP
+name: CI
 
 on:
   pull_request:
@@ -33,3 +33,109 @@ jobs:
 
       - name: PHPCS
         run: composer run phpcs
+
+  validate:
+    name: Validate theme files
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate JSON
+        run: |
+          fail=0
+          for f in theme.json blocks/*/block.json; do
+            if [ ! -f "$f" ]; then
+              echo "::error file=$f::Expected JSON file is missing"
+              fail=1
+              continue
+            fi
+            if jq empty "$f" 2>/tmp/jqerr; then
+              echo "OK   $f"
+            else
+              echo "::error file=$f::Invalid JSON — $(cat /tmp/jqerr)"
+              fail=1
+            fi
+          done
+          exit $fail
+
+      - name: Template parts present
+        run: |
+          fail=0
+          for part in parts/header.html parts/footer.html; do
+            if [ -f "$part" ]; then
+              echo "OK   $part"
+            else
+              echo "::error file=$part::Required template part is missing (see the parts/ gitignore trap)"
+              fail=1
+            fi
+          done
+          exit $fail
+
+      - name: Version and changelog consistency
+        run: |
+          version=$(grep -m1 -E '^Version:' style.css | sed -E 's/^Version:[[:space:]]*//' | tr -d '[:space:]')
+          if [ -z "$version" ]; then
+            echo "::error file=style.css::Could not read Version header"
+            exit 1
+          fi
+          echo "style.css Version: $version"
+          if grep -qE "^## \[$(printf '%s' "$version" | sed 's/\./\\./g')\]" CHANGELOG.md; then
+            echo "OK   CHANGELOG.md has an entry for $version"
+          else
+            echo "::error file=CHANGELOG.md::No '## [$version]' section for the current style.css version"
+            exit 1
+          fi
+
+  theme-check:
+    name: WordPress Theme Check
+    runs-on: ubuntu-latest
+    # Report-only for now: Theme Check emits INFO/RECOMMENDED notices that should
+    # not hard-block merges. Promote to a required check once the output is clean.
+    continue-on-error: true
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: wordpress
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -uroot -proot"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+    steps:
+      - name: Check out theme
+        uses: actions/checkout@v4
+        with:
+          path: oaf-wp-blocktheme
+
+      - name: Set up PHP + WP-CLI
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          tools: wp-cli
+          coverage: none
+
+      - name: Install WordPress
+        run: |
+          wp core download --path=wp --version=latest
+          wp config create --path=wp \
+            --dbname=wordpress --dbuser=root --dbpass=root \
+            --dbhost=127.0.0.1:3306
+          wp core install --path=wp \
+            --url=http://localhost --title="Theme Check" \
+            --admin_user=admin --admin_password=admin \
+            --admin_email=ci@example.com --skip-email
+
+      - name: Install theme under test
+        run: cp -R oaf-wp-blocktheme wp/wp-content/themes/oaf-wp-blocktheme
+
+      - name: Run Theme Check
+        run: |
+          # wp-cli-themecheck drives the official Theme Check plugin, so it must
+          # be installed and active first.
+          wp plugin install theme-check --activate --path=wp
+          wp package install anhskohbo/wp-cli-themecheck --path=wp
+          wp theme-check oaf-wp-blocktheme --path=wp
