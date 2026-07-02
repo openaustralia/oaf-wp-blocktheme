@@ -130,12 +130,56 @@ jobs:
             --admin_email=ci@example.com --skip-email
 
       - name: Install theme under test
-        run: cp -R oaf-wp-blocktheme wp/wp-content/themes/oaf-wp-blocktheme
+        run: |
+          # Copy only what ships in the theme; dev-only dirs would add noise.
+          dest=wp/wp-content/themes/oaf-wp-blocktheme
+          mkdir -p "$dest"
+          rsync -a --delete \
+            --exclude='.git' --exclude='.github' --exclude='vendor' \
+            --exclude='node_modules' --exclude='.playwright-mcp' \
+            oaf-wp-blocktheme/ "$dest/"
 
       - name: Run Theme Check
         run: |
-          # wp-cli-themecheck drives the official Theme Check plugin, so it must
-          # be installed and active first.
-          wp plugin install theme-check --activate --path=wp
-          wp package install anhskohbo/wp-cli-themecheck --path=wp
-          wp theme-check oaf-wp-blocktheme --path=wp
+          # Drive the official Theme Check plugin directly via its run_themechecks()
+          # API — avoids `wp package install` (Composer VCS auth fails on runners).
+          wp plugin install theme-check --path=wp
+          cat > "$RUNNER_TEMP/themecheck.php" <<'PHP'
+          <?php
+          require_once WP_PLUGIN_DIR . '/theme-check/checkbase.php';
+          require_once WP_PLUGIN_DIR . '/theme-check/main.php';
+
+          $slug  = 'oaf-wp-blocktheme';
+          $theme = wp_get_theme( $slug );
+          $dir   = $theme->get_stylesheet_directory();
+
+          $php = $css = $other = array();
+          $it  = new RecursiveIteratorIterator(
+              new RecursiveDirectoryIterator( $dir, FilesystemIterator::SKIP_DOTS )
+          );
+          foreach ( $it as $file ) {
+              $path = $file->getPathname();
+              switch ( strtolower( pathinfo( $path, PATHINFO_EXTENSION ) ) ) {
+                  case 'php': $php[ $path ] = file_get_contents( $path ); break;
+                  case 'css': $css[ $path ] = file_get_contents( $path ); break;
+                  default:    $other[ $path ] = ''; break;
+              }
+          }
+
+          run_themechecks( $php, $css, $other, array( 'theme' => $theme, 'slug' => $slug ) );
+
+          global $themechecks;
+          $required = 0;
+          foreach ( (array) $themechecks as $check ) {
+              if ( ! is_object( $check ) || ! method_exists( $check, 'getError' ) ) { continue; }
+              foreach ( (array) $check->getError() as $e ) {
+                  $e = trim( html_entity_decode( wp_strip_all_tags( $e ) ) );
+                  if ( '' === $e ) { continue; }
+                  echo $e, "\n";
+                  if ( false !== stripos( $e, 'REQUIRED' ) ) { $required++; }
+              }
+          }
+          echo "\n== {$required} REQUIRED issue(s) ==\n";
+          if ( $required > 0 ) { exit( 1 ); }
+          PHP
+          wp eval-file "$RUNNER_TEMP/themecheck.php" --path=wp
