@@ -5,11 +5,13 @@
  * Categories: oaf
  * Block Types: core/post-content
  * Post Types: page
- * Description: Full Contact page - hero plus an accordion that routes each kind of enquiry (general, service question, media, government) to the right inbox, and the contact channels.
+ * Description: Full Contact page - hero plus a Jetpack multi-step form that routes each kind of enquiry (general, service, media, government) to the right inbox, and the contact channels.
  *
- * The forms are Jetpack Form blocks (jetpack/contact-form). Each has its own
- * recipient (to) and subject prefix, set as block attributes. Jetpack blocks
- * survive wp_kses on WordPress.com where a raw <form> would be stripped.
+ * The form is a single Jetpack multi-step Form block. Step one asks what the
+ * enquiry is about; inc/contact-form.php reads that choice and routes the
+ * submission to the right inbox with a subject prefix (contact_form_to /
+ * contact_form_subject filters). Keep the field-select options below in sync
+ * with oaf_contact_routes() in inc/contact-form.php.
  *
  * @package oaf-wp-blocktheme
  */
@@ -26,7 +28,7 @@
 		<h1 class="wp-block-heading">Get in touch.</h1>
 		<!-- /wp:heading -->
 		<!-- wp:paragraph {"className":"oaf-lead"} -->
-		<p class="oaf-lead">We&rsquo;re a small charity and we read everything. Whether you want to volunteer, partner, report a problem, or ask a question, here&rsquo;s how to reach us.</p>
+		<p class="oaf-lead">We&rsquo;re a small team, and we read everything. Tell us what your message is about and we&rsquo;ll make sure it reaches the right person.</p>
 		<!-- /wp:paragraph -->
 	</div>
 	<!-- /wp:group -->
@@ -37,97 +39,72 @@
 <section class="wp-block-group alignfull oaf-band has-sand-background-color has-background">
 	<!-- wp:group {"className":"oaf-ct oaf-ct--920 oaf-grid-form","layout":{"type":"default"}} -->
 	<div class="wp-block-group oaf-ct oaf-ct--920 oaf-grid-form">
-		<!-- wp:group {"className":"oaf-accordion","layout":{"type":"default"}} -->
-		<div class="wp-block-group oaf-accordion">
-			<!-- wp:paragraph {"className":"oaf-accordion__lead"} -->
-			<p class="oaf-accordion__lead">Pick what your message is about so it reaches the right people.</p>
-			<!-- /wp:paragraph -->
+		<!-- wp:group {"className":"oaf-formwrap","layout":{"type":"default"}} -->
+		<div class="wp-block-group oaf-formwrap">
+			<!-- wp:jetpack/contact-form {"to":"contact@oaf.org.au","subject":"[OAF Contact]"} -->
+			<div class="wp-block-jetpack-contact-form">
+				<!-- wp:jetpack/form-progress-indicator /-->
 
-			<!-- wp:details {"showContent":true} -->
-			<details class="wp-block-details" open><summary>General enquiry</summary>
-				<!-- wp:jetpack/contact-form {"to":"contact@oaf.org.au","subject":"[OAF Contact]"} -->
-				<div class="wp-block-jetpack-contact-form">
-					<!-- wp:jetpack/field-name {"required":true} /-->
-					<!-- wp:jetpack/field-email {"required":true} /-->
-					<!-- wp:jetpack/field-textarea {"label":"Message","required":true} /-->
-					<!-- wp:button {"tagName":"button","type":"submit"} -->
-					<div class="wp-block-button"><button type="submit" class="wp-block-button__link wp-element-button">Send message</button></div>
-					<!-- /wp:button -->
+				<!-- wp:jetpack/form-step-container -->
+				<div class="jetpack-form-steps-wrapper"><div class="wp-block-jetpack-form-step-container jetpack-form-step-container"><!-- wp:jetpack/form-step {"stepLabel":"Your enquiry"} -->
+				<div class="wp-block-jetpack-form-step">
+					<!-- wp:paragraph {"className":"oaf-form-hint"} -->
+					<p class="oaf-form-hint">Each of our services has its own help pages and contact address, and that&rsquo;s usually the fastest way to get an answer. If your question is about one of them, please try there first: <a href="https://www.righttoknow.org.au/help/about">Right to Know</a>, <a href="https://theyvoteforyou.org.au/help/faq">They Vote for You</a>, <a href="https://www.planningalerts.org.au/faq">PlanningAlerts</a>, <a href="https://www.openaustralia.org.au/help/">OpenAustralia.org.au</a>.</p>
+					<!-- /wp:paragraph -->
+					<!-- wp:jetpack/field-select {"required":true,"options":["General enquiry","Right to Know","They Vote for You","PlanningAlerts","OpenAustralia.org.au","Media enquiry","Government or law enforcement"]} -->
+					<div><!-- wp:jetpack/label {"label":"What is your enquiry about?"} /-->
+					<!-- wp:jetpack/input {"placeholder":"Select one option","type":"dropdown"} /--></div>
+					<!-- /wp:jetpack/field-select -->
+					<!-- wp:html -->
+					<div class="oaf-form-alert oaf-service-direct oaf-hidden" role="note"><p><a class="oaf-service-direct__link" href="#"></a></p></div>
+					<div class="oaf-form-alert oaf-gov-disclaimer oaf-hidden" role="note"><p>I understand that OpenAustralia Foundation is <strong>not</strong> run by the government, and the OpenAustralia Foundation team <strong>cannot</strong> help me with personal matters relating to government services.</p></div>
+					<!-- /wp:html -->
 				</div>
-				<!-- /wp:jetpack/contact-form -->
-			</details>
-			<!-- /wp:details -->
+				<!-- /wp:jetpack/form-step -->
 
-			<!-- wp:details -->
-			<details class="wp-block-details"><summary>A question about one of our services</summary>
-				<!-- wp:paragraph -->
-				<p>You&rsquo;ll often find your answer faster on the service&rsquo;s own help pages. If you still need us after checking, email the service directly:</p>
-				<!-- /wp:paragraph -->
-				<!-- wp:html -->
-				<ul class="oaf-services">
-					<li>
-						<span class="oaf-services__name">Right to Know</span>
-						<span class="oaf-services__links"><a href="https://www.righttoknow.org.au/help/about">Help pages</a> <a href="mailto:contact@righttoknow.org.au?subject=Right%20to%20Know%20enquiry">Email</a></span>
-					</li>
-					<li>
-						<span class="oaf-services__name">They Vote for You</span>
-						<span class="oaf-services__links"><a href="https://theyvoteforyou.org.au/help/faq">Help pages</a> <a href="mailto:contact@theyvoteforyou.org.au?subject=They%20Vote%20for%20You%20enquiry">Email</a></span>
-					</li>
-					<li>
-						<span class="oaf-services__name">PlanningAlerts</span>
-						<span class="oaf-services__links"><a href="https://www.planningalerts.org.au/faq">Help pages</a> <a href="mailto:contact@planningalerts.org.au?subject=PlanningAlerts%20enquiry">Email</a></span>
-					</li>
-					<li>
-						<span class="oaf-services__name">OpenAustralia.org.au</span>
-						<span class="oaf-services__links"><a href="https://www.openaustralia.org.au/help/">Help pages</a> <a href="mailto:contact@openaustralia.org.au?subject=OpenAustralia.org.au%20enquiry">Email</a></span>
-					</li>
-				</ul>
-				<!-- /wp:html -->
-			</details>
-			<!-- /wp:details -->
-
-			<!-- wp:details -->
-			<details class="wp-block-details"><summary>Media enquiry</summary>
-				<!-- wp:jetpack/contact-form {"to":"media@oaf.org.au","subject":"[Media Contact]"} -->
-				<div class="wp-block-jetpack-contact-form">
-					<!-- wp:jetpack/field-name {"required":true} /-->
-					<!-- wp:jetpack/field-text {"label":"Outlet or publication"} /-->
-					<!-- wp:jetpack/field-email {"required":true} /-->
-					<!-- wp:jetpack/field-textarea {"label":"Message","required":true} /-->
-					<!-- wp:button {"tagName":"button","type":"submit"} -->
-					<div class="wp-block-button"><button type="submit" class="wp-block-button__link wp-element-button">Send message</button></div>
-					<!-- /wp:button -->
-				</div>
-				<!-- /wp:jetpack/contact-form -->
-			</details>
-			<!-- /wp:details -->
-
-			<!-- wp:details -->
-			<details class="wp-block-details"><summary>Government or law enforcement</summary>
-				<!-- wp:paragraph {"className":"oaf-notice"} -->
-				<p class="oaf-notice">This form is only for use by government or law enforcement. For any other enquiry, please use one of the options above.</p>
-				<!-- /wp:paragraph -->
-				<!-- wp:jetpack/contact-form {"to":"exec@oaf.org.au","subject":"[OAF Contact: Gov/LEO]"} -->
-				<div class="wp-block-jetpack-contact-form">
+				<!-- wp:jetpack/form-step {"stepLabel":"Your details"} -->
+				<div class="wp-block-jetpack-form-step">
 					<!-- wp:jetpack/field-name {"label":"Full name","required":true} /-->
-					<!-- wp:jetpack/field-text {"label":"Organisation or agency","required":true} /-->
-					<!-- wp:jetpack/field-email {"label":"Contact email","required":true} /-->
-					<!-- wp:jetpack/field-telephone {"label":"Contact phone","required":true} /-->
+					<!-- wp:jetpack/field-email {"label":"Email","required":true} /-->
+					<!-- wp:jetpack/field-text {"label":"Organisation or agency (if government or law enforcement)"} /-->
+					<!-- wp:jetpack/field-telephone {"label":"Phone (optional)"} /-->
+				</div>
+				<!-- /wp:jetpack/form-step -->
+
+				<!-- wp:jetpack/form-step {"stepLabel":"Your message"} -->
+				<div class="wp-block-jetpack-form-step">
 					<!-- wp:jetpack/field-textarea {"label":"Message","required":true} /-->
 					<!-- wp:jetpack/field-file -->
-					<div></div>
-					<!-- /wp:jetpack/field-file -->
-					<!-- wp:button {"tagName":"button","type":"submit"} -->
-					<div class="wp-block-button"><button type="submit" class="wp-block-button__link wp-element-button">Send message</button></div>
-					<!-- /wp:button -->
-				</div>
-				<!-- /wp:jetpack/contact-form -->
-			</details>
-			<!-- /wp:details -->
+					<div><!-- wp:jetpack/label {"label":"Upload a file","lock":{"move":true,"remove":true}} /-->
 
-			<!-- wp:paragraph {"className":"oaf-fineprint"} -->
-			<p class="oaf-fineprint">We don&rsquo;t sell or share your details, and we read everything you send us.</p>
-			<!-- /wp:paragraph -->
+					<!-- wp:jetpack/dropzone {"lock":{"move":true,"remove":true},"layout":{"type":"flex","justifyContent":"center","orientation":"vertical"}} -->
+					<div class="wp-block-jetpack-dropzone"><!-- wp:paragraph -->
+					<p>Drag and drop or click to select a file.</p>
+					<!-- /wp:paragraph --></div>
+					<!-- /wp:jetpack/dropzone --></div>
+					<!-- /wp:jetpack/field-file -->
+					<!-- wp:paragraph {"className":"oaf-fineprint"} -->
+					<p class="oaf-fineprint">We don&rsquo;t sell or share your details.</p>
+					<!-- /wp:paragraph -->
+				</div>
+				<!-- /wp:jetpack/form-step --></div></div>
+				<!-- /wp:jetpack/form-step-container -->
+
+				<!-- wp:jetpack/form-step-navigation {"layout":{"type":"flex","justifyContent":"right"}} -->
+				<div class="wp-block-jetpack-form-step-navigation__wrapper"><div class="wp-block-jetpack-form-step-navigation"><!-- wp:button {"tagName":"button","metadata":{"name":"Previous button"},"className":"is-style-outline form-button-previous is-previous"} -->
+				<div class="wp-block-button is-style-outline form-button-previous is-previous"><button type="button" class="wp-block-button__link wp-element-button">&larr; Back</button></div>
+				<!-- /wp:button -->
+
+				<!-- wp:button {"tagName":"button","metadata":{"name":"Next button"},"className":"form-button-next is-next"} -->
+				<div class="wp-block-button form-button-next is-next"><button type="button" class="wp-block-button__link wp-element-button">Next &rarr;</button></div>
+				<!-- /wp:button -->
+
+				<!-- wp:button {"tagName":"button","type":"submit","metadata":{"name":"Submit button"},"className":"form-button-submit is-submit"} -->
+				<div class="wp-block-button form-button-submit is-submit"><button type="submit" class="wp-block-button__link wp-element-button">Send message</button></div>
+				<!-- /wp:button --></div></div>
+				<!-- /wp:jetpack/form-step-navigation -->
+			</div>
+			<!-- /wp:jetpack/contact-form -->
 		</div>
 		<!-- /wp:group -->
 		<!-- wp:group {"layout":{"type":"default"}} -->
