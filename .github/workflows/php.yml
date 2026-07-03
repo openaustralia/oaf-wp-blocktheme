@@ -141,45 +141,9 @@ jobs:
 
       - name: Run Theme Check
         run: |
-          # Drive the official Theme Check plugin directly via its run_themechecks()
-          # API — avoids `wp package install` (Composer VCS auth fails on runners).
+          # Drive the official Theme Check plugin via its run_themechecks() API
+          # (avoids `wp package install`, whose Composer VCS auth fails on runners).
+          # The check logic lives in bin/theme-check.php so CI and the local
+          # `mise run theme-check` task run identical checks.
           wp plugin install theme-check --path=wp
-          cat > "$RUNNER_TEMP/themecheck.php" <<'PHP'
-          <?php
-          require_once WP_PLUGIN_DIR . '/theme-check/checkbase.php';
-          require_once WP_PLUGIN_DIR . '/theme-check/main.php';
-
-          $slug  = 'oaf-wp-blocktheme';
-          $theme = wp_get_theme( $slug );
-          $dir   = $theme->get_stylesheet_directory();
-
-          $php = $css = $other = array();
-          $it  = new RecursiveIteratorIterator(
-              new RecursiveDirectoryIterator( $dir, FilesystemIterator::SKIP_DOTS )
-          );
-          foreach ( $it as $file ) {
-              $path = $file->getPathname();
-              switch ( strtolower( pathinfo( $path, PATHINFO_EXTENSION ) ) ) {
-                  case 'php': $php[ $path ] = file_get_contents( $path ); break;
-                  case 'css': $css[ $path ] = file_get_contents( $path ); break;
-                  default:    $other[ $path ] = ''; break;
-              }
-          }
-
-          run_themechecks( $php, $css, $other, array( 'theme' => $theme, 'slug' => $slug ) );
-
-          global $themechecks;
-          $required = 0;
-          foreach ( (array) $themechecks as $check ) {
-              if ( ! is_object( $check ) || ! method_exists( $check, 'getError' ) ) { continue; }
-              foreach ( (array) $check->getError() as $e ) {
-                  $e = trim( html_entity_decode( wp_strip_all_tags( $e ) ) );
-                  if ( '' === $e ) { continue; }
-                  echo $e, "\n";
-                  if ( false !== stripos( $e, 'REQUIRED' ) ) { $required++; }
-              }
-          }
-          echo "\n== {$required} REQUIRED issue(s) ==\n";
-          if ( $required > 0 ) { exit( 1 ); }
-          PHP
-          wp eval-file "$RUNNER_TEMP/themecheck.php" --path=wp
+          wp eval-file oaf-wp-blocktheme/bin/theme-check.php --path=wp
