@@ -60,7 +60,7 @@ if ( ! function_exists( 'oaf_avatar_initials_svg' ) ) {
 	 *
 	 * @param string $name Full name.
 	 * @param int    $size Pixel size.
-	 * @return string `data:image/svg+xml;base64,…` URI.
+	 * @return string `data:image/svg+xml,…` (URL-encoded) URI.
 	 */
 	function oaf_avatar_initials_svg( $name, $size = 96 ) {
 		$size     = max( 1, (int) $size );
@@ -87,8 +87,9 @@ if ( ! function_exists( 'oaf_avatar_initials_svg' ) ) {
 			htmlspecialchars( $initials, ENT_QUOTES, 'UTF-8' )
 		);
 
-		// Encoded for transport in an img `src`, not to obscure the markup.
-		return 'data:image/svg+xml;base64,' . base64_encode( $svg ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode
+		// URL-encoded (not base64) for transport in an img `src`: keeps the SVG
+		// markup readable and correctly escapes the `#` and `%` a raw data: URI needs.
+		return 'data:image/svg+xml,' . rawurlencode( $svg );
 	}
 }
 

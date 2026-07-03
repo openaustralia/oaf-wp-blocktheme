@@ -1,0 +1,15 @@
+# Dev-only paths that live in the repo but must NOT ship in the theme.
+# `git archive` (and GitHub's generated zipballs, which Git Updater installs)
+# honour export-ignore, so the built/deployed theme excludes these. This is the
+# single source of truth mirrored by bin/theme-check.php's skip lists and the
+# CI theme-check job (.github/workflows/php.yml), which scans a `git archive`.
+.github/           export-ignore
+bin/               export-ignore
+.wp-env.json       export-ignore
+.wp-setup.sh       export-ignore
+phpcs.xml.dist     export-ignore
+composer.json      export-ignore
+composer.lock      export-ignore
+.gitignore         export-ignore
+.gitattributes     export-ignore
+languages/.gitkeep export-ignore

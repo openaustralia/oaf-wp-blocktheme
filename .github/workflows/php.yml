@@ -131,13 +131,12 @@ jobs:
 
       - name: Install theme under test
         run: |
-          # Copy only what ships in the theme; dev-only dirs would add noise.
+          # Install exactly what ships: `git archive` applies .gitattributes
+          # export-ignore, so the scanned theme matches the deployed artifact and
+          # the exclude list lives only in .gitattributes (single source of truth).
           dest=wp/wp-content/themes/oaf-wp-blocktheme
           mkdir -p "$dest"
-          rsync -a --delete \
-            --exclude='.git' --exclude='.github' --exclude='vendor' \
-            --exclude='node_modules' --exclude='.playwright-mcp' \
-            oaf-wp-blocktheme/ "$dest/"
+          git -C oaf-wp-blocktheme archive HEAD | tar -x -C "$dest"
 
       - name: Run Theme Check
         run: |

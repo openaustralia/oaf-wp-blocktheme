@@ -20,21 +20,25 @@ $slug  = 'oaf-wp-blocktheme';
 $theme = wp_get_theme( $slug );
 $dir   = $theme->get_stylesheet_directory();
 
-// Directories that are never part of the shipped theme (mirror the CI rsync
-// excludes), plus this bin/ dir which only exists to run this check.
-$skip_dirs = array( '.git', '.github', 'vendor', 'node_modules', '.playwright-mcp', '.wp-core', 'bin' );
+// Paths that are in the repo but NOT in the shipped theme. The source of truth
+// is .gitattributes (export-ignore): CI scans a `git archive` build, so these
+// are already absent there. Locally, wp-env mounts the whole repo, so this list
+// must mirror .gitattributes to skip the same dev-only files/dirs by hand.
+$skip_dirs  = array( '.git', '.github', 'vendor', 'node_modules', '.playwright-mcp', '.wp-core', 'bin' );
+$skip_files = array( '.gitignore', '.gitattributes', '.gitkeep', '.wp-env.json', '.wp-setup.sh', 'phpcs.xml.dist', 'composer.json', 'composer.lock' );
 
-// Gitignored artifact file types that CI's checkout never sees. Tracked
-// dotfiles (.gitignore, .wp-env.json, .wp-setup.sh) are deliberately NOT
-// skipped: they ship, so Theme Check flags them in CI and must here too.
+// Gitignored artifact file types that a `git archive`/checkout never contains.
 $skip_ext = array( 'zip', 'log' );
 
 $php = $css = $other = array();
 $filter = new RecursiveCallbackFilterIterator(
 	new RecursiveDirectoryIterator( $dir, FilesystemIterator::SKIP_DOTS ),
-	function ( $current ) use ( $skip_dirs, $skip_ext ) {
+	function ( $current ) use ( $skip_dirs, $skip_files, $skip_ext ) {
 		if ( $current->isDir() ) {
 			return ! in_array( $current->getFilename(), $skip_dirs, true );
+		}
+		if ( in_array( $current->getFilename(), $skip_files, true ) ) {
+			return false;
 		}
 		return ! in_array( strtolower( $current->getExtension() ), $skip_ext, true );
 	}
@@ -51,16 +55,38 @@ foreach ( $it as $file ) {
 
 run_themechecks( $php, $css, $other, array( 'theme' => $theme, 'slug' => $slug ) );
 
+// Accepted deviations: REQUIRED issues that are intentional for this bespoke,
+// single-site theme (never distributed via WordPress.org). Each signature must
+// name BOTH the flagged function and its file so a genuinely new register_*()
+// call elsewhere still trips the gate. The custom post type, taxonomy and blocks
+// are core theme functionality (people grid, patterns, avatars) rather than the
+// "plugin territory" the .org guideline assumes.
+$accepted_signatures = array(
+	array( 'register_post_type', 'inc/people.php' ),
+	array( 'register_taxonomy', 'inc/people.php' ),
+	array( 'register_block_type', 'functions.php' ),
+);
+
 global $themechecks;
 $required = 0;
+$accepted = 0;
 foreach ( (array) $themechecks as $check ) {
 	if ( ! is_object( $check ) || ! method_exists( $check, 'getError' ) ) { continue; }
 	foreach ( (array) $check->getError() as $e ) {
 		$e = trim( html_entity_decode( wp_strip_all_tags( $e ) ) );
 		if ( '' === $e ) { continue; }
 		echo $e, "\n";
-		if ( false !== stripos( $e, 'REQUIRED' ) ) { $required++; }
+		if ( false === stripos( $e, 'REQUIRED' ) ) { continue; }
+		$is_accepted = false;
+		foreach ( $accepted_signatures as $sig ) {
+			if ( false !== stripos( $e, $sig[0] ) && false !== stripos( $e, $sig[1] ) ) {
+				$is_accepted = true;
+				break;
+			}
+		}
+		if ( $is_accepted ) { $accepted++; } else { $required++; }
 	}
 }
 echo "\n== {$required} REQUIRED issue(s) ==\n";
+echo "== {$accepted} accepted deviation(s) ==\n";
 if ( $required > 0 ) { exit( 1 ); }
