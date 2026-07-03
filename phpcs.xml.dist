@@ -15,6 +15,9 @@
 	<!-- Dependencies and build output are not ours to lint. -->
 	<exclude-pattern>/vendor/*</exclude-pattern>
 	<exclude-pattern>/node_modules/*</exclude-pattern>
+	<!-- bin/ is dev-only WP-CLI tooling (export-ignored, never shipped); its
+	     compact style and raw terminal echo are intentional, not theme code. -->
+	<exclude-pattern>/bin/*</exclude-pattern>
 
 	<!-- Match the theme's declared support: PHP 8.3+ and WordPress 6.6+. -->
 	<config name="testVersion" value="8.3-"/>
