@@ -33,7 +33,7 @@ if ( ! function_exists( 'oaf_default_options' ) ) {
 			'righttoknow_url'    => 'https://www.righttoknow.org.au',
 			'theyvoteforyou_url' => 'https://theyvoteforyou.org.au',
 			'openaustralia_url'  => 'https://www.openaustralia.org.au',
-			'acknowledgement'    => 'We acknowledge the traditional owners of the land now known as Australia. We pay our respects to their elders past, present and emerging.',
+			'acknowledgement'    => 'OpenAustralia Foundation acknowledges the traditional Owners of Country throughout Australia and acknowledges their continuing connection to land, waters and community. We pay our respects to the people, the cultures and the Elders past and present.',
 			'raisely_embed'      => '',
 		);
 	}
