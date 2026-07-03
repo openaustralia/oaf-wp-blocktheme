@@ -1,3 +1,17 @@
 [tools]
 "npm:@wordpress/env" = "latest"
 "npm:wp-studio" = "latest"
+
+[env]
+# wp-env's node downloads time out here without this: node's Happy Eyeballs
+# abandons the ~282ms trans-Pacific IPv4 handshake at its 250ms default.
+NODE_OPTIONS = "--network-family-autoselection-attempt-timeout=5000"
+
+[tasks.theme-check]
+description = "Run the WordPress Theme Check plugin against the theme (same checks as CI)"
+run = """
+wp-env start
+wp-env run --quiet cli wp plugin is-installed theme-check \
+  || wp-env run cli wp plugin install theme-check
+wp-env run cli wp eval-file wp-content/themes/oaf-wp-blocktheme/bin/theme-check.php
+"""
