@@ -6,12 +6,19 @@
 # wp-env's node downloads time out here without this: node's Happy Eyeballs
 # abandons the ~282ms trans-Pacific IPv4 handshake at its 250ms default.
 NODE_OPTIONS = "--network-family-autoselection-attempt-timeout=5000"
+# Silence Docker Desktop's "What's next" hint that fires on the check's
+# intentional non-zero exit (REQUIRED issues found).
+DOCKER_CLI_HINTS = "false"
 
 [tasks.theme-check]
 description = "Run the WordPress Theme Check plugin against the theme (same checks as CI)"
 run = """
 wp-env start
-wp-env run --quiet cli wp plugin is-installed theme-check \
-  || wp-env run cli wp plugin install theme-check
+# --force reinstalls the latest Theme Check every run, matching CI's fresh-runner
+# `wp plugin install` so a stale local copy can't diverge from the gated result.
+wp-env run cli wp plugin install theme-check --force
+# wp-env mounts the whole repo as the theme; bin/theme-check.php's skip lists
+# mirror .gitattributes export-ignore, so this scans the same file set CI gets
+# from its `git archive` extract.
 wp-env run cli wp eval-file wp-content/themes/oaf-wp-blocktheme/bin/theme-check.php
 """

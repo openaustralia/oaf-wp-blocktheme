@@ -41,6 +41,12 @@ in `patterns/header.php` and `patterns/footer.php` so they can resolve bundled t
 URLs. The thin `parts/*.html` reference those patterns. The footer's editable values come from
 the theme settings (see below).
 
+Dev-only files (`bin/`, `.github/`, `phpcs.xml.dist`, `composer.*`, `.wp-*`) are marked
+`export-ignore` in `.gitattributes`, so `git archive` and the GitHub zipballs Git Updater
+installs leave them out of the shipped theme. `.gitattributes` is the single source of truth:
+if you add a dev file, list it there (and mirror it in `bin/theme-check.php`'s skip list) so it
+stays out of production and out of the Theme Check scan.
+
 ## Installing
 
 You can install the theme either from GitHub (recommended, so it can self-update) or by hand.

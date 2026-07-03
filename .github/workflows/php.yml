@@ -89,9 +89,9 @@ jobs:
   theme-check:
     name: WordPress Theme Check
     runs-on: ubuntu-latest
-    # Report-only for now: Theme Check emits INFO/RECOMMENDED notices that should
-    # not hard-block merges. Promote to a required check once the output is clean.
-    continue-on-error: true
+    # Required check: bin/theme-check.php exits non-zero only on REQUIRED issues
+    # (INFO/RECOMMENDED/WARNING notices still print but never fail the build), so
+    # this gates merges on new REQUIRED regressions without blocking on notices.
     services:
       mysql:
         image: mysql:8.0
