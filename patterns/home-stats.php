@@ -20,7 +20,7 @@
 		<div class="oaf-stat"><div class="oaf-stat__num">1.4 million</div><div class="oaf-stat__label">planning alerts sent last year</div></div>
 		<div class="oaf-stat"><div class="oaf-stat__num"><?php echo oaf_stat( 'visible_request_count', '12,346' ); ?></div><div class="oaf-stat__label">FOI requests archived</div></div>
 		<div class="oaf-stat"><div class="oaf-stat__num">200+</div><div class="oaf-stat__label">parliamentary divisions explained</div></div>
-		<div class="oaf-stat"><div class="oaf-stat__num">2007</div><div class="oaf-stat__label">building public tools since</div></div>
+		<div class="oaf-stat"><div class="oaf-stat__num">2007</div><div class="oaf-stat__label">we started building public tools</div></div>
 	</div>
 	<!-- /wp:html -->
 </section>

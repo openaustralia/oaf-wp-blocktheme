@@ -371,15 +371,15 @@ if ( ! function_exists( 'oaf_seed_people' ) ) {
 		oaf_seed_person_terms();
 
 		$people = array(
-			array( 'team', 'Ben Fairless', 'Chief Executive Officer', 'Leads the Foundation: keeping our services running and useful, looking after the people who build them, and finding sustainable ways to fund work that belongs to everyone.' ),
-			array( 'team', 'James Polley', 'Chief Financial Officer', 'Responsible for financial management, budgeting, and reporting. Ensures that we have enough in the bank to keep our services running.' ),
-			array( 'team', 'Ian Heggie', 'Senior Developer', 'Our resident software expert. Keeps our services running smoothly and efficiently, and develops new features to further our mission.' ),
-			array( 'team', 'Emanuele Muratore', 'Planning Alerts', 'Oversees the Planning Alerts API service, working with our business customers to ensure they get the most value from our planning data.' ),
-			array( 'team', 'Brenda Wallace', 'Civil Disobedience Kiwi', 'Our resident Kiwi. Loves turning a tangle of complexity into something clean, drawing on years building civic technology and government services across the ditch.' ),
-			array( 'board-of-directors', 'Matthew Landauer', 'Founder and Director', 'Co-founded the foundation in 2007. The brains behind most of our early initiatives and code. Responsible for guiding the direction of the Foundation for most of its early years.' ),
-			array( 'board-of-directors', 'Katherine Szuminska', 'Founder and Director', 'Co-founded the Foundation with Matthew in 2007, establishing its constitution and charity status and negotiating content licensing with Parliament. Shapes our design and content, and represents OAF on open government internationally.' ),
-			array( 'board-of-directors', 'Donna Benjamin', 'Chair of the Board', 'Chairs the board, bringing decades of open-source community leadership and governance from Red Hat, the Drupal Association and Linux Australia.' ),
-			array( 'board-of-directors', 'Sae Ra Germaine', 'Director', 'Brings over 20 years in technology and open-source community leadership, including roles with CAVAL, VALA and Linux Australia.' ),
+			array( 'team', 'Ben Fairless', 'Chief Executive Officer', 'Leading the foundation, looking after the people who build the tools and services, and finding sustainable ways to fund work that belongs to everyone.' ),
+			array( 'team', 'James Polley', 'Chief Financial Officer', 'Financial management, budgeting, and reporting; making sure there is enough in the bank to keep the lights on.' ),
+			array( 'team', 'Ian Heggie', 'Senior Developer', 'Software expert who keeps services running smoothly, while developing new features to further our mission.' ),
+			array( 'team', 'Emanuele Muratore', 'Planning Alerts Lead', 'Overseeing the Planning Alerts API service and working to ensure business customers get the most value from our planning data.' ),
+			array( 'team', 'Brenda Wallace', 'Civil Disobedience Kiwi', 'Turning tangles of complexity into clean simplicity, drawing on years building civic technology and government services across the ditch.' ),
+			array( 'board-of-directors', 'Matthew Landauer', 'Co-Founder and Director', 'Co-founded the OpenAustralia Foundation in 2007. Developed early initiatives and code. Responsible for directing the foundation for most of its early years.' ),
+			array( 'board-of-directors', 'Katherine Szuminska', 'Co-Founder and Director', 'Co-founded the OpenAustralia Foundation in 2007. Established constitution and charity status, negotiated content licensing with Parliament. Shaped design and content, and represented OAF on open government internationally.' ),
+			array( 'board-of-directors', 'Donna Benjamin', 'Chair of the Board', 'Open-source community leadership and governance from Red Hat, the Drupal Association and Linux Australia.' ),
+			array( 'board-of-directors', 'Sae Ra Germaine', 'Director', 'Leadership in technology and the open-source community at CAVAL, VALA and Linux Australia.' ),
 		);
 
 		$order = array();

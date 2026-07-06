@@ -19,10 +19,10 @@
 		<p class="oaf-eyebrow">People</p>
 		<!-- /wp:paragraph -->
 		<!-- wp:heading {"level":1} -->
-		<h1 class="wp-block-heading">People before software.</h1>
+		<h1 class="wp-block-heading">On the tools.</h1>
 		<!-- /wp:heading -->
 		<!-- wp:paragraph {"className":"oaf-lead"} -->
-		<p class="oaf-lead">Our contributors are named. Our staff are named. Our board is named. The work is collective - a small team and a long list of volunteers.</p>
+		<p class="oaf-lead">This work is a collective - a long list of volunteers headed by a small team. Contributors, staff and board are proud to put their names to their work.</p>
 		<!-- /wp:paragraph -->
 	</div>
 	<!-- /wp:group -->
@@ -37,7 +37,7 @@
 		<h2 class="wp-block-heading">Team</h2>
 		<!-- /wp:heading -->
 		<!-- wp:paragraph {"className":"oaf-intro"} -->
-		<p class="oaf-intro">A small team keeps the services running day to day.</p>
+		<p class="oaf-intro">Keeping services running day to day.</p>
 		<!-- /wp:paragraph -->
 		<!-- wp:oaf/people-grid {"group":"team"} /-->
 	</div>
@@ -53,7 +53,7 @@
 		<h2 class="wp-block-heading">Board of directors</h2>
 		<!-- /wp:heading -->
 		<!-- wp:paragraph {"className":"oaf-intro"} -->
-		<p class="oaf-intro">The board met four times last financial year. Governance documents are public.</p>
+		<p class="oaf-intro">The board meets four times a year. Governance documents are public.</p>
 		<!-- /wp:paragraph -->
 		<!-- wp:oaf/people-grid {"group":"board-of-directors"} /-->
 	</div>

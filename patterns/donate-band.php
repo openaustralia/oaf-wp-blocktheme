@@ -19,7 +19,7 @@
 			<h2 class="wp-block-heading">Keep the collection open</h2>
 			<!-- /wp:heading -->
 			<!-- wp:paragraph -->
-			<p>Funded entirely by donations from people who use the services and want them to keep going. We're a registered charity - donations are not tax deductible.</p>
+			<p>Funded entirely by donations from people who use the services and want them to keep going. OpenAustralia Foundation is a registered charity. Donations are not currently tax deductible.</p>
 			<!-- /wp:paragraph -->
 		</div>
 		<!-- /wp:group -->
