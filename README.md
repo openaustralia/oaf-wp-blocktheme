@@ -70,9 +70,13 @@ GitHub Theme URI: openaustralia/oaf-wp-blocktheme
 Primary Branch: main
 ```
 
-With the repo public, no token is required. To cut a release, bump `Version:` in `style.css`
-and push/tag on `main`; Git Updater offers the update on connected sites. (For a private repo
-you would instead add a GitHub Personal Access Token in Git Updater's settings.)
+With the repo public, no token is required. Git Updater offers connected sites an update only
+when `Version:` in `style.css` increases, so merging to `main` does not ship a change on its
+own. Changes accumulate under `## [Unreleased]` in [CHANGELOG.md](CHANGELOG.md); to cut a
+release run `mise run bump <major|minor|patch>`, which bumps the version, rolls the changelog,
+tags and pushes. See [CONTRIBUTING.md](CONTRIBUTING.md) for the full changelog and release
+workflow. (For a private repo you would instead add a GitHub Personal Access Token in Git
+Updater's settings.)
 
 ## Theme settings & one-click setup
 
@@ -121,8 +125,8 @@ link to the internal `/donate/` page. The embed is stored raw and is editable on
 can manage options. **Keep the "donations are not tax deductible" wording** below the form; it
 is mandatory.
 
-The Contact page still includes a **styled, non-functional** form placeholder; replace it with a
-contact-form plugin block/shortcode to make it send mail.
+The Contact page ships a working **Jetpack multi-step form**; `inc/contact-form.php` routes each
+submission to the right inbox by enquiry type. See the contact-form notes in `CLAUDE.md`.
 
 ## Editing
 

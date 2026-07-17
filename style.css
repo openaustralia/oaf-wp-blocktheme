@@ -163,6 +163,22 @@ a:hover { color: var(--oaf-link-hover); }
 .oaf-masthead .wp-block-navigation__responsive-container.is-menu-open .wp-block-navigation-item a { color: #fff; }
 .oaf-masthead .wp-block-navigation__responsive-container-close,
 .oaf-masthead .wp-block-navigation__responsive-container-close svg { color: #fff; fill: currentColor; }
+/* Mobile overlay menu fix.
+   The desktop masthead right-aligns the nav with `margin-left:auto`
+   (.oaf-masthead .wp-block-navigation, above). Inside the open mobile
+   overlay WordPress lays the nav out as a flex column, and that same rule
+   leaks onto the nav container - pushing the links hard against the right
+   edge so the panel shrinks and "Collection" clips off-screen. Reset the
+   margin within the open overlay and pad the panel so links sit flush-left.
+   Scoped to .is-menu-open, so the desktop/tablet nav is untouched. */
+.oaf-masthead .wp-block-navigation__responsive-container.is-menu-open .wp-block-navigation,
+.oaf-masthead .wp-block-navigation__responsive-container.is-menu-open .wp-block-navigation__container {
+	margin-left: 0;
+}
+.oaf-masthead .wp-block-navigation__responsive-container.is-menu-open .wp-block-navigation__container {
+	align-items: flex-start;
+	padding-left: 8px;
+}
 
 .oaf-donate-btn { margin-left: 0; }
 .oaf-donate-btn .wp-block-button__link {
@@ -1030,4 +1046,26 @@ textarea.oaf-input { resize: vertical; }
 	.oaf-foot-top { grid-template-columns: 1fr; row-gap: 28px; }
 	.oaf-foot-tick img { width: 110px; height: 110px; }
 	.oaf-donateband .oaf-ct { align-items: flex-start; }
+}
+
+/* Bridge WordPress's fixed 600px nav breakpoint up to the masthead's 781px
+   reflow. Core only collapses the nav to the hamburger below 600px, so from
+   600-781px the full horizontal nav shows and wraps to a second row. Force
+   the hamburger toggle across that range instead: show the open button and
+   hide the inline nav container (unless the overlay is open). Selectors are
+   one class more specific than core's :not(.always-shown) rules so they win
+   without !important; the open overlay still uses core's fixed-overlay CSS.
+
+   Depends on the core Navigation block's class contract and its fixed 600px
+   overlay breakpoint (WordPress 6.8, overlayMenu: mobile). Core has reworked
+   this block's markup/CSS before, and there is no test to catch a regression,
+   so re-check this range on each WordPress bump. The 781px bound must stay in
+   sync with the masthead flex-wrap breakpoint above. */
+@media (min-width: 600px) and (max-width: 781px) {
+	.oaf-masthead .wp-block-navigation__responsive-container-open:not(.always-shown) {
+		display: flex;
+	}
+	.oaf-masthead .wp-block-navigation__responsive-container:not(.hidden-by-default):not(.always-shown):not(.is-menu-open) {
+		display: none;
+	}
 }

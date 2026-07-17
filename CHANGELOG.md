@@ -6,20 +6,44 @@ in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project aims to follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.3.0] - Unreleased
+Changes land under [Unreleased] as they are merged. Merging to `main` does not
+ship them: connected sites only update when the `Version` header in `style.css`
+increases, which happens as a deliberate release (see
+[CONTRIBUTING.md](CONTRIBUTING.md)).
+
+## [Unreleased]
 
 ### Added
 
-- Contributors section on the People page: an `oaf/contributors` block that
-  thanks the volunteer open-source contributors across the foundation's
-  projects, shown as one combined, de-duplicated grid (a person who has worked
-  on several projects appears once). Contributors are fetched from the GitHub
-  API (`inc/contributors.php`), merged by login, with bot accounts filtered
-  out. Avatars are downloaded and self-hosted under the uploads directory and
-  the list is cached and refreshed weekly in the background, so rendering the
-  page makes no third-party request and leaks no visitor IP to GitHub. The repo
-  list, excluded logins, cache lifetime and an optional API token are all
-  filterable.
+- A Contributors section on the People page that thanks the volunteer
+  open-source contributors across our projects, shown as one combined,
+  de-duplicated grid. Contributors are pulled from the GitHub API and merged by
+  login with bot accounts filtered out, and their avatars are self-hosted and
+  refreshed weekly in the background, so rendering the page makes no third-party
+  request and leaks no visitor IP to GitHub.
+
+### Changed
+
+- The footer now renders the ACNC Registered Charity tick as an inline SVG
+  instead of a raster image, so the logo stays crisp at any size.
+- The navigation now collapses to the hamburger across the whole small-tablet
+  range (600-781px), matching where the rest of the masthead reflows.
+  Previously WordPress core's fixed 600px breakpoint left the full horizontal
+  nav showing and wrapping to a second row between 600px and 781px.
+
+### Fixed
+
+- Mobile navigation overlay: the open hamburger menu no longer clips its links
+  against the right edge. The masthead's `margin-left:auto` (which right-aligns
+  the desktop nav) was leaking onto the nav container inside the open overlay,
+  shrinking it and pushing "Collection" off-screen. The margin is now reset
+  within `.is-menu-open` and the panel padded so links sit flush-left.
+
+## [1.3.0] - 2026-07-06
+
+### Changed
+
+- Copy edits to the homepage and People page (Adam's feedback).
 
 ## [1.2.0] - 2026-07-01
 
@@ -107,3 +131,9 @@ and reads the `Version` header in `style.css`. During early development the
 version line briefly reached 1.1.0 and 1.1.1, then was re-baselined back through
 0.0.x. 1.0.0 (2026-07-01) marks the first stable release under the consolidated
 numbering and supersedes those earlier development builds.
+
+[Unreleased]: https://github.com/openaustralia/oaf-wp-blocktheme/compare/v1.3.0...HEAD
+[1.3.0]: https://github.com/openaustralia/oaf-wp-blocktheme/compare/v1.2.0...v1.3.0
+[1.2.0]: https://github.com/openaustralia/oaf-wp-blocktheme/compare/v1.1.0...v1.2.0
+[1.1.0]: https://github.com/openaustralia/oaf-wp-blocktheme/compare/v1.0.0...v1.1.0
+[1.0.0]: https://github.com/openaustralia/oaf-wp-blocktheme/releases/tag/v1.0.0
