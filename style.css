@@ -590,6 +590,36 @@ a:hover { color: var(--oaf-link-hover); }
 	max-width: 420px;
 }
 
+/* ---------- Contributors ---------- */
+.oaf-contributors {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(84px, 1fr));
+	gap: 22px 12px;
+	margin-top: 18px;
+}
+.oaf-contributor {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 8px;
+	min-width: 0;
+	text-align: center;
+	text-decoration: none;
+	color: var(--oaf-body);
+}
+.oaf-contributor .oaf-avatar { width: 72px; height: 72px; font-size: 24px; }
+.oaf-contributor__name {
+	max-width: 100%;
+	font-size: 12.5px;
+	font-weight: 600;
+	color: var(--oaf-ink);
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.oaf-contributor:hover .oaf-contributor__name { color: var(--oaf-maroon); }
+.oaf-contributor:focus-visible { outline: 2px solid var(--oaf-maroon); outline-offset: 4px; border-radius: 8px; }
+
 /* ---------- Single post prose ---------- */
 .oaf-post-hero .oaf-ct { padding-top: 40px; padding-bottom: 44px; }
 .oaf-post-hero h1 { color: #fff; font-size: 40px; }
@@ -1011,6 +1041,8 @@ textarea.oaf-input { resize: vertical; }
 	.oaf-grid-2,
 	.oaf-grid-form,
 	.oaf-grid-donate { grid-template-columns: 1fr; gap: 24px; }
+	.oaf-contributors { grid-template-columns: repeat(auto-fill, minmax(72px, 1fr)); gap: 18px 10px; }
+	.oaf-contributor .oaf-avatar { width: 60px; height: 60px; font-size: 20px; }
 	.oaf-foot-top { grid-template-columns: 1fr; row-gap: 28px; }
 	.oaf-foot-tick img { width: 110px; height: 110px; }
 	.oaf-donateband .oaf-ct { align-items: flex-start; }

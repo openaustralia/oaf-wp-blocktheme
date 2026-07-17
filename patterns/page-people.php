@@ -61,4 +61,20 @@
 </section>
 <!-- /wp:group -->
 
+<!-- wp:group {"align":"full","className":"oaf-band oaf-people-section","backgroundColor":"white","tagName":"section","layout":{"type":"default"}} -->
+<section class="wp-block-group alignfull oaf-band oaf-people-section has-white-background-color has-background">
+	<!-- wp:group {"className":"oaf-ct","layout":{"type":"default"}} -->
+	<div class="wp-block-group oaf-ct">
+		<!-- wp:heading {"level":2} -->
+		<h2 class="wp-block-heading">Contributors</h2>
+		<!-- /wp:heading -->
+		<!-- wp:paragraph {"className":"oaf-intro"} -->
+		<p class="oaf-intro">Our services are open source. Thanks to the volunteers who build and improve them across all our projects.</p>
+		<!-- /wp:paragraph -->
+		<!-- wp:oaf/contributors /-->
+	</div>
+	<!-- /wp:group -->
+</section>
+<!-- /wp:group -->
+
 <!-- wp:pattern {"slug":"oaf/donate-band"} /-->

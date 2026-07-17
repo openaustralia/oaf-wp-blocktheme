@@ -13,6 +13,15 @@ increases, which happens as a deliberate release (see
 
 ## [Unreleased]
 
+### Added
+
+- A Contributors section on the People page that thanks the volunteer
+  open-source contributors across our projects, shown as one combined,
+  de-duplicated grid. Contributors are pulled from the GitHub API and merged by
+  login with bot accounts filtered out, and their avatars are self-hosted and
+  refreshed weekly in the background, so rendering the page makes no third-party
+  request and leaks no visitor IP to GitHub.
+
 ### Changed
 
 - The footer now renders the ACNC Registered Charity tick as an inline SVG
