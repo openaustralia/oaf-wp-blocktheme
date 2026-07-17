@@ -6,6 +6,30 @@ in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project aims to follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.1] - 2026-07-17
+
+### Fixed
+
+- Mobile navigation overlay: the open hamburger menu no longer clips its links
+  against the right edge. The masthead's `margin-left:auto` (which right-aligns
+  the desktop nav) was leaking onto the nav container inside the open overlay,
+  shrinking it and pushing "Collection" off-screen. The margin is now reset
+  within `.is-menu-open` and the panel padded so links sit flush-left.
+
+### Changed
+
+- The navigation now collapses to the hamburger across the whole small-tablet
+  range (600-781px), matching where the rest of the masthead reflows.
+  Previously WordPress core's fixed 600px breakpoint left the full horizontal
+  nav showing and wrapping to a second row between 600px and 781px.
+
+## [1.3.0] - 2026-07-17
+
+### Changed
+
+- Applied Adam's copy edits to the homepage and People page.
+- The ACNC "Registered Charity" tick in the footer now uses the SVG logo.
+
 ## [1.2.0] - 2026-07-01
 
 ### Changed
