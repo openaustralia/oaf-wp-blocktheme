@@ -1022,7 +1022,13 @@ textarea.oaf-input { resize: vertical; }
    the hamburger toggle across that range instead: show the open button and
    hide the inline nav container (unless the overlay is open). Selectors are
    one class more specific than core's :not(.always-shown) rules so they win
-   without !important; the open overlay still uses core's fixed-overlay CSS. */
+   without !important; the open overlay still uses core's fixed-overlay CSS.
+
+   Depends on the core Navigation block's class contract and its fixed 600px
+   overlay breakpoint (WordPress 6.8, overlayMenu: mobile). Core has reworked
+   this block's markup/CSS before, and there is no test to catch a regression,
+   so re-check this range on each WordPress bump. The 781px bound must stay in
+   sync with the masthead flex-wrap breakpoint above. */
 @media (min-width: 600px) and (max-width: 781px) {
 	.oaf-masthead .wp-block-navigation__responsive-container-open:not(.always-shown) {
 		display: flex;
