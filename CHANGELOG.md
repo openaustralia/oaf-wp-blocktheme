@@ -17,6 +17,18 @@ increases, which happens as a deliberate release (see
 
 - The footer now renders the ACNC Registered Charity tick as an inline SVG
   instead of a raster image, so the logo stays crisp at any size.
+- The navigation now collapses to the hamburger across the whole small-tablet
+  range (600-781px), matching where the rest of the masthead reflows.
+  Previously WordPress core's fixed 600px breakpoint left the full horizontal
+  nav showing and wrapping to a second row between 600px and 781px.
+
+### Fixed
+
+- Mobile navigation overlay: the open hamburger menu no longer clips its links
+  against the right edge. The masthead's `margin-left:auto` (which right-aligns
+  the desktop nav) was leaking onto the nav container inside the open overlay,
+  shrinking it and pushing "Collection" off-screen. The margin is now reset
+  within `.is-menu-open` and the panel padded so links sit flush-left.
 
 ## [1.3.0] - 2026-07-06
 
