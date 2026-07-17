@@ -1,3 +1,7 @@
 [tools]
 "npm:@wordpress/env" = "latest"
 "npm:wp-studio" = "latest"
+
+[tasks.bump]
+description = "Cut a release: bump style.css version, roll the changelog, tag and push"
+run = "./bin/bump-version.sh"
