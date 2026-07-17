@@ -6,6 +6,21 @@ in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project aims to follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.0] - Unreleased
+
+### Added
+
+- Contributors section on the People page: an `oaf/contributors` block that
+  thanks the volunteer open-source contributors across the foundation's
+  projects, shown as one combined, de-duplicated grid (a person who has worked
+  on several projects appears once). Contributors are fetched from the GitHub
+  API (`inc/contributors.php`), merged by login, with bot accounts filtered
+  out. Avatars are downloaded and self-hosted under the uploads directory and
+  the list is cached and refreshed weekly in the background, so rendering the
+  page makes no third-party request and leaks no visitor IP to GitHub. The repo
+  list, excluded logins, cache lifetime and an optional API token are all
+  filterable.
+
 ## [1.2.0] - 2026-07-01
 
 ### Changed

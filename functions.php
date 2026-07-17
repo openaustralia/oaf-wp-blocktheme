@@ -15,6 +15,9 @@ require_once get_template_directory() . '/inc/options.php';
 // People post type + taxonomy (registered on the front end and in admin).
 require_once get_template_directory() . '/inc/people.php';
 
+// Volunteer contributors: fetch from GitHub, cache and self-host for the People page.
+require_once get_template_directory() . '/inc/contributors.php';
+
 // Local avatars (People images instead of Gravatar) for bylines and comments.
 require_once get_template_directory() . '/inc/avatars.php';
 
@@ -104,6 +107,7 @@ if ( ! function_exists( 'oaf_register_blocks' ) ) {
 	function oaf_register_blocks() {
 		register_block_type( get_template_directory() . '/blocks/raisely-donation-form' );
 		register_block_type( get_template_directory() . '/blocks/people-grid' );
+		register_block_type( get_template_directory() . '/blocks/contributors' );
 	}
 }
 add_action( 'init', 'oaf_register_blocks' );
