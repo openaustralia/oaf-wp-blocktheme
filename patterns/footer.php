@@ -47,7 +47,7 @@ $oaf_li       = oaf_option( 'linkedin_url' );
 				</div>
 				<div class="oaf-foot-aok"><?php echo esc_html( oaf_option( 'acknowledgement' ) ); ?></div>
 			</div>
-			<a class="oaf-foot-tick" href="<?php echo esc_url( $oaf_acnc ); ?>"><img src="<?php echo esc_url( $oaf_uri . '/assets/img/acnc/acnc-registered-charity-colour.png' ); ?>" alt="ACNC Registered Charity"></a>
+			<a class="oaf-foot-tick" href="<?php echo esc_url( $oaf_acnc ); ?>"><img src="<?php echo esc_url( $oaf_uri . '/assets/img/acnc/acnc-registered-charity-colour.svg' ); ?>" alt="ACNC Registered Charity"></a>
 		</div>
 		<div class="oaf-foot-row">
 			<div class="oaf-foot-eyebrow">Our services</div>
