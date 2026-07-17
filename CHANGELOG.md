@@ -6,6 +6,24 @@ in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project aims to follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+Changes land under [Unreleased] as they are merged. Merging to `main` does not
+ship them: connected sites only update when the `Version` header in `style.css`
+increases, which happens as a deliberate release (see
+[CONTRIBUTING.md](CONTRIBUTING.md)).
+
+## [Unreleased]
+
+### Changed
+
+- The footer now renders the ACNC Registered Charity tick as an inline SVG
+  instead of a raster image, so the logo stays crisp at any size.
+
+## [1.3.0] - 2026-07-06
+
+### Changed
+
+- Copy edits to the homepage and People page (Adam's feedback).
+
 ## [1.2.0] - 2026-07-01
 
 ### Changed
@@ -92,3 +110,9 @@ and reads the `Version` header in `style.css`. During early development the
 version line briefly reached 1.1.0 and 1.1.1, then was re-baselined back through
 0.0.x. 1.0.0 (2026-07-01) marks the first stable release under the consolidated
 numbering and supersedes those earlier development builds.
+
+[Unreleased]: https://github.com/openaustralia/oaf-wp-blocktheme/compare/v1.3.0...HEAD
+[1.3.0]: https://github.com/openaustralia/oaf-wp-blocktheme/compare/v1.2.0...v1.3.0
+[1.2.0]: https://github.com/openaustralia/oaf-wp-blocktheme/compare/v1.1.0...v1.2.0
+[1.1.0]: https://github.com/openaustralia/oaf-wp-blocktheme/compare/v1.0.0...v1.1.0
+[1.0.0]: https://github.com/openaustralia/oaf-wp-blocktheme/releases/tag/v1.0.0
