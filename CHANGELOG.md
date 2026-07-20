@@ -13,6 +13,8 @@ increases, which happens as a deliberate release (see
 
 ## [Unreleased]
 
+## [1.4.0] - 2026-07-20
+
 ### Added
 
 - A Contributors section on the People page that thanks the volunteer
@@ -137,7 +139,8 @@ version line briefly reached 1.1.0 and 1.1.1, then was re-baselined back through
 0.0.x. 1.0.0 (2026-07-01) marks the first stable release under the consolidated
 numbering and supersedes those earlier development builds.
 
-[Unreleased]: https://github.com/openaustralia/oaf-wp-blocktheme/compare/v1.3.0...HEAD
+[Unreleased]: https://github.com/openaustralia/oaf-wp-blocktheme/compare/v1.4.0...HEAD
+[1.4.0]: https://github.com/openaustralia/oaf-wp-blocktheme/compare/v1.3.0...v1.4.0
 [1.3.0]: https://github.com/openaustralia/oaf-wp-blocktheme/compare/v1.2.0...v1.3.0
 [1.2.0]: https://github.com/openaustralia/oaf-wp-blocktheme/compare/v1.1.0...v1.2.0
 [1.1.0]: https://github.com/openaustralia/oaf-wp-blocktheme/compare/v1.0.0...v1.1.0
