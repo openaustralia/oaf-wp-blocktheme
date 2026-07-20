@@ -3,6 +3,7 @@
 .playwright-mcp/
 node_modules/
 vendor/
+.phpunit.cache/
 *.log
 debug.log
 

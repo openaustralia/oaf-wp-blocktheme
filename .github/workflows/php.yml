@@ -33,3 +33,6 @@ jobs:
 
       - name: PHPCS
         run: composer run phpcs
+
+      - name: PHPUnit
+        run: composer run test

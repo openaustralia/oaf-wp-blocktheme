@@ -16,6 +16,10 @@
 	<exclude-pattern>/vendor/*</exclude-pattern>
 	<exclude-pattern>/node_modules/*</exclude-pattern>
 
+	<!-- PHPUnit tests follow PHPUnit conventions (camelCase, redefined WP
+	     function stubs) that intentionally diverge from WPCS. -->
+	<exclude-pattern>/tests/*</exclude-pattern>
+
 	<!-- Match the theme's declared support: PHP 8.3+ and WordPress 6.6+. -->
 	<config name="testVersion" value="8.3-"/>
 	<config name="minimum_wp_version" value="6.6"/>
