@@ -77,6 +77,15 @@ if ( ! function_exists( 'oaf_register_settings' ) ) {
 			'textarea',
 			__( 'Paste the embed snippet from your Raisely campaign. It appears wherever the "Raisely Donation Form" block is placed (the Donate page by default).', 'oaf-wp-blocktheme' )
 		);
+
+		add_settings_section( 'oaf_contributors', __( 'Contributors', 'oaf-wp-blocktheme' ), '__return_false', 'oaf-theme' );
+		oaf_add_field(
+			'contributor_exclude_logins',
+			__( 'Exclude usernames', 'oaf-wp-blocktheme' ),
+			'oaf_contributors',
+			'textarea',
+			__( 'One GitHub username per line. These people are hidden from the Contributors grid on the People page and their cached avatar is removed on the next refresh.', 'oaf-wp-blocktheme' )
+		);
 	}
 }
 add_action( 'admin_init', 'oaf_register_settings' );
@@ -180,6 +189,13 @@ if ( ! function_exists( 'oaf_render_admin_page' ) ) {
 				submit_button( __( 'Save settings', 'oaf-wp-blocktheme' ) );
 				?>
 			</form>
+
+			<?php
+			if ( function_exists( 'oaf_render_contributors_section' ) ) {
+				echo '<hr />';
+				oaf_render_contributors_section();
+			}
+			?>
 		</div>
 		<?php
 	}

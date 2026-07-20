@@ -21,6 +21,11 @@ increases, which happens as a deliberate release (see
   login with bot accounts filtered out, and their avatars are self-hosted and
   refreshed weekly in the background, so rendering the page makes no third-party
   request and leaks no visitor IP to GitHub.
+- Admin controls for the Contributors section, under Appearance → OAF Theme: an
+  "Exclude usernames" field to hide specific GitHub logins from the grid (each
+  hidden person's cached avatar is deleted on the next refresh), and a "Refresh
+  now" button that updates the list on demand and shows when it last updated and
+  whether the last attempt succeeded.
 
 ### Changed
 
