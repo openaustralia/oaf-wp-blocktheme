@@ -50,6 +50,43 @@ if ( ! function_exists( 'oaf_contributor_repos' ) ) {
 	}
 }
 
+if ( ! function_exists( 'oaf_normalize_login_list' ) ) {
+	/**
+	 * Normalise free-text input into a list of lower-case GitHub logins.
+	 *
+	 * Accepts newline- or comma-separated input, strips a leading `@` and any
+	 * surrounding whitespace, keeps only characters valid in a GitHub login, drops
+	 * blanks and de-duplicates. Shared by the admin field sanitiser and the reader.
+	 *
+	 * @param string $raw Raw textarea or comma-separated value.
+	 * @return string[] Unique lower-case logins.
+	 */
+	function oaf_normalize_login_list( $raw ) {
+		$parts  = preg_split( '/[\r\n,]+/', (string) $raw );
+		$logins = array();
+		foreach ( (array) $parts as $part ) {
+			$login = strtolower( ltrim( trim( $part ), '@' ) );
+			$login = preg_replace( '/[^a-z0-9-]/', '', $login );
+			if ( '' !== $login ) {
+				$logins[ $login ] = $login;
+			}
+		}
+		return array_values( $logins );
+	}
+}
+
+if ( ! function_exists( 'oaf_contributor_exclude_logins_setting' ) ) {
+	/**
+	 * The admin-managed list of logins to exclude (Appearance -> OAF Theme).
+	 *
+	 * @return string[] Lower-case logins from the `contributor_exclude_logins` option.
+	 */
+	function oaf_contributor_exclude_logins_setting() {
+		$raw = function_exists( 'oaf_option' ) ? oaf_option( 'contributor_exclude_logins' ) : '';
+		return oaf_normalize_login_list( $raw );
+	}
+}
+
 if ( ! function_exists( 'oaf_contributor_exclude_logins' ) ) {
 	/**
 	 * GitHub logins to exclude from the grid, in addition to the automatic
@@ -73,6 +110,9 @@ if ( ! function_exists( 'oaf_contributor_exclude_logins' ) ) {
 		 *
 		 * @param string[] $logins Logins to exclude (compared lower-case).
 		 */
+		// Merge in the admin-managed exclusions (Appearance -> OAF Theme).
+		$logins = array_merge( $logins, oaf_contributor_exclude_logins_setting() );
+
 		$logins = (array) apply_filters( 'oaf_contributor_exclude_logins', $logins );
 
 		return array_map( 'strtolower', $logins );
@@ -134,7 +174,64 @@ if ( ! function_exists( 'oaf_get_contributors' ) ) {
 			}
 		}
 
+		// Hide admin-excluded logins immediately, without waiting for a refresh.
+		$exclude = oaf_contributor_exclude_logins();
+		if ( ! empty( $exclude ) ) {
+			$people = array_values(
+				array_filter(
+					$people,
+					static function ( $person ) use ( $exclude ) {
+						$login = isset( $person['login'] ) ? strtolower( $person['login'] ) : '';
+						return ! in_array( $login, $exclude, true );
+					}
+				)
+			);
+		}
+
 		return $people;
+	}
+}
+
+if ( ! function_exists( 'oaf_contributors_status' ) ) {
+	/**
+	 * The recorded outcome of the most recent refresh attempt.
+	 *
+	 * @return array{time:int,ok:bool,count:int,source:string,reason:string}
+	 */
+	function oaf_contributors_status() {
+		$status = get_option( 'oaf_contributors_status', array() );
+		return array(
+			'time'   => isset( $status['time'] ) ? (int) $status['time'] : 0,
+			'ok'     => ! empty( $status['ok'] ),
+			'count'  => isset( $status['count'] ) ? (int) $status['count'] : 0,
+			'source' => isset( $status['source'] ) ? (string) $status['source'] : '',
+			'reason' => isset( $status['reason'] ) ? (string) $status['reason'] : '',
+		);
+	}
+}
+
+if ( ! function_exists( 'oaf_set_contributors_status' ) ) {
+	/**
+	 * Record the outcome of a refresh attempt (both success and total failure).
+	 *
+	 * @param bool   $ok     Whether at least one repository was fetched.
+	 * @param int    $count  Number of contributors currently shown.
+	 * @param string $source 'cron' or 'manual'.
+	 * @param string $reason Human-readable failure reason, or '' on success.
+	 * @return void
+	 */
+	function oaf_set_contributors_status( $ok, $count, $source, $reason ) {
+		update_option(
+			'oaf_contributors_status',
+			array(
+				'time'   => time(),
+				'ok'     => (bool) $ok,
+				'count'  => (int) $count,
+				'source' => (string) $source,
+				'reason' => (string) $reason,
+			),
+			false
+		);
 	}
 }
 
@@ -142,35 +239,48 @@ if ( ! function_exists( 'oaf_refresh_contributors' ) ) {
 	/**
 	 * Fetch, merge, de-duplicate and cache contributors, downloading avatars.
 	 *
-	 * Runs on WP-Cron (see the scheduling below). If every repository request
-	 * fails the previous cache is kept untouched, so a GitHub outage never blanks
-	 * the page.
+	 * Runs on WP-Cron and from the manual "Refresh now" button. If every repository
+	 * request fails the previous cache is kept untouched, so a GitHub outage never
+	 * blanks the page. The outcome is recorded either way (see
+	 * oaf_contributors_status()).
 	 *
-	 * @return void
+	 * @param string $source Where the refresh was triggered ('cron' or 'manual').
+	 * @return array The recorded status.
 	 */
-	function oaf_refresh_contributors() {
+	function oaf_refresh_contributors( $source = 'cron' ) {
 		// Guard against a stampede and against retrying a hard failure every request.
 		set_transient( 'oaf_contributors_refreshing', 1, 10 * MINUTE_IN_SECONDS );
 		set_transient( 'oaf_contributors_cooldown', 1, HOUR_IN_SECONDS );
 
 		$exclude = oaf_contributor_exclude_logins();
 
-		// Remember previous avatars so we can reuse them if a download fails.
-		$previous     = get_option( 'oaf_contributors_cache', array() );
-		$prev_people  = ( isset( $previous['people'] ) && is_array( $previous['people'] ) ) ? $previous['people'] : array();
-		$prev_avatars = array();
+		// Remember previous avatars (and their source URLs) so an unchanged photo is
+		// reused from disk, and so a failed download can fall back to it.
+		$previous         = get_option( 'oaf_contributors_cache', array() );
+		$prev_people      = ( isset( $previous['people'] ) && is_array( $previous['people'] ) ) ? $previous['people'] : array();
+		$prev_avatars     = array();
+		$prev_avatar_urls = array();
 		foreach ( $prev_people as $prev_person ) {
 			if ( ! empty( $prev_person['login'] ) ) {
-				$prev_avatars[ strtolower( $prev_person['login'] ) ] = isset( $prev_person['avatar'] ) ? $prev_person['avatar'] : '';
+				$prev_key                      = strtolower( $prev_person['login'] );
+				$prev_avatars[ $prev_key ]     = isset( $prev_person['avatar'] ) ? $prev_person['avatar'] : '';
+				$prev_avatar_urls[ $prev_key ] = isset( $prev_person['avatar_url'] ) ? $prev_person['avatar_url'] : '';
 			}
 		}
 
 		$merged      = array();
 		$any_success = false;
+		$any_fail    = false;
+		$fail_code   = 0;
 
 		foreach ( oaf_contributor_repos() as $repo ) {
-			$list = oaf_fetch_repo_contributors( $repo );
+			$code = 0;
+			$list = oaf_fetch_repo_contributors( $repo, $code );
 			if ( null === $list ) {
+				$any_fail = true;
+				if ( 0 === $fail_code ) {
+					$fail_code = (int) $code;
+				}
 				continue;
 			}
 			$any_success = true;
@@ -207,7 +317,11 @@ if ( ! function_exists( 'oaf_refresh_contributors' ) ) {
 		// Every request failed (e.g. rate-limited or offline): keep the old cache.
 		if ( ! $any_success ) {
 			delete_transient( 'oaf_contributors_refreshing' );
-			return;
+			$reason = ( 403 === $fail_code || 429 === $fail_code )
+				? __( 'GitHub rate limit reached. Add a token or try again later.', 'oaf-wp-blocktheme' )
+				: __( 'Could not reach GitHub. Check the connection and try again.', 'oaf-wp-blocktheme' );
+			oaf_set_contributors_status( false, count( $prev_people ), $source, $reason );
+			return oaf_contributors_status();
 		}
 
 		uasort( $merged, 'oaf_contributors_compare' );
@@ -221,7 +335,17 @@ if ( ! function_exists( 'oaf_refresh_contributors' ) ) {
 
 		$people = array();
 		foreach ( $merged as $key => $person ) {
-			$avatar = ( '' !== $person['avatar_url'] ) ? oaf_cache_contributor_avatar( $person['login'], $person['avatar_url'] ) : '';
+			// Reuse the stored file when the source URL is unchanged and it still
+			// exists on disk, so a re-run does not re-download every avatar.
+			$avatar = '';
+			if ( isset( $prev_avatars[ $key ], $prev_avatar_urls[ $key ] )
+				&& '' !== $prev_avatars[ $key ]
+				&& $prev_avatar_urls[ $key ] === $person['avatar_url']
+				&& oaf_contributor_avatar_exists( $prev_avatars[ $key ] ) ) {
+				$avatar = $prev_avatars[ $key ];
+			} elseif ( '' !== $person['avatar_url'] ) {
+				$avatar = oaf_cache_contributor_avatar( $person['login'], $person['avatar_url'] );
+			}
 			if ( '' === $avatar && isset( $prev_avatars[ $key ] ) ) {
 				$avatar = $prev_avatars[ $key ];
 			}
@@ -230,8 +354,24 @@ if ( ! function_exists( 'oaf_refresh_contributors' ) ) {
 				'login'         => $person['login'],
 				'profile'       => $person['profile'],
 				'avatar'        => $avatar,
+				'avatar_url'    => $person['avatar_url'],
 				'contributions' => (int) $person['contributions'],
 			);
+		}
+
+		// Excluded people: always remove their cached photo, even on a partial
+		// fetch, so an exclusion reliably takes the stored image off disk.
+		oaf_delete_contributor_avatars( $exclude );
+
+		// Only when every repository responded is it safe to reap contributors who
+		// are simply gone now; a partial fetch must not delete photos belonging to a
+		// repository that failed this run.
+		if ( ! $any_fail ) {
+			$kept = array();
+			foreach ( $people as $person ) {
+				$kept[] = strtolower( $person['login'] );
+			}
+			oaf_prune_contributor_avatars( $kept );
 		}
 
 		update_option(
@@ -243,7 +383,11 @@ if ( ! function_exists( 'oaf_refresh_contributors' ) ) {
 			false
 		);
 
+		oaf_set_contributors_status( true, count( $people ), $source, '' );
+
 		delete_transient( 'oaf_contributors_refreshing' );
+
+		return oaf_contributors_status();
 	}
 }
 
@@ -267,10 +411,12 @@ if ( ! function_exists( 'oaf_fetch_repo_contributors' ) ) {
 	/**
 	 * Fetch the full contributor list for a single repository from the GitHub API.
 	 *
-	 * @param string $repo `owner/repo` slug.
+	 * @param string $repo      `owner/repo` slug.
+	 * @param int    $http_code Set by reference to the failing HTTP status (0 on a
+	 *                            transport error), for the caller's status reason.
 	 * @return array<int,array>|null Contributor records, or null when the request failed.
 	 */
-	function oaf_fetch_repo_contributors( $repo ) {
+	function oaf_fetch_repo_contributors( $repo, &$http_code = 0 ) {
 		$headers = array(
 			'Accept'               => 'application/vnd.github+json',
 			'User-Agent'           => 'oaf-wp-blocktheme',
@@ -309,7 +455,12 @@ if ( ! function_exists( 'oaf_fetch_repo_contributors' ) ) {
 				)
 			);
 
-			if ( is_wp_error( $response ) || 200 !== (int) wp_remote_retrieve_response_code( $response ) ) {
+			if ( is_wp_error( $response ) ) {
+				$http_code = 0;
+				return null;
+			}
+			$http_code = (int) wp_remote_retrieve_response_code( $response );
+			if ( 200 !== $http_code ) {
 				return null;
 			}
 
@@ -420,6 +571,102 @@ if ( ! function_exists( 'oaf_cache_contributor_avatar' ) ) {
 		}
 
 		return trailingslashit( $dir['url'] ) . $file;
+	}
+}
+
+if ( ! function_exists( 'oaf_contributor_avatar_exists' ) ) {
+	/**
+	 * Whether a stored avatar (given its public URL) still exists on disk.
+	 *
+	 * @param string $url Local avatar URL previously returned by the cache.
+	 * @return bool
+	 */
+	function oaf_contributor_avatar_exists( $url ) {
+		$dir = oaf_contributors_upload_dir();
+		if ( empty( $dir ) || '' === (string) $url || 0 !== strpos( $url, $dir['url'] ) ) {
+			return false;
+		}
+		return file_exists( trailingslashit( $dir['path'] ) . basename( $url ) );
+	}
+}
+
+if ( ! function_exists( 'oaf_delete_contributor_avatars' ) ) {
+	/**
+	 * Delete the cached avatar files for specific logins (any extension).
+	 *
+	 * Used to honour an exclusion immediately: the hidden person's self-hosted
+	 * photo is taken off disk regardless of whether the fetch was full or partial.
+	 *
+	 * @param string[] $logins Logins whose cached avatar should be removed.
+	 * @return void
+	 */
+	function oaf_delete_contributor_avatars( $logins ) {
+		$dir = oaf_contributors_upload_dir();
+		if ( empty( $dir ) || empty( $logins ) ) {
+			return;
+		}
+
+		global $wp_filesystem;
+		if ( ! function_exists( 'WP_Filesystem' ) ) {
+			require_once ABSPATH . 'wp-admin/includes/file.php';
+		}
+		WP_Filesystem();
+		if ( ! $wp_filesystem ) {
+			return;
+		}
+
+		foreach ( (array) $logins as $login ) {
+			$slug = sanitize_file_name( strtolower( $login ) );
+			if ( '' === $slug ) {
+				continue;
+			}
+			$files = glob( trailingslashit( $dir['path'] ) . $slug . '.*' );
+			if ( is_array( $files ) ) {
+				foreach ( $files as $file ) {
+					$wp_filesystem->delete( $file );
+				}
+			}
+		}
+	}
+}
+
+if ( ! function_exists( 'oaf_prune_contributor_avatars' ) ) {
+	/**
+	 * Delete cached avatar files whose login is no longer shown.
+	 *
+	 * Removes the self-hosted image for anyone excluded or no longer returned by
+	 * GitHub, so an exclusion also takes the stored photo off disk.
+	 *
+	 * @param string[] $keep_logins Lower-case logins to keep.
+	 * @return void
+	 */
+	function oaf_prune_contributor_avatars( $keep_logins ) {
+		$dir = oaf_contributors_upload_dir();
+		if ( empty( $dir ) ) {
+			return;
+		}
+
+		$keep  = array_fill_keys( array_map( 'strtolower', $keep_logins ), true );
+		$files = glob( trailingslashit( $dir['path'] ) . '*' );
+		if ( ! is_array( $files ) ) {
+			return;
+		}
+
+		global $wp_filesystem;
+		if ( ! function_exists( 'WP_Filesystem' ) ) {
+			require_once ABSPATH . 'wp-admin/includes/file.php';
+		}
+		WP_Filesystem();
+		if ( ! $wp_filesystem ) {
+			return;
+		}
+
+		foreach ( $files as $file ) {
+			$login = strtolower( pathinfo( $file, PATHINFO_FILENAME ) );
+			if ( '' !== $login && ! isset( $keep[ $login ] ) ) {
+				$wp_filesystem->delete( $file );
+			}
+		}
 	}
 }
 

@@ -31,6 +31,7 @@ require_once get_template_directory() . '/inc/contact-form.php';
 if ( is_admin() ) {
 	require_once get_template_directory() . '/inc/pages.php';
 	require_once get_template_directory() . '/inc/admin.php';
+	require_once get_template_directory() . '/inc/contributors-admin.php';
 }
 
 if ( ! function_exists( 'oaf_setup' ) ) {
