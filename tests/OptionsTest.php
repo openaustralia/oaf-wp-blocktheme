@@ -96,4 +96,31 @@ final class OptionsTest extends TestCase {
 
 		$this->assertSame( '<b>existing</b>', $clean['raisely_embed'] );
 	}
+
+	public function test_github_token_stored_and_trimmed_when_submitted(): void {
+		$clean = oaf_sanitize_options( array( 'github_token' => '  ghp_secret  ' ) );
+		$this->assertSame( 'ghp_secret', $clean['github_token'] );
+	}
+
+	/**
+	 * The field renders blank (the secret is never echoed), so a blank submit -
+	 * which happens whenever any OTHER setting is saved - must keep the stored
+	 * token rather than wipe it.
+	 */
+	public function test_github_token_preserved_when_submitted_blank(): void {
+		$GLOBALS['oaf_test_options']['oaf_theme_options'] = array( 'github_token' => 'ghp_existing' );
+		$clean = oaf_sanitize_options( array( 'github_token' => '' ) );
+		$this->assertSame( 'ghp_existing', $clean['github_token'] );
+	}
+
+	public function test_github_token_removed_when_remove_checked(): void {
+		$GLOBALS['oaf_test_options']['oaf_theme_options'] = array( 'github_token' => 'ghp_existing' );
+		$clean = oaf_sanitize_options(
+			array(
+				'github_token'        => '',
+				'github_token_remove' => '1',
+			)
+		);
+		$this->assertSame( '', $clean['github_token'] );
+	}
 }
