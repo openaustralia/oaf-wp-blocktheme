@@ -79,6 +79,14 @@ if ( ! function_exists( 'oaf_register_settings' ) ) {
 		);
 
 		add_settings_section( 'oaf_contributors', __( 'Contributors', 'oaf-wp-blocktheme' ), '__return_false', 'oaf-theme' );
+		add_settings_field(
+			'oaf_field_github_token',
+			__( 'GitHub access token', 'oaf-wp-blocktheme' ),
+			'oaf_render_github_token_field',
+			'oaf-theme',
+			'oaf_contributors',
+			array( 'label_for' => 'oaf_field_github_token' )
+		);
 		oaf_add_field(
 			'contributor_exclude_logins',
 			__( 'Exclude usernames', 'oaf-wp-blocktheme' ),
@@ -96,6 +104,48 @@ if ( ! function_exists( 'oaf_raisely_section_intro' ) ) {
 	 */
 	function oaf_raisely_section_intro() {
 		echo '<p>' . esc_html__( 'This code may contain scripts and is saved as-is, so only people allowed to publish unfiltered HTML can change it. Only paste embed code you trust from your own Raisely dashboard.', 'oaf-wp-blocktheme' ) . '</p>';
+	}
+}
+
+if ( ! function_exists( 'oaf_render_github_token_field' ) ) {
+	/**
+	 * Render the GitHub access token field.
+	 *
+	 * The token is a secret, so the stored value is never echoed back into the
+	 * form: the field is left blank with a placeholder noting whether a token is
+	 * already saved. Entering a value replaces it, submitting blank preserves it,
+	 * and the "Remove" checkbox clears it (see oaf_sanitize_options()). When a
+	 * token is defined via the OAF_GITHUB_TOKEN constant in wp-config.php it takes
+	 * precedence, so the field is disabled and that is noted.
+	 */
+	function oaf_render_github_token_field() {
+		$const_set = defined( 'OAF_GITHUB_TOKEN' ) && '' !== (string) OAF_GITHUB_TOKEN;
+		$has_saved = '' !== (string) oaf_option( 'github_token' );
+
+		if ( $const_set ) {
+			echo '<input type="password" id="oaf_field_github_token" class="regular-text" value="" autocomplete="new-password" disabled />';
+			echo '<p class="description">' . esc_html__( 'A token is defined in wp-config.php (OAF_GITHUB_TOKEN) and takes precedence, so this field is disabled. Remove that constant to manage the token here instead.', 'oaf-wp-blocktheme' ) . '</p>';
+			return;
+		}
+
+		printf(
+			'<input type="password" id="oaf_field_github_token" name="oaf_theme_options[github_token]" class="regular-text" value="" autocomplete="new-password" placeholder="%s" />',
+			esc_attr(
+				$has_saved
+					? __( 'A token is saved. Enter a new one to replace it.', 'oaf-wp-blocktheme' )
+					: __( 'ghp_… or github_pat_…', 'oaf-wp-blocktheme' )
+			)
+		);
+
+		if ( $has_saved ) {
+			echo '<p><label><input type="checkbox" name="oaf_theme_options[github_token_remove]" value="1" /> ';
+			esc_html_e( 'Remove the saved token', 'oaf-wp-blocktheme' );
+			echo '</label></p>';
+		}
+
+		echo '<p class="description">';
+		esc_html_e( 'Optional. Only used to raise the GitHub API rate limit when refreshing contributors. The theme reads only public repositories, so a token with no scopes is enough: a fine-grained token with "Public repositories (read-only)" access, or a classic token with no scopes ticked.', 'oaf-wp-blocktheme' );
+		echo '</p>';
 	}
 }
 

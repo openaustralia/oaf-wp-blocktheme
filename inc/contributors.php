@@ -124,10 +124,18 @@ if ( ! function_exists( 'oaf_contributors_token' ) ) {
 	 * Optional GitHub token, used only to raise the API rate limit. Not required
 	 * for public repositories at the weekly refresh cadence.
 	 *
+	 * Read from the OAF_GITHUB_TOKEN constant (wp-config.php) when set; otherwise
+	 * from the admin setting (Appearance -> OAF Theme). The constant wins so an
+	 * ops-defined secret cannot be overridden from wp-admin.
+	 *
 	 * @return string Token, or '' when none is configured.
 	 */
 	function oaf_contributors_token() {
 		$token = defined( 'OAF_GITHUB_TOKEN' ) ? (string) OAF_GITHUB_TOKEN : '';
+
+		if ( '' === $token && function_exists( 'oaf_option' ) ) {
+			$token = (string) oaf_option( 'github_token' );
+		}
 
 		/**
 		 * Filter the GitHub token used for contributor requests.

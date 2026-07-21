@@ -13,6 +13,15 @@ increases, which happens as a deliberate release (see
 
 ## [Unreleased]
 
+### Added
+
+- A "GitHub access token" field under Appearance → OAF Theme (Contributors
+  section), so the token that lifts the GitHub API rate limit for the
+  contributors refresh can be set from wp-admin instead of only via the
+  `OAF_GITHUB_TOKEN` constant in `wp-config.php`. The token is stored write-only
+  (never redisplayed), a "Remove" checkbox clears it, and the constant still
+  takes precedence when set.
+
 ## [1.4.0] - 2026-07-20
 
 ### Added

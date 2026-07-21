@@ -35,6 +35,7 @@ if ( ! function_exists( 'oaf_default_options' ) ) {
 			'openaustralia_url'          => 'https://www.openaustralia.org.au',
 			'acknowledgement'            => 'OpenAustralia Foundation acknowledges the traditional Owners of Country throughout Australia and acknowledges their continuing connection to land, waters and community. We pay our respects to the people, the cultures and the Elders past and present.',
 			'raisely_embed'              => '',
+			'github_token'               => '',
 			'contributor_exclude_logins' => '',
 		);
 	}
@@ -130,6 +131,21 @@ if ( ! function_exists( 'oaf_sanitize_options' ) ) {
 		} else {
 			$existing               = get_option( 'oaf_theme_options', array() );
 			$clean['raisely_embed'] = isset( $existing['raisely_embed'] ) ? $existing['raisely_embed'] : '';
+		}
+
+		// GitHub token for the Contributors fetch. It is a secret, so the admin
+		// field renders blank and is never echoed back; that means an empty submit
+		// must PRESERVE the stored value, otherwise saving any other setting on the
+		// shared form would silently wipe the token. A new value replaces it, and
+		// the "remove" checkbox is the explicit way to clear it.
+		$existing_opts  = get_option( 'oaf_theme_options', array() );
+		$existing_token = ( is_array( $existing_opts ) && isset( $existing_opts['github_token'] ) ) ? $existing_opts['github_token'] : '';
+		if ( ! empty( $input['github_token_remove'] ) ) {
+			$clean['github_token'] = '';
+		} elseif ( isset( $input['github_token'] ) && '' !== trim( $input['github_token'] ) ) {
+			$clean['github_token'] = sanitize_text_field( $input['github_token'] );
+		} else {
+			$clean['github_token'] = $existing_token;
 		}
 
 		return $clean;
