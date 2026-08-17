@@ -58,8 +58,11 @@ Escape late (at output), and match the surrounding file's WPCS-clean style — C
 
 The local `CONTRIBUTING.md` owns what is specific to this repo: dev setup, the changelog rule, versioning, and cutting a release. Everything else (branch naming, draft PRs and assignees, DCO sign-off, AI disclosure, org-wide agent conventions) comes from [`openaustralia/.github`](https://github.com/openaustralia/.github). Fetch the current versions rather than relying on a copy:
 
-`gh api repos/openaustralia/.github/contents/.github/CONTRIBUTING.md -H "Accept: application/vnd.github.raw"`
+`curl -fsSL https://raw.githubusercontent.com/openaustralia/.github/main/.github/CONTRIBUTING.md`
 
-`gh api repos/openaustralia/.github/contents/AGENTS.md -H "Accept: application/vnd.github.raw"`
+`curl -fsSL https://raw.githubusercontent.com/openaustralia/.github/main/AGENTS.md`
+
+Any equivalent fetch of those URLs works (web fetch, or `gh api` if the GitHub CLI
+is installed); don't assume a particular tool is present.
 
 This is a public-facing OAF site: keep all copy non-partisan and in Australian English, no em dashes, and write "people", not "users".
