@@ -13,6 +13,26 @@ increases, which happens as a deliberate release (see
 
 ## [Unreleased]
 
+### Added
+
+- A copyright and content licence notice in the footer. It states that, unless
+  otherwise stated, content on the site may be reused under the Creative Commons
+  Attribution-NonCommercial-ShareAlike 4.0 International licence. This restores a
+  statement the previous oaf.org.au theme carried and the move to this theme
+  dropped, updated from the superseded 3.0 Australia licence. Creative Commons
+  no longer ports licences to individual countries, so 4.0 International is the
+  successor to 3.0 Australia.
+- A Licence page at `/licence/`, covering how to credit us, what the licence
+  does not cover (our name and logos, the ACNC Registered Charity Tick,
+  photographs of people, and the bundled typefaces), and the separate GPL
+  licence on the theme's code. **After updating, run "Create required pages"
+  under Appearance -> OAF Theme to create it.** Until it exists, the footer
+  notes the exceptions as plain text rather than linking to a page that is not
+  there.
+- `docs/adr/0001-content-licence-cc-by-nc-sa-4-0.md`, recording why the site is
+  licensed this way and noting that whether to drop the NonCommercial term is an
+  open question for the board.
+
 ## [1.4.1] - 2026-07-21
 
 ### Added
