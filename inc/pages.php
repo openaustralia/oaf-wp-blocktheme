@@ -70,6 +70,11 @@ if ( ! function_exists( 'oaf_required_pages' ) ) {
 				'template' => 'page-no-title',
 				'parent'   => 'donate',
 			),
+			'licence'      => array(
+				'title'    => __( 'Licence', 'oaf-wp-blocktheme' ),
+				'pattern'  => 'oaf/page-licence',
+				'template' => 'page-no-title',
+			),
 		);
 	}
 }
@@ -461,7 +466,7 @@ if ( ! function_exists( 'oaf_render_pages_section' ) ) {
 		}
 		?>
 		<h2><?php esc_html_e( 'Required pages', 'oaf-wp-blocktheme' ); ?></h2>
-		<p><?php esc_html_e( 'Create the standard OAF pages (About, Collection, People, Contact, Donate) plus Home and Blog, and seed the example Team and Board people. Pages and people that already exist are left untouched, so this is safe to run more than once.', 'oaf-wp-blocktheme' ); ?></p>
+		<p><?php esc_html_e( 'Create the standard OAF pages (About, Collection, People, Contact, Donate, Licence) plus Home and Blog, and seed the example Team and Board people. Pages and people that already exist are left untouched, so this is safe to run more than once.', 'oaf-wp-blocktheme' ); ?></p>
 		<form action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" method="post">
 			<input type="hidden" name="action" value="oaf_create_pages" />
 			<?php wp_nonce_field( 'oaf_create_pages' ); ?>

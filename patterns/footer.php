@@ -7,7 +7,8 @@
  * Inserter: no
  *
  * The OAF canonical footer: attribution, charity status + ABN, Acknowledgement
- * of Country, ACNC Registered Charity tick, sister services and social links.
+ * of Country, ACNC Registered Charity tick, sister services, social links and
+ * the copyright + content licence notice.
  * This copy is mandatory across the family - keep it exact.
  *
  * @package oaf-wp-blocktheme
@@ -31,6 +32,15 @@ $oaf_gh       = oaf_option( 'github_url' );
 $oaf_bsky     = oaf_option( 'bluesky_url' );
 $oaf_mast     = oaf_option( 'mastodon_url' );
 $oaf_li       = oaf_option( 'linkedin_url' );
+
+// The reuse/exceptions page is a required page an admin creates from Appearance
+// -> OAF Theme, so it may not exist yet on a site that has only just updated.
+// Link to it only when it is actually published; otherwise the licence sentence
+// still reads correctly with the exceptions noted as plain text.
+$oaf_licence_page = get_page_by_path( 'licence' );
+$oaf_licence_url  = ( $oaf_licence_page instanceof WP_Post && 'publish' === $oaf_licence_page->post_status )
+	? get_permalink( $oaf_licence_page )
+	: '';
 ?>
 <!-- wp:group {"align":"full","className":"oaf-footer","backgroundColor":"sand","layout":{"type":"default"}} -->
 <div class="wp-block-group alignfull oaf-footer has-sand-background-color has-background">
@@ -90,6 +100,20 @@ $oaf_li       = oaf_option( 'linkedin_url' );
 					?>
 					<li><a href="<?php echo esc_url( $oaf_li ); ?>" aria-label="OAF on LinkedIn"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.063 2.063 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg><span class="oaf-foot-socials__label">LinkedIn</span></a></li><?php endif; ?>
 			</ul>
+		</div>
+		<div class="oaf-foot-row oaf-foot-row--legal">
+			<a class="oaf-foot-cc" rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/" aria-label="Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International">
+				<?php foreach ( array( 'cc', 'by', 'nc', 'sa' ) as $oaf_cc_icon ) : ?>
+					<img src="<?php echo esc_url( $oaf_uri . '/assets/img/cc/' . $oaf_cc_icon . '.svg' ); ?>" alt="" width="22" height="22" loading="lazy" decoding="async">
+				<?php endforeach; ?>
+			</a>
+			<p class="oaf-foot-legal">&copy; <?php echo esc_html( wp_date( 'Y' ) ); ?> <?php echo esc_html( $oaf_org ); ?> Limited. Unless otherwise stated, you are free to reuse the content on this site under the <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International</a> licence.
+			<?php if ( '' !== $oaf_licence_url ) : ?>
+				<a href="<?php echo esc_url( $oaf_licence_url ); ?>">Some exceptions apply</a>.
+			<?php else : ?>
+				Some exceptions apply.
+			<?php endif; ?>
+			</p>
 		</div>
 	</div>
 	<!-- /wp:html -->
