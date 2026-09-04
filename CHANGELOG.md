@@ -13,6 +13,15 @@ increases, which happens as a deliberate release (see
 
 ## [Unreleased]
 
+### Changed
+
+- The vision and mission statement on the homepage, so it matches how the rest
+  of the site describes us. It now names the library and says that people can
+  act on what they find, not only read it. It also no longer says "voters",
+  which was narrower than who the Collections actually serve, and it restores
+  the wording "transform democracy in Australia" from the full statement on the
+  about page.
+
 ## [1.5.0] - 2026-09-04
 
 ### Added
