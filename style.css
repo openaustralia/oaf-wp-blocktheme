@@ -548,7 +548,14 @@ a:hover { color: var(--oaf-link-hover); }
 .oaf-foot-socials a:hover { color: var(--oaf-maroon); }
 .oaf-foot-socials svg { width: 22px; height: 22px; display: block; }
 .oaf-foot-socials__label { font-size: 13px; font-weight: 500; letter-spacing: 0.01em; }
-.oaf-foot-row--legal { justify-content: flex-start; }
+.oaf-foot-row--legal { justify-content: flex-start; flex-wrap: nowrap; gap: 14px; align-items: flex-start; }
+.oaf-foot-cc {
+	display: inline-flex;
+	gap: 4px;
+	flex-shrink: 0;
+	padding-top: 2px;
+}
+.oaf-foot-cc img { width: 22px; height: 22px; display: block; }
 .oaf-foot-legal {
 	font-size: 13px;
 	color: var(--oaf-muted);
@@ -1055,6 +1062,7 @@ textarea.oaf-input { resize: vertical; }
 	.oaf-contributor .oaf-avatar { width: 60px; height: 60px; font-size: 20px; }
 	.oaf-foot-top { grid-template-columns: 1fr; row-gap: 28px; }
 	.oaf-foot-tick img { width: 110px; height: 110px; }
+	.oaf-foot-row--legal { flex-direction: column; gap: 12px; }
 	.oaf-donateband .oaf-ct { align-items: flex-start; }
 }
 

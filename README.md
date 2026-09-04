@@ -175,6 +175,15 @@ Foundation site as designed.
   - including hyperlinking it to their own Charity Register listing and following the Registered
   Charity Tick Style Guide.
 
+The **Creative Commons licence icons** (`assets/img/cc/`) are trademarks of Creative Commons.
+They are bundled byte-identical to the originals from the
+[CC presskit](https://mirrors.creativecommons.org/presskit/icons/) and are used descriptively, to
+indicate the licence covering the site's content. CC's
+[trademark policy](https://creativecommons.org/policies/) permits that use without permission
+provided the mark describes the licence that actually applies and links to the corresponding
+Commons deed, which the footer does. Do not restyle or recolour them, and remove them from a fork
+that is not published under the same licence.
+
 The bundled Fira Sans and Merriweather fonts are licensed separately under the SIL Open Font
 License 1.1 (see `assets/fonts/OFL.txt`).
 

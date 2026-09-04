@@ -102,6 +102,11 @@ $oaf_licence_url  = ( $oaf_licence_page instanceof WP_Post && 'publish' === $oaf
 			</ul>
 		</div>
 		<div class="oaf-foot-row oaf-foot-row--legal">
+			<a class="oaf-foot-cc" rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/" aria-label="Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International">
+				<?php foreach ( array( 'cc', 'by', 'nc', 'sa' ) as $oaf_cc_icon ) : ?>
+					<img src="<?php echo esc_url( $oaf_uri . '/assets/img/cc/' . $oaf_cc_icon . '.svg' ); ?>" alt="" width="22" height="22" loading="lazy" decoding="async">
+				<?php endforeach; ?>
+			</a>
 			<p class="oaf-foot-legal">&copy; <?php echo esc_html( wp_date( 'Y' ) ); ?> <?php echo esc_html( $oaf_org ); ?> Limited. Unless otherwise stated, you are free to reuse the content on this site under the <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International</a> licence.
 			<?php if ( '' !== $oaf_licence_url ) : ?>
 				<a href="<?php echo esc_url( $oaf_licence_url ); ?>">Some exceptions apply</a>.

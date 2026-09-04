@@ -17,7 +17,10 @@ increases, which happens as a deliberate release (see
 
 - A copyright and content licence notice in the footer. It states that, unless
   otherwise stated, content on the site may be reused under the Creative Commons
-  Attribution-NonCommercial-ShareAlike 4.0 International licence. This restores a
+  Attribution-NonCommercial-ShareAlike 4.0 International licence, alongside the four
+  Creative Commons icons (CC, BY, NC, SA) linking to the licence deed. The icons are
+  bundled with the theme rather than hotlinked, so rendering a page makes no
+  third-party request. This restores a
   statement the previous oaf.org.au theme carried and the move to this theme
   dropped, updated from the superseded 3.0 Australia licence. Creative Commons
   no longer ports licences to individual countries, so 4.0 International is the
