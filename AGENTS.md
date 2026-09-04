@@ -17,7 +17,7 @@ wp-env start                  # boot WordPress with this repo as the active them
 wp-env run cli wp <command>   # run WP-CLI against the dev site
 sh .wp-setup.sh               # seed the dev site: permalinks, the standard pages (from patterns), reading settings
 
-mise run bump <level>         # cut a release: bump style.css, roll CHANGELOG, tag, push (level = major|minor|patch|X.Y.Z)
+mise run bump <level>         # cut a release: bump style.css, roll CHANGELOG, tag, push, publish the GitHub Release (level = major|minor|patch|X.Y.Z)
 ```
 
 CI runs two workflows on PRs: `.github/workflows/php.yml` (`composer validate --strict`, a `php -l` syntax sweep, `composer run phpcs`) and `.github/workflows/changelog.yml` (the changelog rule - see `CONTRIBUTING.md`, which owns the changelog and release workflow). On some networks `wp-env`/Node needs `NODE_OPTIONS=--network-family-autoselection-attempt-timeout=5000` to avoid connection timeouts.

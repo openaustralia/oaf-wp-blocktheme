@@ -80,6 +80,12 @@ The command does the whole release in one step:
 3. Makes one signed commit (`Release X.Y.Z`) and a `vX.Y.Z` tag.
 4. Asks for confirmation, then pushes `main` and the tag to GitHub, at which
    point Git Updater offers the update to connected sites.
+5. Publishes the GitHub Release for the tag, with auto-generated notes. Pushing
+   a tag does not create a Release on its own, so without this the Releases page
+   would stay empty. It needs the [GitHub CLI](https://cli.github.com/); if `gh`
+   is missing or the call fails, the release still ships (Git Updater works from
+   the tag and the `style.css` header) and the command tells you how to publish
+   the Release by hand.
 
 It refuses to run if you are not on `main`, if the working tree is dirty, if
 `[Unreleased]` is empty, or if the target tag already exists.
