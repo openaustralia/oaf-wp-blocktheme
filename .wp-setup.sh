@@ -5,7 +5,7 @@ cd /var/www/html
 
 wp rewrite structure '/%postname%/' --hard
 
-for slug in about collection people contact donate; do
+for slug in about collection people contact donate licence; do
   title=$(printf '%s' "$slug" | awk '{print toupper(substr($0,1,1)) substr($0,2)}')
   ID=$(wp post create --post_type=page --post_status=publish --post_title="$title" --post_name="$slug" \
     --post_content="<!-- wp:pattern {\"slug\":\"oaf/page-$slug\"} /-->" --porcelain)
