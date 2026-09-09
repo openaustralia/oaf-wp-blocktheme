@@ -47,21 +47,33 @@ if ( ! function_exists( 'oaf_setup' ) ) {
 		add_theme_support( 'html5', array( 'search-form', 'gallery', 'caption', 'style', 'script' ) );
 		add_theme_support( 'post-thumbnails' );
 
-		// Load style.css into the Site Editor / block editor so it matches the front end.
-		add_editor_style( 'style.css' );
+		// Load the stylesheets into the Site Editor / block editor so it matches
+		// the front end. Same order as the front-end enqueue: the vendored OAF
+		// Standard Footer first, then style.css so theme overrides win.
+		add_editor_style( array( 'assets/css/oaf-footer.css', 'style.css' ) );
 	}
 }
 add_action( 'after_setup_theme', 'oaf_setup' );
 
 if ( ! function_exists( 'oaf_enqueue_assets' ) ) {
 	/**
-	 * Enqueue the theme stylesheet on the front end.
+	 * Enqueue the theme stylesheets on the front end.
 	 */
 	function oaf_enqueue_assets() {
+		// The vendored OAF Standard Footer (github.com/openaustralia/oaf-standard-footer).
+		// The version mirrors the version comment at the top of the file - the only
+		// marker the standard footer carries - so bump both together on upgrade.
+		wp_enqueue_style(
+			'oaf-standard-footer',
+			get_template_directory_uri() . '/assets/css/oaf-footer.css',
+			array(),
+			'2.0.1'
+		);
+
 		wp_enqueue_style(
 			'oaf-style',
 			get_stylesheet_uri(),
-			array(),
+			array( 'oaf-standard-footer' ),
 			wp_get_theme()->get( 'Version' )
 		);
 	}

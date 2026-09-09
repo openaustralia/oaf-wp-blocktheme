@@ -13,6 +13,33 @@ increases, which happens as a deliberate release (see
 
 ## [Unreleased]
 
+### Fixed
+
+- The links in the mobile menu overlay were hard to tap: they inherited the
+  desktop masthead's 14.5px type and carried no padding, leaving each one a
+  roughly 22px-tall target hugging the panel edge. Inside the open overlay
+  they now render at 22px with padding that takes each target past the 44px
+  minimum tap size (WCAG 2.5.5), and the labels are inset to the same 22px
+  gutter the rest of the mobile layout uses. The desktop and tablet nav are
+  untouched.
+
+### Changed
+
+- The footer is now the [OAF Standard Footer](https://github.com/openaustralia/oaf-standard-footer)
+  (v2.0.1), replacing the theme's own hand-ported footer. The stylesheet is
+  vendored at `assets/css/oaf-footer.css` with the `oaf-footer--oaf` surface
+  preset, and the markup in `patterns/footer.php` follows the canonical
+  `oaf-footer.html`. With it come the governed wording updates: the charity
+  sentence now opens with the Foundation's name and describes it as "a public
+  digital online library", and the sister-sites row reads "Our collections"
+  instead of "Our services". The OAF wordmark is now inlined SVG coloured with
+  `currentColor` rather than a bundled image, and the ACNC Registered Charity
+  Tick SVG is replaced with the unaltered ACNC master the standard footer
+  carries. The theme's editable settings (name, ABN, register links, collection
+  and social links, Acknowledgement of Country) keep driving the footer, and
+  the copyright + content licence row remains below the standard rows, restyled
+  to match them.
+
 ## [1.6.0] - 2026-09-04
 
 ### Changed
