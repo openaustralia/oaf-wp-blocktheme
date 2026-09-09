@@ -169,7 +169,8 @@ a:hover { color: var(--oaf-link-hover); }
    overlay WordPress lays the nav out as a flex column, and that same rule
    leaks onto the nav container - pushing the links hard against the right
    edge so the panel shrinks and "Collection" clips off-screen. Reset the
-   margin within the open overlay and pad the panel so links sit flush-left.
+   margin within the open overlay so links sit flush-left (the link padding
+   below supplies the panel inset).
    Scoped to .is-menu-open, so the desktop/tablet nav is untouched. */
 .oaf-masthead .wp-block-navigation__responsive-container.is-menu-open .wp-block-navigation,
 .oaf-masthead .wp-block-navigation__responsive-container.is-menu-open .wp-block-navigation__container {
@@ -177,7 +178,22 @@ a:hover { color: var(--oaf-link-hover); }
 }
 .oaf-masthead .wp-block-navigation__responsive-container.is-menu-open .wp-block-navigation__container {
 	align-items: flex-start;
-	padding-left: 8px;
+	/* Plus the links' own 8px side padding, this puts the labels at the same
+	   22px gutter as .oaf-ct on mobile instead of hugging the panel edge. */
+	padding-left: 14px;
+}
+/* Inside the open overlay the links otherwise inherit the desktop nav's
+   14.5px and carry no padding, so each one is a ~22px-tall tap target. Bump
+   the type up to overlay scale and pad every link so the target clears the
+   44px minimum (WCAG 2.5.5); the link's own 8px side padding also supplies
+   the panel inset the container used to carry. Scoped to .is-menu-open, so
+   the desktop/tablet nav is untouched. */
+.oaf-masthead .wp-block-navigation__responsive-container.is-menu-open .wp-block-navigation {
+	font-size: 22px;
+}
+.oaf-masthead .wp-block-navigation__responsive-container.is-menu-open .wp-block-navigation-item__content {
+	display: inline-block;
+	padding: 8px;
 }
 
 .oaf-donate-btn { margin-left: 0; }

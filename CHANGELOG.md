@@ -13,6 +13,16 @@ increases, which happens as a deliberate release (see
 
 ## [Unreleased]
 
+### Fixed
+
+- The links in the mobile menu overlay were hard to tap: they inherited the
+  desktop masthead's 14.5px type and carried no padding, leaving each one a
+  roughly 22px-tall target hugging the panel edge. Inside the open overlay
+  they now render at 22px with padding that takes each target past the 44px
+  minimum tap size (WCAG 2.5.5), and the labels are inset to the same 22px
+  gutter the rest of the mobile layout uses. The desktop and tablet nav are
+  untouched.
+
 ### Changed
 
 - The footer is now the [OAF Standard Footer](https://github.com/openaustralia/oaf-standard-footer)
