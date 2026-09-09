@@ -124,8 +124,15 @@ git tag -a -m "Release $new" "v$new"
 
 # --- Confirm, then push ---
 if [ "$assume_yes" -ne 1 ]; then
+  if [ ! -t 0 ]; then
+    echo "No terminal to confirm the push (pass -y to skip the prompt)."
+    echo "Committed and tagged locally, not pushed."
+    echo "To ship: git push origin main --follow-tags"
+    echo "Then:    gh release create v$new --generate-notes"
+    exit 0
+  fi
   printf 'Push release %s to origin/main now? This ships it to connected sites. [y/N] ' "$new"
-  read -r reply
+  read -r reply || reply=""
   case "$reply" in
     y|Y|yes|YES) ;;
     *)

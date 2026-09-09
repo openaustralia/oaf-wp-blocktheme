@@ -5,3 +5,6 @@
 [tasks.bump]
 description = "Cut a release: bump style.css version, roll the changelog, tag and push"
 run = "./bin/bump-version.sh"
+# The script prompts before pushing; raw connects it to the terminal so the
+# prompt can actually read a reply instead of hitting EOF through mise's pipes.
+raw = true
