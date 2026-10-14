@@ -13,6 +13,14 @@ increases, which happens as a deliberate release (see
 
 ## [Unreleased]
 
+### Fixed
+
+- "Re-create selected" in Appearance > OAF Theme failed with "Could not be
+  re-created" for any page still carrying a template from the old classic
+  theme, such as Donate. WordPress rejected the stale template while saving
+  the page. The re-create now sets the theme's own template as part of the
+  save, which also repairs the page's stored template.
+
 ### Changed
 
 - The pages the theme expects (Home, Blog and the seven pattern pages) are now

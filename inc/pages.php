@@ -116,23 +116,25 @@ if ( ! function_exists( 'oaf_write_page' ) ) {
 				);
 			}
 
-			$id = wp_update_post(
-				array(
-					'ID'           => $found['post']->ID,
-					'post_content' => $content,
-				),
-				true
+			$update = array(
+				'ID'           => $found['post']->ID,
+				'post_content' => $content,
 			);
+
+			// wp_update_post() merges the page's stored template back in and rejects
+			// it if the theme no longer has it (legacy pages keep the classic theme's
+			// template-page-fullwidth.php), so pass the template we want explicitly.
+			if ( '' !== $template ) {
+				$update['page_template'] = $template;
+			}
+
+			$id = wp_update_post( $update, true );
 
 			if ( is_wp_error( $id ) ) {
 				return array(
 					'status' => 'error',
 					'id'     => $found['post']->ID,
 				);
-			}
-
-			if ( '' !== $template ) {
-				update_post_meta( (int) $id, '_wp_page_template', $template );
 			}
 
 			return array(
