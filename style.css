@@ -439,7 +439,16 @@ a:hover { color: var(--oaf-link-hover); }
 	letter-spacing: 0.1em;
 	font-weight: 700;
 }
-.oaf-tag a, .oaf-teaser__meta .wp-block-post-terms a { color: inherit; text-decoration: none; }
+/* A comma-separated category list isn't running text, so WCAG 2.5.8's inline
+   exemption doesn't cover it: give each link a full 24x24 target. */
+.oaf-tag a, .oaf-teaser__meta .wp-block-post-terms a {
+	color: inherit;
+	text-decoration: none;
+	display: inline-block;
+	min-width: 24px;
+	min-height: 24px;
+	line-height: 24px;
+}
 .oaf-date, .oaf-teaser__meta .wp-block-post-date {
 	font-family: var(--oaf-font-mono);
 	font-size: 12px;
@@ -883,12 +892,34 @@ textarea.oaf-input { resize: vertical; }
 
 /* Spacer helper for white/sand content bands */
 .oaf-band { padding-top: 58px; padding-bottom: 58px; }
+
+/* Core pads every coloured Group with :where(.wp-block-group.has-background)
+   { padding: 1.25em 2.375em }. The theme's full-bleed bands take their side
+   gutter from the inner .oaf-ct alone, so drop core's horizontal padding here -
+   otherwise it stacks on .oaf-ct and leaves a 270px column on a 390px phone.
+   Scoped to the theme's own band classes so a coloured Group an editor adds by
+   hand keeps core's padding. */
+.oaf-masthead,
+.oaf-hero,
+.oaf-pagehero,
+.oaf-stats,
+.oaf-band,
+.oaf-darkpanel,
+.oaf-donateband { padding-left: 0; padding-right: 0; }
 .has-sand-background-color { background: var(--oaf-sand); }
 .has-navy-background-color { background: var(--oaf-navy); }
 
 /* ---------- Pagination ---------- */
 .wp-block-query-pagination { margin-top: 40px; font-family: var(--oaf-font-sans); }
 .wp-block-query-pagination a { color: var(--oaf-link); }
+/* Page numbers sit side by side, so each needs a full 24x24 target (WCAG 2.5.8). */
+.wp-block-query-pagination .page-numbers {
+	display: inline-block;
+	min-width: 24px;
+	min-height: 24px;
+	line-height: 24px;
+	text-align: center;
+}
 
 /* ---------- Archive / search hero extras ---------- */
 .oaf-pagehero .wp-block-query-title { color: #fff; font-size: 46px; margin: 0; }
@@ -1001,6 +1032,12 @@ textarea.oaf-input { resize: vertical; }
 	.oaf-hero h1 { font-size: 52px; }
 	.oaf-pagehero h1 { font-size: 38px; }
 }
+/* Equal Donate columns leave the Raisely form under 300px wide on tablets, so
+   fix the form column at 400px (form ~344px) and let "What your donation does"
+   take the rest. Below 782px the columns stack. */
+@media (min-width: 782px) and (max-width: 1023px) {
+	.oaf-grid-donate { grid-template-columns: 400px minmax(0, 1fr); }
+}
 @media (max-width: 781px) {
 	.oaf-ct { padding-left: 22px; padding-right: 22px; }
 	.oaf-masthead .oaf-ct { flex-wrap: wrap; gap: 14px; }
@@ -1019,6 +1056,17 @@ textarea.oaf-input { resize: vertical; }
 	.oaf-footer { --oaf-footer-padding-inline: 22px; }
 	.oaf-foot-licence { flex-direction: column; gap: 12px; }
 	.oaf-donateband .oaf-ct { align-items: flex-start; }
+	.oaf-donate-card { padding: 18px; }
+}
+
+/* Below desktop the masthead shows the two-line logo (swapped in by the
+   <picture> in patterns/header.php), sized so its letters match the one-line
+   wordmark. It keeps logo, menu and Donate on one row down to ~350px, and
+   leaves the tablet nav room for all five links. */
+@media (max-width: 1023px) {
+	.oaf-masthead__logo img { height: 46px; }
+	/* Scale Donate up to sit level with the taller logo. */
+	.oaf-donate-btn .wp-block-button__link { font-size: 16px; padding: 9px 22px; }
 }
 
 /* Bridge WordPress's fixed 600px nav breakpoint up to the masthead's 781px

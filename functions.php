@@ -27,6 +27,9 @@ require_once get_template_directory() . '/inc/stats.php';
 // Contact form: route Jetpack multi-step submissions by enquiry type.
 require_once get_template_directory() . '/inc/contact-form.php';
 
+// Render legacy pattern pages whose classic template no longer exists with page-no-title.
+require_once get_template_directory() . '/inc/templates.php';
+
 // Admin-only: required-page creation and the theme settings screen.
 if ( is_admin() ) {
 	require_once get_template_directory() . '/inc/pages.php';

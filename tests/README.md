@@ -19,6 +19,7 @@ composer run test       # run the suite (also runs in CI, see .github/workflows/
 | `ContactRouteSyncTest` | Guards the drift CLAUDE.md warns about: the contact pattern's field-select options must match `oaf_contact_routes()` |
 | `StatsTest` | `oaf_stat()` fallback when the Alaveteli stats plugin is absent |
 | `AvatarsTest` | Initials, deterministic palette colour, and the initials-SVG data URI |
+| `TemplatesTest` | Which pages with a stale classic `_wp_page_template` fall back to `page-no-title` |
 | `StructureTest` | `theme.json` / `block.json` validity, block asset targets exist, and the `style.css` Version header Git Updater keys on |
 
 ## Ground rule

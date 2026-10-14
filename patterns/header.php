@@ -17,7 +17,7 @@ $oaf_home = home_url( '/' );
 	<!-- wp:group {"className":"oaf-ct","layout":{"type":"default"}} -->
 	<div class="wp-block-group oaf-ct">
 		<!-- wp:html -->
-		<a class="oaf-masthead__logo" href="<?php echo esc_url( $oaf_home ); ?>" aria-label="OpenAustralia Foundation - home"><img src="<?php echo esc_url( $oaf_uri . '/assets/img/oaf-wordmark-white.svg' ); ?>" alt="OpenAustralia Foundation" width="220" height="24"></a>
+		<a class="oaf-masthead__logo" href="<?php echo esc_url( $oaf_home ); ?>" aria-label="OpenAustralia Foundation - home"><picture><source media="(max-width: 1023px)" srcset="<?php echo esc_url( $oaf_uri . '/assets/img/oaf-logo-white-2lines.svg' ); ?>" width="2347" height="707"><img src="<?php echo esc_url( $oaf_uri . '/assets/img/oaf-wordmark-white.svg' ); ?>" alt="OpenAustralia Foundation" width="267" height="24"></picture></a>
 		<!-- /wp:html -->
 
 		<!-- wp:navigation {"overlayMenu":"mobile","layout":{"type":"flex","setCascadingProperties":true,"justifyContent":"left"}} -->
