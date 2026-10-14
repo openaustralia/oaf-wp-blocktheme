@@ -26,12 +26,12 @@ increases, which happens as a deliberate release (see
   coloured Group, and that stacked on the theme's gutter, leaving a 270px
   column on a 390px phone. The theme's full-width bands now take their side
   gutter from the inner container only.
-- On tablets (782 to 1023px) the Donate page now stacks the form above "What
-  your donation does" instead of squeezing it into a narrow column, and the
-  form card uses less padding on phones.
-- The masthead no longer wraps onto two rows on phones. Below 600px the
-  wordmark scales to the space left beside the menu button and Donate button.
-  On tablets (782 to 1023px) the nav links no longer wrap onto a second line.
+- On tablets (782 to 1023px) the Donate form now has a fixed 400px column
+  instead of half the width, so it is no longer narrower than on a phone, and
+  the form card uses less padding on phones.
+- Below 1024px the masthead uses the two-line OAF logo. On phones the logo,
+  menu button and Donate button now share one row instead of wrapping onto
+  two, and on tablets the nav links no longer wrap onto a second line.
 - Category links on posts and listings, and the page numbers in pagination,
   now meet the 24px minimum target size (WCAG 2.2, 2.5.8).
 

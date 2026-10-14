@@ -1032,12 +1032,11 @@ textarea.oaf-input { resize: vertical; }
 	.oaf-hero h1 { font-size: 52px; }
 	.oaf-pagehero h1 { font-size: 38px; }
 }
-/* Two Donate columns leave the Raisely form under 300px wide below 1024px,
-   narrower than on a phone, so stack the form card above "What your donation
-   does" and cap it so the form doesn't stretch across a tablet. */
-@media (max-width: 1023px) {
-	.oaf-grid-donate { grid-template-columns: 1fr; }
-	.oaf-grid-donate .oaf-donate-card { max-width: 560px; }
+/* Equal Donate columns leave the Raisely form under 300px wide on tablets, so
+   fix the form column at 400px (form ~344px) and let "What your donation does"
+   take the rest. Below 782px the columns stack. */
+@media (min-width: 782px) and (max-width: 1023px) {
+	.oaf-grid-donate { grid-template-columns: 400px minmax(0, 1fr); }
 }
 @media (max-width: 781px) {
 	.oaf-ct { padding-left: 22px; padding-right: 22px; }
@@ -1060,13 +1059,12 @@ textarea.oaf-input { resize: vertical; }
 	.oaf-donate-card { padding: 18px; }
 }
 
-/* Phones: keep logo, menu button and Donate on one row. The wordmark (267x24)
-   takes whatever width is left, up to full size: ~19px tall at 390px, ~16.5px
-   at 360px. */
-@media (max-width: 599px) {
-	.oaf-masthead .oaf-ct { flex-wrap: nowrap; }
-	.oaf-masthead__logo { flex: 0 1 267px; min-width: 0; }
-	.oaf-masthead__logo img { width: 100%; height: auto; }
+/* Below desktop the masthead shows the two-line logo (swapped in by the
+   <picture> in patterns/header.php), sized so its letters match the one-line
+   wordmark. It keeps logo, menu and Donate on one row down to ~330px, and
+   leaves the tablet nav room for all five links. */
+@media (max-width: 1023px) {
+	.oaf-masthead__logo img { height: 46px; }
 }
 
 /* Bridge WordPress's fixed 600px nav breakpoint up to the masthead's 781px
@@ -1089,12 +1087,4 @@ textarea.oaf-input { resize: vertical; }
 	.oaf-masthead .wp-block-navigation__responsive-container:not(.hidden-by-default):not(.always-shown):not(.is-menu-open) {
 		display: none;
 	}
-}
-
-/* Tablets: logo, five nav links and Donate overflow the row by a few pixels at
-   iPad-portrait widths, so the links wrapped onto a second line. Tighter gaps
-   keep them on one line from 782px. */
-@media (min-width: 782px) and (max-width: 1023px) {
-	.oaf-masthead .oaf-ct,
-	.oaf-masthead .wp-block-navigation { gap: 16px; }
 }
