@@ -13,6 +13,28 @@ increases, which happens as a deliberate release (see
 
 ## [Unreleased]
 
+### Fixed
+
+- The Raisely donation form was squeezed to about 107px wide on a phone. The
+  Donate page still carried a template from the old classic theme, so it fell
+  back to the generic page layout and was wrapped in a second hero and padded
+  band (which also gave it two headings). A page that names a template the
+  theme doesn't have, and whose content is one of the theme's own page
+  patterns, now renders with the "Page (no title)" template. The stored page
+  setting is left as it is.
+- Every page was cramped on phones: WordPress adds its own side padding to any
+  coloured Group, and that stacked on the theme's gutter, leaving a 270px
+  column on a 390px phone. The theme's full-width bands now take their side
+  gutter from the inner container only.
+- On tablets (782 to 1023px) the Donate page now stacks the form above "What
+  your donation does" instead of squeezing it into a narrow column, and the
+  form card uses less padding on phones.
+- The masthead no longer wraps onto two rows on phones. Below 600px the
+  wordmark scales to the space left beside the menu button and Donate button.
+  On tablets (782 to 1023px) the nav links no longer wrap onto a second line.
+- Category links on posts and listings, and the page numbers in pagination,
+  now meet the 24px minimum target size (WCAG 2.2, 2.5.8).
+
 ## [1.7.0] - 2026-09-09
 
 ### Fixed
