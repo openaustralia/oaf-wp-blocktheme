@@ -1,6 +1,6 @@
 <?php
 /**
- * Tests for inc/templates.php - which pages fall back to page-no-title.
+ * Tests for inc/templates.php - which pages fall back to their own template.
  *
  * Only the decision is tested. The hierarchy filter itself reads the queried
  * page through WordPress and is checked end to end in a browser.
@@ -23,11 +23,6 @@ final class TemplatesTest extends TestCase {
 		);
 	}
 
-	public function test_legacy_template_on_expanded_pattern_markup_falls_back(): void {
-		$content = '<section class="wp-block-group alignfull oaf-pagehero has-maroon-background-color">';
-		$this->assertSame( 'page-no-title', oaf_legacy_template_fallback( 'template-page-fullwidth.php', $content, self::KNOWN ) );
-	}
-
 	public function test_legacy_template_on_classic_content_is_left_alone(): void {
 		$this->assertSame( '', oaf_legacy_template_fallback( 'template-page-fullwidth.php', '<h2>Old page</h2><p>Text.</p>', self::KNOWN ) );
 	}
@@ -41,15 +36,18 @@ final class TemplatesTest extends TestCase {
 		$this->assertSame( '', oaf_legacy_template_fallback( 'default', self::PATTERN_REF, self::KNOWN ) );
 	}
 
-	public function test_pattern_reference_with_slug_not_first_is_recognised(): void {
-		$this->assertTrue( oaf_page_supplies_own_hero( '<!-- wp:pattern {"className":"x","slug":"oaf/page-donate"} /-->' ) );
+	public function test_slug_not_first_in_the_reference_still_falls_back(): void {
+		$content = '<!-- wp:pattern {"className":"x","slug":"oaf/page-donate"} /-->';
+		$this->assertSame( 'page-no-title', oaf_legacy_template_fallback( 'template-page-fullwidth.php', $content, self::KNOWN ) );
 	}
 
-	public function test_hero_class_named_in_prose_is_not_treated_as_a_hero(): void {
-		$this->assertFalse( oaf_page_supplies_own_hero( '<p>The oaf-hero band sits at the top of the home page.</p>' ) );
+	public function test_detached_pattern_markup_is_left_alone(): void {
+		$content = '<section class="wp-block-group alignfull oaf-pagehero has-maroon-background-color">';
+		$this->assertSame( '', oaf_legacy_template_fallback( 'template-page-fullwidth.php', $content, self::KNOWN ) );
 	}
 
-	public function test_non_oaf_pattern_is_not_treated_as_a_hero(): void {
-		$this->assertFalse( oaf_page_supplies_own_hero( '<!-- wp:pattern {"slug":"twentytwentyfive/hero"} /-->' ) );
+	public function test_unregistered_pattern_is_left_alone(): void {
+		$content = '<!-- wp:pattern {"slug":"twentytwentyfive/hero"} /-->';
+		$this->assertSame( '', oaf_legacy_template_fallback( 'template-page-fullwidth.php', $content, self::KNOWN ) );
 	}
 }

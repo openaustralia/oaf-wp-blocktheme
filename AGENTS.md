@@ -34,9 +34,10 @@ Connected sites self-update via the Git Updater plugin tracking `main`, which of
 
 **Marketing pages ship as patterns; everything else is templates.** The five pages (about, collection, people, contact, donate) exist as `patterns/page-*.php`. Once created they are normal editable pages whose content is a single `wp:pattern` reference — so their real markup is in the pattern file, not the page. Home, blog, single, archive, search and 404 are driven by `templates/*.html`.
 
-**`functions.php` wires up `inc/` modules.** Loaded on the front end: `options.php`, `people.php`, `avatars.php`, `stats.php`, `contact-form.php`. Loaded only in admin: `pages.php`, `admin.php`.
+**`functions.php` wires up `inc/` modules.** Loaded on the front end: `options.php`, `people.php`, `avatars.php`, `stats.php`, `required-pages.php`, `contact-form.php`, `templates.php`. Loaded only in admin: `pages.php`, `admin.php`.
 
 - **Settings** (`inc/options.php` + `inc/admin.php`): one option `oaf_theme_options`, read everywhere via `oaf_option()`, each field falling back to a design default. Drives the footer's editable values (name/ABN, socials, sister-service links, Acknowledgement of Country) and the Raisely embed. Admin screen: **Appearance → OAF Theme**.
+- **Required pages** (`inc/required-pages.php`): the one definition of the pages the theme expects (slug, pattern, template, parent), loaded everywhere. Add a page there, not in the seed script or a regex; `RequiredPagesTest` checks it against `patterns/`, `theme.json` and `.wp-setup.sh`. Terms are in `CONTEXT.md`.
 - **Required-page creation** (`inc/pages.php`): the "Create required pages" button is **idempotent** — existing pages/people are skipped. Pattern pages get the `page-no-title` template so `page.html`'s title hero doesn't double up with the pattern's own hero.
 - **People** (`inc/people.php`): a `People` custom post type + `Groups` taxonomy (seeded Team / Board) + a Role meta box + Order. Rendered by the `oaf/people-grid` dynamic block, not page markup.
 - **Avatars** (`inc/avatars.php`): overrides Gravatar with People photos via `pre_get_avatar_data`, falling back to a coloured initials circle. Set `$args['url']` + `found_avatar` there to fully short-circuit Gravatar.

@@ -24,10 +24,13 @@ require_once get_template_directory() . '/inc/avatars.php';
 // Live statistics (wp-alaveteli-stats plugin when present), used by patterns.
 require_once get_template_directory() . '/inc/stats.php';
 
+// The required pages (definition and content lookup), read on the front end and in admin.
+require_once get_template_directory() . '/inc/required-pages.php';
+
 // Contact form: route Jetpack multi-step submissions by enquiry type.
 require_once get_template_directory() . '/inc/contact-form.php';
 
-// Render legacy pattern pages whose classic template no longer exists with page-no-title.
+// Render pattern pages that carry a stale template with page-no-title.
 require_once get_template_directory() . '/inc/templates.php';
 
 // Admin-only: required-page creation and the theme settings screen.

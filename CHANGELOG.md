@@ -13,6 +13,19 @@ increases, which happens as a deliberate release (see
 
 ## [Unreleased]
 
+### Changed
+
+- The pages the theme expects (Home, Blog and the seven pattern pages) are now
+  defined in one place, `inc/required-pages.php`, instead of being repeated in
+  the template fallback, the contact-form script check and the dev seed script.
+  A page counts as a pattern page when its content references one of those
+  patterns, which is exactly what "Create required pages" writes. A page whose
+  pattern an editor has detached into ordinary blocks no longer gets the
+  stale-template fallback. Nothing else changes for visitors.
+- The dev seed (`.wp-setup.sh`) now creates pages through the same code as the
+  admin button, so it also creates "Other ways to give" under Donate, which it
+  used to skip.
+
 ## [1.7.1] - 2026-10-14
 
 ### Fixed
