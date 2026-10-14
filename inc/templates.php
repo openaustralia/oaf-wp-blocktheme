@@ -8,33 +8,14 @@
  * its own title hero and padded white band. For a pattern page (which brings
  * its own hero and full-width bands) that means a duplicate h1 and compounded
  * padding - on the Donate page it squeezed the Raisely form to ~107px on a
- * phone. This renders such pages with page-no-title instead, without touching
- * the stored meta.
+ * phone. This renders such pages with their own template (page-no-title)
+ * instead, without touching the stored meta.
  *
  * @package oaf-wp-blocktheme
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
-}
-
-if ( ! function_exists( 'oaf_page_supplies_own_hero' ) ) {
-	/**
-	 * Whether page content brings its own hero, as the oaf/page-* patterns do.
-	 *
-	 * Matches a pattern reference (how "Create required pages" stores them) as
-	 * well as the expanded pattern markup, in case a page was saved after its
-	 * pattern was detached.
-	 *
-	 * @param string $content Raw post content.
-	 * @return bool
-	 */
-	function oaf_page_supplies_own_hero( $content ) {
-		return 1 === preg_match(
-			'/<!-- wp:pattern \{[^}]*"slug":"oaf\/page-|class="[^"]*\boaf-(?:page)?hero\b/',
-			(string) $content
-		);
-	}
 }
 
 if ( ! function_exists( 'oaf_legacy_template_fallback' ) ) {
@@ -44,20 +25,27 @@ if ( ! function_exists( 'oaf_legacy_template_fallback' ) ) {
 	 * @param string   $assigned Assigned template slug ('' or 'default' for none).
 	 * @param string   $content  Raw post content.
 	 * @param string[] $known    Template slugs this theme (or the Site Editor) provides.
-	 * @return string 'page-no-title', or '' to leave the hierarchy alone.
+	 * @return string The pattern page's own template, or '' to leave the hierarchy alone.
 	 */
 	function oaf_legacy_template_fallback( $assigned, $content, $known ) {
 		if ( '' === $assigned || 'default' === $assigned || in_array( $assigned, $known, true ) ) {
 			return '';
 		}
 
-		return oaf_page_supplies_own_hero( $content ) ? 'page-no-title' : '';
+		$key = oaf_pattern_page_for_content( $content );
+		if ( null === $key ) {
+			return '';
+		}
+
+		$template = oaf_required_pages()[ $key ]['template'];
+
+		return $template ? $template : '';
 	}
 }
 
 if ( ! function_exists( 'oaf_legacy_page_template_hierarchy' ) ) {
 	/**
-	 * Swap an unknown assigned template for page-no-title on pattern pages.
+	 * Swap an unknown assigned template for the pattern page's own template.
 	 *
 	 * @param string[] $templates Template candidates, highest priority first.
 	 * @return string[]

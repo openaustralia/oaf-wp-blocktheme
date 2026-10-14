@@ -102,7 +102,7 @@ if ( ! function_exists( 'oaf_contact_form_assets' ) ) {
 			return;
 		}
 
-		$uses_pattern = false !== strpos( $post->post_content, 'oaf/page-contact' );
+		$uses_pattern = 'contact' === oaf_pattern_page_for_content( $post->post_content );
 		if ( ! $uses_pattern && ! has_block( 'jetpack/contact-form', $post ) ) {
 			return;
 		}
