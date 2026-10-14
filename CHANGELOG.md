@@ -29,7 +29,8 @@ increases, which happens as a deliberate release (see
 - On tablets (782 to 1023px) the Donate form now has a fixed 400px column
   instead of half the width, so it is no longer narrower than on a phone, and
   the form card uses less padding on phones.
-- Below 1024px the masthead uses the two-line OAF logo. On phones the logo,
+- Below 1024px the masthead uses the two-line OAF logo, with a larger Donate
+  button to match its height. On phones the logo,
   menu button and Donate button now share one row instead of wrapping onto
   two, and on tablets the nav links no longer wrap onto a second line.
 - Category links on posts and listings, and the page numbers in pagination,

@@ -1061,10 +1061,12 @@ textarea.oaf-input { resize: vertical; }
 
 /* Below desktop the masthead shows the two-line logo (swapped in by the
    <picture> in patterns/header.php), sized so its letters match the one-line
-   wordmark. It keeps logo, menu and Donate on one row down to ~330px, and
+   wordmark. It keeps logo, menu and Donate on one row down to ~350px, and
    leaves the tablet nav room for all five links. */
 @media (max-width: 1023px) {
 	.oaf-masthead__logo img { height: 46px; }
+	/* Scale Donate up to sit level with the taller logo. */
+	.oaf-donate-btn .wp-block-button__link { font-size: 16px; padding: 9px 22px; }
 }
 
 /* Bridge WordPress's fixed 600px nav breakpoint up to the masthead's 781px
