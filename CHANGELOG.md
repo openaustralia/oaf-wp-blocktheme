@@ -13,6 +13,8 @@ increases, which happens as a deliberate release (see
 
 ## [Unreleased]
 
+## [1.7.1] - 2026-10-14
+
 ### Fixed
 
 - The Raisely donation form was squeezed to about 107px wide on a phone. The
@@ -238,7 +240,8 @@ version line briefly reached 1.1.0 and 1.1.1, then was re-baselined back through
 0.0.x. 1.0.0 (2026-07-01) marks the first stable release under the consolidated
 numbering and supersedes those earlier development builds.
 
-[Unreleased]: https://github.com/openaustralia/oaf-wp-blocktheme/compare/v1.7.0...HEAD
+[Unreleased]: https://github.com/openaustralia/oaf-wp-blocktheme/compare/v1.7.1...HEAD
+[1.7.1]: https://github.com/openaustralia/oaf-wp-blocktheme/compare/v1.7.0...v1.7.1
 [1.7.0]: https://github.com/openaustralia/oaf-wp-blocktheme/compare/v1.6.0...v1.7.0
 [1.6.0]: https://github.com/openaustralia/oaf-wp-blocktheme/compare/v1.5.0...v1.6.0
 [1.5.0]: https://github.com/openaustralia/oaf-wp-blocktheme/compare/v1.4.1...v1.5.0
