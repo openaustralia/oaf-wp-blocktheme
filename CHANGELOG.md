@@ -30,9 +30,9 @@ increases, which happens as a deliberate release (see
   instead of half the width, so it is no longer narrower than on a phone, and
   the form card uses less padding on phones.
 - Below 1024px the masthead uses the two-line OAF logo, with a larger Donate
-  button to match its height. On phones the logo,
-  menu button and Donate button now share one row instead of wrapping onto
-  two, and on tablets the nav links no longer wrap onto a second line.
+  button to match its height. On phones the logo, menu button and Donate
+  button now share one row instead of wrapping onto two, and on tablets the
+  nav links no longer wrap onto a second line.
 - Category links on posts and listings, and the page numbers in pagination,
   now meet the 24px minimum target size (WCAG 2.2, 2.5.8).
 
