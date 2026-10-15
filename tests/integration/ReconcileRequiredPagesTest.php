@@ -114,6 +114,27 @@ final class ReconcileRequiredPagesTest extends IntegrationTestCase {
 		$this->assertSame( 'About us', get_post( $id )->post_title );
 	}
 
+	public function test_repairing_a_template_does_not_run_existing_content_through_the_html_filters(): void {
+		// Without the unfiltered_html capability (the WP-CLI seed has no user) a save
+		// re-filters post_content and strips embeds. The repair is template-only, so
+		// the stored content must come out byte for byte as it went in.
+		$content = '<p>Intro</p><iframe src="https://example.org/embed" title="Embed"></iframe>';
+		$id      = $this->make_page( array( 'post_name' => 'about' ), self::STALE );
+		$GLOBALS['wpdb']->update( $GLOBALS['wpdb']->posts, array( 'post_content' => $content ), array( 'ID' => $id ) );
+		clean_post_cache( $id );
+
+		wp_set_current_user( 0 );
+		kses_init_filters();
+		try {
+			$result = $this->reconcile_one( 'about', 'create' );
+		} finally {
+			kses_remove_filters();
+		}
+
+		$this->assertSame( 'repaired', $result['status'] );
+		$this->assertSame( $content, get_post_field( 'post_content', $id, 'raw' ) );
+	}
+
 	public function test_a_stale_template_on_a_page_with_no_theme_template_is_cleared(): void {
 		$id = $this->make_page( array( 'post_name' => 'home' ), self::STALE );
 

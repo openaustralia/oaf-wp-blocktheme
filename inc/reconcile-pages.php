@@ -142,23 +142,22 @@ if ( ! function_exists( 'oaf_reconcile_page' ) ) {
 		}
 
 		if ( '' !== oaf_stale_page_template( $existing ) ) {
-			// Template only: content, title and status stay as they were. Saved through
-			// wp_update_post() so WordPress's save hooks run and caches are cleared.
+			// Template only: content, title and status stay as they were, so write the
+			// template meta alone. A full save would run the content back through
+			// WordPress's HTML filters, which strip embeds when the caller lacks the
+			// unfiltered_html capability (as the WP-CLI seed does).
 			// The replacement follows the page's own content, as the render-time
 			// fallback does: a page that still holds a pattern gets that pattern's
 			// template, but a page with ordinary content keeps the default one, which
 			// shows its title. Assigning the registry template by slug would hide it.
 			$repair = oaf_pattern_page_template( $existing->post_content );
-			$id     = wp_update_post(
-				array(
-					'ID'            => $existing->ID,
-					'page_template' => '' !== $repair ? $repair : 'default',
-				),
-				true
-			);
-			if ( is_wp_error( $id ) ) {
-				return oaf_reconcile_error( $existing->ID, $id );
+			if ( '' !== $repair ) {
+				update_post_meta( $existing->ID, '_wp_page_template', $repair );
+			} else {
+				delete_post_meta( $existing->ID, '_wp_page_template' );
 			}
+			// Tell page caches the page changed, as a save would.
+			clean_post_cache( $existing->ID );
 
 			return array(
 				'status' => 'repaired',
