@@ -18,20 +18,36 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-if ( ! function_exists( 'oaf_legacy_template_fallback' ) ) {
+if ( ! function_exists( 'oaf_stale_page_template' ) ) {
 	/**
-	 * The template to render a page with instead of its assigned one, if any.
+	 * The stored template of a page when the theme does not provide it.
 	 *
-	 * @param string   $assigned Assigned template slug ('' or 'default' for none).
-	 * @param string   $content  Raw post content.
-	 * @param string[] $known    Template slugs this theme (or the Site Editor) provides.
-	 * @return string The pattern page's own template, or '' to leave the hierarchy alone.
+	 * Pages imported from the old classic theme carry values such as
+	 * `template-page-fullwidth.php`, which WordPress rejects when the page is saved.
+	 * Used both here, to render around it, and by the reconcile code, to repair it.
+	 *
+	 * @param WP_Post $post A page.
+	 * @return string The stale template slug, or '' when there is none.
 	 */
-	function oaf_legacy_template_fallback( $assigned, $content, $known ) {
-		if ( '' === $assigned || 'default' === $assigned || in_array( $assigned, $known, true ) ) {
+	function oaf_stale_page_template( $post ) {
+		$stored = (string) get_page_template_slug( $post );
+		if ( '' === $stored || 'default' === $stored ) {
 			return '';
 		}
 
+		return array_key_exists( $stored, wp_get_theme()->get_page_templates( $post ) ) ? '' : $stored;
+	}
+}
+
+if ( ! function_exists( 'oaf_pattern_page_template' ) ) {
+	/**
+	 * The template a pattern page is meant to render with.
+	 *
+	 * @param string $content Raw post content.
+	 * @return string The pattern page's own template, or '' when the content is not a
+	 *                pattern page (or its page has no template).
+	 */
+	function oaf_pattern_page_template( $content ) {
 		$key = oaf_pattern_page_for_content( $content );
 		if ( null === $key ) {
 			return '';
@@ -45,7 +61,7 @@ if ( ! function_exists( 'oaf_legacy_template_fallback' ) ) {
 
 if ( ! function_exists( 'oaf_legacy_page_template_hierarchy' ) ) {
 	/**
-	 * Swap an unknown assigned template for the pattern page's own template.
+	 * Swap a stale template for the pattern page's own template.
 	 *
 	 * @param string[] $templates Template candidates, highest priority first.
 	 * @return string[]
@@ -60,20 +76,19 @@ if ( ! function_exists( 'oaf_legacy_page_template_hierarchy' ) ) {
 			return $templates;
 		}
 
-		$assigned = (string) get_page_template_slug( $post );
-		if ( '' === $assigned || 'default' === $assigned ) {
+		$stale = oaf_stale_page_template( $post );
+		if ( '' === $stale ) {
 			return $templates;
 		}
 
-		$known    = array_keys( wp_get_theme()->get_page_templates( $post ) );
-		$fallback = oaf_legacy_template_fallback( $assigned, $post->post_content, $known );
+		$fallback = oaf_pattern_page_template( $post->post_content );
 		if ( '' === $fallback ) {
 			return $templates;
 		}
 
 		// Take the stale slug's place, so the fallback ranks as an assigned
 		// template would: ahead of page-{slug} and page-{id}.
-		$index = array_search( $assigned, $templates, true );
+		$index = array_search( $stale, $templates, true );
 		if ( false === $index ) {
 			array_unshift( $templates, $fallback );
 		} else {

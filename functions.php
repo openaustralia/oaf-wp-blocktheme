@@ -33,6 +33,11 @@ require_once get_template_directory() . '/inc/contact-form.php';
 // Render pattern pages that carry a stale template with page-no-title.
 require_once get_template_directory() . '/inc/templates.php';
 
+// Reconciling the required pages (the write policy): admin and WP-CLI, never the front end.
+if ( is_admin() || ( defined( 'WP_CLI' ) && WP_CLI ) ) {
+	require_once get_template_directory() . '/inc/reconcile-pages.php';
+}
+
 // Admin-only: required-page creation and the theme settings screen.
 if ( is_admin() ) {
 	require_once get_template_directory() . '/inc/pages.php';

@@ -2,10 +2,10 @@
 /**
  * The required pages: every page the theme expects a site to have.
  *
- * One definition, read by the admin create/re-create actions, the template
+ * One definition, read by the reconcile code, the admin screen, the template
  * fallback, the contact-form script and (through `wp eval`) the dev seed.
  * Loaded on every request, so it holds data and pure lookups only; the code that
- * writes pages lives in inc/pages.php and loads in admin alone.
+ * writes pages lives in inc/reconcile-pages.php and loads in admin and WP-CLI.
  *
  * @package oaf-wp-blocktheme
  */

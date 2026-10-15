@@ -44,5 +44,5 @@ if ( get_stylesheet() !== basename( OAF_THEME_DIR ) ) {
 	exit( 1 );
 }
 
-require_once OAF_THEME_DIR . '/inc/pages.php';
+require_once OAF_THEME_DIR . '/inc/reconcile-pages.php';
 require_once __DIR__ . '/IntegrationTestCase.php';

@@ -39,6 +39,7 @@ set `NODE_OPTIONS=--network-family-autoselection-attempt-timeout=5000`.
 | `StatsTest` | `oaf_stat()` fallback when the Alaveteli stats plugin is absent |
 | `AvatarsTest` | Initials, deterministic palette colour, and the initials-SVG data URI |
 | `RequiredPagesTest` | Which content is a pattern page, plus guards that the required pages match `patterns/`, `theme.json` and the dev seed script |
+| `PagesNoticesTest` | The admin notices built from a reconcile result: what was created, repaired, skipped or failed, and why |
 | `TemplatesTest` | Which pages with a stale classic `_wp_page_template` fall back to their own template |
 | `StructureTest` | `theme.json` / `block.json` validity, block asset targets exist, and the `style.css` Version header Git Updater keys on |
 
@@ -46,8 +47,9 @@ set `NODE_OPTIONS=--network-family-autoselection-attempt-timeout=5000`.
 
 | File | Covers |
 | --- | --- |
-| `RequiredPageWritesTest` | Creating, skipping, overwriting and repairing the required pages on real WordPress, including the stale-template save that failed in production |
-| `TemplateHierarchyTest` | The stale-template fallback through the real `page_template_hierarchy` filter and a queried page |
+| `ReconcileRequiredPagesTest` | Creating, repairing and re-creating the required pages on real WordPress, including the stale-template save that failed in production and the reason a failed save reports |
+| `StalePageTemplateTest` | Deciding that a page's stored template is stale (one the active theme does not provide) |
+| `TemplateHierarchyTest` | Which template WordPress resolves for a page with a stale template (the fallback through the real `page_template_hierarchy` filter) |
 
 ## Ground rule
 

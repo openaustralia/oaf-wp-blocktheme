@@ -91,9 +91,9 @@ final class RequiredPagesTest extends TestCase {
 	public function test_dev_seed_script_keeps_no_page_list(): void {
 		$seed = (string) file_get_contents( OAF_THEME_DIR . '/.wp-setup.sh' );
 
-		$this->assertStringNotContainsString( 'oaf/page-', $seed, '.wp-setup.sh must create pages through oaf_create_required_pages().' );
+		$this->assertStringNotContainsString( 'oaf/page-', $seed, '.wp-setup.sh must create pages through oaf_reconcile_required_pages().' );
 		$this->assertStringNotContainsString( 'page-no-title', $seed );
-		$this->assertStringContainsString( 'oaf_create_required_pages', $seed );
+		$this->assertStringContainsString( 'oaf_reconcile_required_pages', $seed );
 	}
 
 	/**

@@ -17,6 +17,7 @@ abstract class IntegrationTestCase extends TestCase {
 	}
 
 	protected function tearDown(): void {
+		remove_all_filters( 'wp_insert_post_empty_content' );
 		$this->delete_all_pages();
 		update_option( 'show_on_front', 'posts' );
 		update_option( 'page_on_front', 0 );
