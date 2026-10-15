@@ -9,6 +9,7 @@
 	<testsuites>
 		<testsuite name="theme">
 			<directory>tests</directory>
+			<exclude>tests/integration</exclude>
 		</testsuite>
 	</testsuites>
 </phpunit>

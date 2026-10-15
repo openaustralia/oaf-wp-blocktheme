@@ -1,0 +1,42 @@
+name: Integration
+
+# Runs tests/integration against real WordPress in the wp-env test container.
+# The fast unit suite and the linters live in php.yml.
+on:
+  pull_request:
+  push:
+    branches: [ main ]
+
+jobs:
+  integration:
+    name: Integration (wp-env)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          tools: composer
+          coverage: none
+
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-progress
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      # The scoped @wordpress/env package. The unscoped "wp-env" on npm is a
+      # different (flagged) package - never install that one.
+      - name: Install wp-env
+        run: npm install --global @wordpress/env@11.17.0
+
+      - name: Start WordPress
+        run: wp-env start
+
+      - name: Integration tests
+        run: composer run test:integration

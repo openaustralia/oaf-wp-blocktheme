@@ -7,8 +7,8 @@ wp rewrite structure '/%postname%/' --hard
 
 # The required pages are defined in inc/required-pages.php and created by the
 # same code as Appearance -> OAF Theme -> "Create required pages" (which also
-# points the front page and posts page at Home and Blog). pages.php loads in
-# admin only, so load it here.
-wp eval 'require_once get_template_directory() . "/inc/pages.php"; print_r( oaf_create_required_pages( true ) );'
+# points the front page and posts page at Home and Blog). That code loads under
+# WP-CLI, so no require is needed.
+wp eval '$failed = false; foreach ( oaf_reconcile_required_pages( "create", null, true ) as $slug => $result ) { echo str_pad( $slug, 14 ), $result["status"], isset( $result["error"] ) ? " (" . $result["error"]["code"] . ": " . $result["error"]["message"] . ")" : "", "\n"; $failed = $failed || "error" === $result["status"]; } if ( $failed ) { exit( 1 ); }'
 
 echo "SETUP_OK"

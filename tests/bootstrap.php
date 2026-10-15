@@ -143,3 +143,4 @@ require_once OAF_THEME_DIR . '/inc/people.php';
 require_once OAF_THEME_DIR . '/inc/avatars.php';
 require_once OAF_THEME_DIR . '/inc/required-pages.php';
 require_once OAF_THEME_DIR . '/inc/templates.php';
+require_once OAF_THEME_DIR . '/inc/pages.php';

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+	Integration suite: runs against real WordPress inside the wp-env test
+	container (see tests/README.md). Run it with `composer run test:integration`;
+	the plain `phpunit` run is the fast unit suite and skips these.
+-->
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="vendor/phpunit/phpunit/phpunit.xsd"
+	bootstrap="tests/integration/bootstrap.php"
+	colors="true"
+	failOnWarning="true"
+	failOnNotice="true"
+	cacheDirectory=".phpunit.cache">
+	<testsuites>
+		<testsuite name="integration">
+			<directory>tests/integration</directory>
+		</testsuite>
+	</testsuites>
+</phpunit>

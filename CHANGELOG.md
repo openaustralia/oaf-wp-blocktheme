@@ -13,6 +13,14 @@ increases, which happens as a deliberate release (see
 
 ## [Unreleased]
 
+### Fixed
+
+- "Re-create selected" in Appearance > OAF Theme failed with "Could not be
+  re-created" for any page still carrying a template from the old classic
+  theme, such as Donate. WordPress rejected the stale template while saving
+  the page. The re-create now sets the theme's own template as part of the
+  save, which also repairs the page's stored template.
+
 ### Changed
 
 - The pages the theme expects (Home, Blog and the seven pattern pages) are now
@@ -25,6 +33,13 @@ increases, which happens as a deliberate release (see
 - The dev seed (`.wp-setup.sh`) now creates pages through the same code as the
   admin button, so it also creates "Other ways to give" under Donate, which it
   used to skip.
+- "Create required pages" in Appearance > OAF Theme now also replaces a page
+  template left over from the old theme on a page that already exists, such as
+  Donate. Only the template changes: the page's content, title and status are
+  left as they are. The result notice lists any pages it repaired.
+- When a page can't be created or re-created, the notice now says why, for
+  example "Could not be re-created: donate (invalid_page_template)". It also no
+  longer says "No new pages were needed" when a page failed.
 
 ## [1.7.1] - 2026-10-14
 

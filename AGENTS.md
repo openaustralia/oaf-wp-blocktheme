@@ -4,14 +4,16 @@ This file provides guidance to AI coding agents (Claude Code, GitHub Copilot, an
 
 ## What this is
 
-A WordPress Full-Site-Editing (block) theme for oaf.org.au. **The repo *is* the theme** — it lives at `wp-content/themes/oaf-wp-blocktheme` on a site. There is **no build step** (no webpack/npm bundling) and **no test suite**: source files ship as-is. PHP 8.3+, WordPress 6.6+.
+A WordPress Full-Site-Editing (block) theme for oaf.org.au. **The repo *is* the theme** — it lives at `wp-content/themes/oaf-wp-blocktheme` on a site. There is **no build step** (no webpack/npm bundling): source files ship as-is. Tests are PHPUnit only, in two suites (see `tests/README.md`). PHP 8.3+, WordPress 6.6+.
 
 ## Commands
 
 ```sh
 composer install              # install dev tooling (PHPCS + WPCS) — required before linting
-composer run phpcs            # lint all PHP (the only automated check; CI runs this on PRs + push to main)
+composer run phpcs            # lint all PHP (CI runs this on PRs + push to main)
 composer run phpcbf           # auto-fix PHPCS violations where possible
+composer run test             # fast unit tests (CI runs these too)
+composer run test:integration # tests on real WordPress in wp-env's test container; needs `wp-env start` first (CI: integration.yml)
 
 wp-env start                  # boot WordPress with this repo as the active theme (wp-env comes via mise)
 wp-env run cli wp <command>   # run WP-CLI against the dev site
@@ -20,7 +22,7 @@ sh .wp-setup.sh               # seed the dev site: permalinks, the standard page
 mise run bump <level>         # cut a release: bump style.css, roll CHANGELOG, tag, push, publish the GitHub Release (level = major|minor|patch|X.Y.Z)
 ```
 
-CI runs two workflows on PRs: `.github/workflows/php.yml` (`composer validate --strict`, a `php -l` syntax sweep, `composer run phpcs`) and `.github/workflows/changelog.yml` (the changelog rule - see `CONTRIBUTING.md`, which owns the changelog and release workflow). On some networks `wp-env`/Node needs `NODE_OPTIONS=--network-family-autoselection-attempt-timeout=5000` to avoid connection timeouts.
+CI runs three workflows on PRs: `.github/workflows/php.yml` (`composer validate --strict`, a `php -l` syntax sweep, `composer run phpcs`, `composer run test`), `.github/workflows/integration.yml` (the integration suite in wp-env) and `.github/workflows/changelog.yml` (the changelog rule - see `CONTRIBUTING.md`, which owns the changelog and release workflow). On some networks `wp-env`/Node needs `NODE_OPTIONS=--network-family-autoselection-attempt-timeout=5000` to avoid connection timeouts.
 
 ## Deployment: Git Updater
 
@@ -34,11 +36,11 @@ Connected sites self-update via the Git Updater plugin tracking `main`, which of
 
 **Marketing pages ship as patterns; everything else is templates.** The five pages (about, collection, people, contact, donate) exist as `patterns/page-*.php`. Once created they are normal editable pages whose content is a single `wp:pattern` reference — so their real markup is in the pattern file, not the page. Home, blog, single, archive, search and 404 are driven by `templates/*.html`.
 
-**`functions.php` wires up `inc/` modules.** Loaded on the front end: `options.php`, `people.php`, `avatars.php`, `stats.php`, `required-pages.php`, `contact-form.php`, `templates.php`. Loaded only in admin: `pages.php`, `admin.php`.
+**`functions.php` wires up `inc/` modules.** Loaded on the front end: `options.php`, `people.php`, `avatars.php`, `stats.php`, `required-pages.php`, `contact-form.php`, `templates.php`. Loaded in admin and under WP-CLI only: `reconcile-pages.php`. Loaded only in admin: `pages.php`, `admin.php`.
 
 - **Settings** (`inc/options.php` + `inc/admin.php`): one option `oaf_theme_options`, read everywhere via `oaf_option()`, each field falling back to a design default. Drives the footer's editable values (name/ABN, socials, sister-service links, Acknowledgement of Country) and the Raisely embed. Admin screen: **Appearance → OAF Theme**.
 - **Required pages** (`inc/required-pages.php`): the one definition of the pages the theme expects (slug, pattern, template, parent), loaded everywhere. Add a page there, not in the seed script or a regex; `RequiredPagesTest` checks it against `patterns/`, `theme.json` and `.wp-setup.sh`. Terms are in `CONTEXT.md`.
-- **Required-page creation** (`inc/pages.php`): the "Create required pages" button is **idempotent** — existing pages/people are skipped. Pattern pages get the `page-no-title` template so `page.html`'s title hero doesn't double up with the pattern's own hero.
+- **Reconciling the required pages** (`inc/reconcile-pages.php`): the write policy, with no output. `oaf_reconcile_required_pages( 'create' | 'recreate', $slugs )` returns a plain result per page (`created`, `overwritten`, `repaired`, `unchanged`, `trashed` or `error`, with WordPress's reason). "Create required pages" is **idempotent**: existing pages are left as they are apart from replacing a stale template. Pattern pages get the `page-no-title` template so `page.html`'s title hero doesn't double up with the pattern's own hero. The admin screen (`inc/pages.php`) and the dev seed (`.wp-setup.sh`, via `wp eval`) both call it; anything that saves pages needs real WordPress, so test it in `tests/integration/`.
 - **People** (`inc/people.php`): a `People` custom post type + `Groups` taxonomy (seeded Team / Board) + a Role meta box + Order. Rendered by the `oaf/people-grid` dynamic block, not page markup.
 - **Avatars** (`inc/avatars.php`): overrides Gravatar with People photos via `pre_get_avatar_data`, falling back to a coloured initials circle. Set `$args['url']` + `found_avatar` there to fully short-circuit Gravatar.
 - **Stats** (`inc/stats.php`): pulls live numbers from the `wp-alaveteli-stats` plugin when present. `oaf_stat()` returns already-escaped markup — it is whitelisted as a custom escaping function in `phpcs.xml.dist`, so do not re-escape at call sites.
