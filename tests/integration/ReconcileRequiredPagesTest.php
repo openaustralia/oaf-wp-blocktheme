@@ -76,11 +76,12 @@ final class ReconcileRequiredPagesTest extends IntegrationTestCase {
 	}
 
 	public function test_a_stale_template_on_an_existing_pattern_page_is_repaired_without_touching_content(): void {
-		$id = $this->make_page(
+		$pattern = '<!-- wp:pattern {"slug":"oaf/page-donate"} /-->';
+		$id      = $this->make_page(
 			array(
 				'post_name'    => 'donate',
 				'post_title'   => 'Give',
-				'post_content' => 'Edited by hand',
+				'post_content' => $pattern,
 			),
 			self::STALE
 		);
@@ -89,8 +90,28 @@ final class ReconcileRequiredPagesTest extends IntegrationTestCase {
 
 		$this->assertSame( 'repaired', $result['status'] );
 		$this->assertSame( 'page-no-title', get_page_template_slug( $id ) );
-		$this->assertSame( 'Edited by hand', get_post( $id )->post_content );
+		$this->assertSame( $pattern, get_post( $id )->post_content );
 		$this->assertSame( 'Give', get_post( $id )->post_title );
+	}
+
+	public function test_a_stale_template_on_a_page_with_ordinary_content_gets_the_default_template(): void {
+		// An imported page with its own content, not a pattern: page-no-title would
+		// hide its title, so it must fall back to the default template instead.
+		$id = $this->make_page(
+			array(
+				'post_name'    => 'about',
+				'post_title'   => 'About us',
+				'post_content' => 'Edited by hand',
+			),
+			self::STALE
+		);
+
+		$result = $this->reconcile_one( 'about', 'create' );
+
+		$this->assertSame( 'repaired', $result['status'] );
+		$this->assertSame( '', (string) get_page_template_slug( $id ) );
+		$this->assertSame( 'Edited by hand', get_post( $id )->post_content );
+		$this->assertSame( 'About us', get_post( $id )->post_title );
 	}
 
 	public function test_a_stale_template_on_a_page_with_no_theme_template_is_cleared(): void {

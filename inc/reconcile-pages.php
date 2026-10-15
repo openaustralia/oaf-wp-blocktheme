@@ -144,10 +144,15 @@ if ( ! function_exists( 'oaf_reconcile_page' ) ) {
 		if ( '' !== oaf_stale_page_template( $existing ) ) {
 			// Template only: content, title and status stay as they were. Saved through
 			// wp_update_post() so WordPress's save hooks run and caches are cleared.
-			$id = wp_update_post(
+			// The replacement follows the page's own content, as the render-time
+			// fallback does: a page that still holds a pattern gets that pattern's
+			// template, but a page with ordinary content keeps the default one, which
+			// shows its title. Assigning the registry template by slug would hide it.
+			$repair = oaf_pattern_page_template( $existing->post_content );
+			$id     = wp_update_post(
 				array(
 					'ID'            => $existing->ID,
-					'page_template' => '' !== $template ? $template : 'default',
+					'page_template' => '' !== $repair ? $repair : 'default',
 				),
 				true
 			);
