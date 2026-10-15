@@ -4,14 +4,16 @@ This file provides guidance to AI coding agents (Claude Code, GitHub Copilot, an
 
 ## What this is
 
-A WordPress Full-Site-Editing (block) theme for oaf.org.au. **The repo *is* the theme** — it lives at `wp-content/themes/oaf-wp-blocktheme` on a site. There is **no build step** (no webpack/npm bundling) and **no test suite**: source files ship as-is. PHP 8.3+, WordPress 6.6+.
+A WordPress Full-Site-Editing (block) theme for oaf.org.au. **The repo *is* the theme** — it lives at `wp-content/themes/oaf-wp-blocktheme` on a site. There is **no build step** (no webpack/npm bundling): source files ship as-is. Tests are PHPUnit only, in two suites (see `tests/README.md`). PHP 8.3+, WordPress 6.6+.
 
 ## Commands
 
 ```sh
 composer install              # install dev tooling (PHPCS + WPCS) — required before linting
-composer run phpcs            # lint all PHP (the only automated check; CI runs this on PRs + push to main)
+composer run phpcs            # lint all PHP (CI runs this on PRs + push to main)
 composer run phpcbf           # auto-fix PHPCS violations where possible
+composer run test             # fast unit tests (CI runs these too)
+composer run test:integration # tests on real WordPress in wp-env's test container; needs `wp-env start` first (CI: integration.yml)
 
 wp-env start                  # boot WordPress with this repo as the active theme (wp-env comes via mise)
 wp-env run cli wp <command>   # run WP-CLI against the dev site
@@ -20,7 +22,7 @@ sh .wp-setup.sh               # seed the dev site: permalinks, the standard page
 mise run bump <level>         # cut a release: bump style.css, roll CHANGELOG, tag, push, publish the GitHub Release (level = major|minor|patch|X.Y.Z)
 ```
 
-CI runs two workflows on PRs: `.github/workflows/php.yml` (`composer validate --strict`, a `php -l` syntax sweep, `composer run phpcs`) and `.github/workflows/changelog.yml` (the changelog rule - see `CONTRIBUTING.md`, which owns the changelog and release workflow). On some networks `wp-env`/Node needs `NODE_OPTIONS=--network-family-autoselection-attempt-timeout=5000` to avoid connection timeouts.
+CI runs three workflows on PRs: `.github/workflows/php.yml` (`composer validate --strict`, a `php -l` syntax sweep, `composer run phpcs`, `composer run test`), `.github/workflows/integration.yml` (the integration suite in wp-env) and `.github/workflows/changelog.yml` (the changelog rule - see `CONTRIBUTING.md`, which owns the changelog and release workflow). On some networks `wp-env`/Node needs `NODE_OPTIONS=--network-family-autoselection-attempt-timeout=5000` to avoid connection timeouts.
 
 ## Deployment: Git Updater
 

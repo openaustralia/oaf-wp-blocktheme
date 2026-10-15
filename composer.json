@@ -16,7 +16,11 @@
 	"scripts": {
 		"phpcs": "phpcs",
 		"phpcbf": "phpcbf",
-		"test": "phpunit"
+		"test": "phpunit",
+		"test:integration": [
+			"wp-env run tests-cli wp theme activate $(basename \"$PWD\")",
+			"wp-env run tests-cli --env-cwd=wp-content/themes/$(basename \"$PWD\") php vendor/bin/phpunit -c phpunit.integration.xml.dist"
+		]
 	},
 	"config": {
 		"allow-plugins": {

@@ -10,9 +10,11 @@ The repo *is* the theme, and there is no build step. For local work:
 
 ```sh
 composer install        # dev tooling (PHPCS + WPCS); needed before linting
-composer run phpcs      # lint all PHP (the only automated code check)
+composer run phpcs      # lint all PHP
 composer run phpcbf     # auto-fix PHPCS violations where possible
+composer run test       # fast unit tests
 wp-env start            # boot WordPress with this repo as the active theme
+composer run test:integration   # tests on real WordPress (needs wp-env started)
 ```
 
 See [README.md](README.md) for the theme tour and [CLAUDE.md](CLAUDE.md) for the
