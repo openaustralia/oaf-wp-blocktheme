@@ -135,6 +135,20 @@ final class ReconcileRequiredPagesTest extends IntegrationTestCase {
 		$this->assertSame( $content, get_post_field( 'post_content', $id, 'raw' ) );
 	}
 
+	public function test_a_repair_that_does_not_take_effect_is_reported_as_an_error(): void {
+		$id = $this->make_page( array( 'post_name' => 'about', 'post_content' => '<!-- wp:pattern {"slug":"oaf/page-about"} /-->' ), self::STALE );
+		// Something (a plugin, a read-only database) refuses the meta write.
+		add_filter( 'update_post_metadata', '__return_false' );
+
+		$result = $this->reconcile_one( 'about', 'create' );
+
+		remove_filter( 'update_post_metadata', '__return_false' );
+		$this->assertSame( 'error', $result['status'] );
+		$this->assertSame( $id, $result['id'] );
+		$this->assertSame( 'template_not_saved', $result['error']['code'] );
+		$this->assertSame( self::STALE, get_page_template_slug( $id ) );
+	}
+
 	public function test_a_stale_template_on_a_page_with_no_theme_template_is_cleared(): void {
 		$id = $this->make_page( array( 'post_name' => 'home' ), self::STALE );
 

@@ -159,6 +159,12 @@ if ( ! function_exists( 'oaf_reconcile_page' ) ) {
 			// Tell page caches the page changed, as a save would.
 			clean_post_cache( $existing->ID );
 
+			// The meta functions return false for an unchanged value as well as a
+			// refused write, so check what is actually stored.
+			if ( '' !== oaf_stale_page_template( get_post( $existing->ID ) ) ) {
+				return oaf_reconcile_error( $existing->ID, new WP_Error( 'template_not_saved', __( 'The page template could not be saved.', 'oaf-wp-blocktheme' ) ) );
+			}
+
 			return array(
 				'status' => 'repaired',
 				'id'     => $existing->ID,
