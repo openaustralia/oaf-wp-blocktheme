@@ -38,25 +38,25 @@ final class TemplateHierarchyTest extends IntegrationTestCase {
 	public function test_a_pattern_page_with_a_stale_template_resolves_to_its_own_template(): void {
 		$id = $this->make_page( array( 'post_name' => 'donate', 'post_content' => self::PATTERN ), self::STALE );
 
-		$this->assertSame( 'oaf-wp-blocktheme//page-no-title', $this->resolved_template_for( $id ) );
+		$this->assertSame( get_stylesheet() . '//page-no-title', $this->resolved_template_for( $id ) );
 		$this->assertSame( self::STALE, get_page_template_slug( $id ), 'The stored template must be left untouched.' );
 	}
 
 	public function test_a_classic_page_with_a_stale_template_falls_through_to_the_page_template(): void {
 		$id = $this->make_page( array( 'post_name' => 'old-page', 'post_content' => '<p>Classic content</p>' ), self::STALE );
 
-		$this->assertSame( 'oaf-wp-blocktheme//page', $this->resolved_template_for( $id ) );
+		$this->assertSame( get_stylesheet() . '//page', $this->resolved_template_for( $id ) );
 	}
 
 	public function test_a_pattern_page_with_a_known_template_keeps_it(): void {
 		$id = $this->make_page( array( 'post_name' => 'donate', 'post_content' => self::PATTERN ), 'page-no-title' );
 
-		$this->assertSame( 'oaf-wp-blocktheme//page-no-title', $this->resolved_template_for( $id ) );
+		$this->assertSame( get_stylesheet() . '//page-no-title', $this->resolved_template_for( $id ) );
 	}
 
 	public function test_a_pattern_page_with_no_template_uses_the_default_page_template(): void {
 		$id = $this->make_page( array( 'post_name' => 'donate', 'post_content' => self::PATTERN ) );
 
-		$this->assertSame( 'oaf-wp-blocktheme//page', $this->resolved_template_for( $id ) );
+		$this->assertSame( get_stylesheet() . '//page', $this->resolved_template_for( $id ) );
 	}
 }
