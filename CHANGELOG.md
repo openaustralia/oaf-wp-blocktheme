@@ -13,6 +13,8 @@ increases, which happens as a deliberate release (see
 
 ## [Unreleased]
 
+## [1.7.3] - 2026-11-05
+
 ### Changed
 
 - The "Other ways to give" page (`/donate/alternatives/`) now matches the
@@ -279,7 +281,8 @@ version line briefly reached 1.1.0 and 1.1.1, then was re-baselined back through
 0.0.x. 1.0.0 (2026-07-01) marks the first stable release under the consolidated
 numbering and supersedes those earlier development builds.
 
-[Unreleased]: https://github.com/openaustralia/oaf-wp-blocktheme/compare/v1.7.2...HEAD
+[Unreleased]: https://github.com/openaustralia/oaf-wp-blocktheme/compare/v1.7.3...HEAD
+[1.7.3]: https://github.com/openaustralia/oaf-wp-blocktheme/compare/v1.7.2...v1.7.3
 [1.7.2]: https://github.com/openaustralia/oaf-wp-blocktheme/compare/v1.7.1...v1.7.2
 [1.7.1]: https://github.com/openaustralia/oaf-wp-blocktheme/compare/v1.7.0...v1.7.1
 [1.7.0]: https://github.com/openaustralia/oaf-wp-blocktheme/compare/v1.6.0...v1.7.0
