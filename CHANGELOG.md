@@ -13,6 +13,13 @@ increases, which happens as a deliberate release (see
 
 ## [Unreleased]
 
+### Changed
+
+- The "Other ways to give" page now matches the content currently on the live
+  site. It leads with why card donations are the most efficient for a small
+  charity. Bank and PayID details are no longer printed on the page; people
+  are asked to email us for them instead.
+
 ## [1.7.2] - 2026-10-15
 
 ### Fixed
