@@ -5,11 +5,7 @@
  * Categories: oaf
  * Block Types: core/post-content
  * Post Types: page
- * Description: Full "Other ways to give" page - why we prefer card, the PayID / bank transfer / cheque alternatives, and why we don't take PayPal.
- *
- * NOTE: the bank, PayID, cheque and postal details below are real payment
- * details copied from the live page. Keep them exact, and verify they are still
- * current before this goes to production.
+ * Description: Full "Other ways to give" page - why we prefer card, how to ask us for PayID or bank transfer details, and why we don't take PayPal.
  *
  * @package oaf-wp-blocktheme
  */
