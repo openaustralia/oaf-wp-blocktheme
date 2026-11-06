@@ -13,6 +13,12 @@ increases, which happens as a deliberate release (see
 
 ## [Unreleased]
 
+### Changed
+
+- The `LICENSE` file now begins with an `SPDX-License-Identifier` line
+  (`GPL-2.0-or-later`), so tools can read the theme's licence without parsing
+  the licence text. The licence itself is unchanged.
+
 ## [1.7.3] - 2026-11-05
 
 ### Changed
